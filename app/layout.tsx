@@ -1,14 +1,16 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Lato, Federo } from "next/font/google";
 import "./globals.css";
+import type { Metadata } from "next";
+import { ReactNode } from "react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const LatoSans = Lato({
+  weight: ["400"],
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const FederoSans = Federo({
+  variable: "--font-federo-sans",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -20,12 +22,12 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${LatoSans.className} ${FederoSans.variable} antialiased`}
       >
         {children}
       </body>
