@@ -1,7 +1,5 @@
 import BrandName from "@/components/BrandName";
-import { FcGoogle } from "react-icons/fc";
-import { FaApple } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
+import SocialLogin from "@/components/SocialLogin";
 
 export default function Home() {
   return (
@@ -17,28 +15,12 @@ export default function Home() {
 
         <p className="text-14-medium md:text-20-medium">
           Please log in or create an account to continue. You can do this
-          quickly using your Google or Apple account.
+          quickly using your Google.
         </p>
       </section>
 
       <section className="flex-center flex flex-col gap-4">
-        <Button
-          className="cursor-pointer bg-white text-2xl shadow-sm outline-none"
-          variant="ghost"
-          size="lg"
-        >
-          <FcGoogle className="!h-6 !w-6" />
-          <span className="text-16-bold">Continue with Google</span>
-        </Button>
-
-        <Button
-          className="cursor-pointer bg-gray-900 text-2xl text-white shadow-sm outline-none"
-          variant="ghost"
-          size="lg"
-        >
-          <FaApple className="!h-6 !w-6" />
-          <span className="text-16-bold">Continue with Apple</span>
-        </Button>
+        <SocialLogin />
       </section>
     </main>
   );

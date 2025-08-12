@@ -7,7 +7,7 @@ const BrandName = () => {
       <span className="relative inline-block h-10 w-9 ">
         <Image
           className="absolute top-[3px] left-2"
-          src="/assets/mark.svg"
+          src="/assets/pavied-mark.svg"
           width={60.61}
           height={33.8}
           alt="check-mark"

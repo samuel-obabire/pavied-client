@@ -1,5 +1,6 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+
 import { FlatCompat } from "@eslint/eslintrc";
 import pluginImport from "eslint-plugin-import";
 import neostandard from "neostandard";
@@ -39,6 +40,33 @@ const eslintConfig = [
       "@stylistic/jsx-quotes": "off",
       "@stylistic/space-before-function-paren": "off",
       "tailwindcss/no-custom-classname": "off",
+
+      "import/order": [
+        "error",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            ["parent", "sibling"],
+            "index",
+            "object",
+          ],
+          "newlines-between": "always",
+          pathGroups: [
+            {
+              pattern: "@app/**",
+              group: "external",
+              position: "after",
+            },
+          ],
+          pathGroupsExcludedImportTypes: ["builtin"],
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
+        },
+      ],
     },
   },
 ];
