@@ -25,3 +25,63 @@
     color: var(--foreground);
   }
 }
+
+@utility container {
+  @apply mx-auto px-4;
+}
+
+@utility flex-center {
+  @apply justify-center items-center;
+}
+
+@utility text-36-bold {
+  @apply text-[36px] leading-[40px] font-bold;
+}
+
+@utility text-32-normal {
+  @apply text-[32px] leading-[36px];
+}
+
+@utility text-28-bold {
+  @apply text-[28px] leading-[28px] font-bold;
+}
+
+@utility text-24-bold {
+  @apply text-[24px] leading-[28px] font-bold;
+}
+
+@utility text-20-medium {
+  @apply text-[20px] leading-[24px] font-medium;
+}
+
+@utility text-18-bold {
+  @apply text-[18px] leading-[24px] font-bold;
+}
+
+@utility text-16-bold {
+  @apply text-[16px] leading-[20px] font-bold;
+}
+
+@utility text-16-semibold {
+  @apply text-[16px] leading-[20px] font-semibold;
+}
+
+@utility text-16-regular {
+  @apply text-[16px] leading-[20px] font-normal;
+}
+
+@utility text-14-medium {
+  @apply text-[14px] leading-[18px] font-medium;
+}
+
+@utility text-14-regular {
+  @apply text-[14px] leading-[18px] font-normal;
+}
+
+@utility text-12-regular {
+  @apply text-[12px] leading-[16px] font-normal;
+}
+
+@utility text-12-semibold {
+  @apply text-[12px] leading-[16px] font-semibold;
+}
