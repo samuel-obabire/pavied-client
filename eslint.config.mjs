@@ -40,6 +40,7 @@ const eslintConfig = [
       "@stylistic/jsx-quotes": "off",
       "@stylistic/space-before-function-paren": "off",
       "tailwindcss/no-custom-classname": "off",
+      "no-undef": "off",
 
       "import/order": [
         "error",

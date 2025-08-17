@@ -1,7 +1,7 @@
 import BrandName from "@/components/BrandName";
 import SocialLogin from "@/components/SocialLogin";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="container max-w-lg space-y-10  pt-32">
       <div className="text-center">
