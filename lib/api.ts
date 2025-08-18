@@ -6,10 +6,10 @@ const API_BASE_URL =
 export const api = {
   users: {
     getById: async (id: string) => {
-      return await fetchHandler(`${API_BASE_URL}/users/${id}`);
+      return await fetchHandler<User>(`${API_BASE_URL}/users/${id}`);
     },
     getByEmail: async (email: string) => {
-      return await fetchHandler(`${API_BASE_URL}/users/email`, {
+      return await fetchHandler<User>(`${API_BASE_URL}/users/email`, {
         method: "POST",
         body: JSON.stringify({ email }),
       });

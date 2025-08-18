@@ -33,7 +33,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const cookieStore = await cookies();
 
         const tgid = cookieStore.get("tgid");
-        if (!tgid) return false;
+        if (!tgid) {
+          logger.error("Create account blocked - No tgid");
+          return false;
+        }
 
         const newUser = {
           telegramId: tgid.value,
@@ -62,9 +65,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
     async session({ session }) {
       try {
-        const { success, data: user } = (await api.users.getByEmail(
+        const { success, data: user } = await api.users.getByEmail(
           session.user.email
-        )) as ActionResponse<User>;
+        );
 
         if (!success || !user) return session;
 

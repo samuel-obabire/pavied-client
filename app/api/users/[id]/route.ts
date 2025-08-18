@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { db } from "@/firebase.config";
-import { addData } from "@/lib/firebase";
+import { createUser, getUserById } from "@/lib/firebase/user";
 import handleError from "@/lib/handlers/error";
 
 export async function GET(
@@ -11,10 +10,10 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const user = await db.collection("user").doc(id).get();
+    const user = await getUserById(id);
 
-    return user.exists
-      ? NextResponse.json({ user: user.data(), success: true })
+    return user
+      ? NextResponse.json({ user, success: true })
       : NextResponse.json({ success: false });
   } catch (error) {
     return handleError(error, "api");
@@ -22,14 +21,10 @@ export async function GET(
 }
 
 export async function POST(request: Request) {
-  const user = await request.json();
+  const user = (await request.json()) as User;
 
   try {
-    await addData({
-      data: user,
-      path: "users",
-      docId: user?.id,
-    });
+    await createUser(user.id, user);
 
     return NextResponse.json({ success: true });
   } catch (error) {

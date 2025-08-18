@@ -1,22 +1,20 @@
 import { NextResponse } from "next/server";
 
-import { db } from "@/firebase.config";
+import { getUserByEmail } from "@/lib/firebase/user";
 import handleError from "@/lib/handlers/error";
 
 export async function POST(request: Request) {
   const { email } = await request.json();
 
   try {
-    const userRef = db.collection("users").where("email", "==", email);
+    const user = await getUserByEmail(email);
 
-    const snapshot = await userRef.get();
-
-    if (snapshot.empty) {
+    if (!user) {
       return NextResponse.json({ success: false });
     } else {
       return NextResponse.json({
         success: true,
-        data: snapshot.docs[0].data(),
+        data: user,
       });
     }
   } catch (error) {
