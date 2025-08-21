@@ -1,6 +1,7 @@
 import { FcGoogle } from "react-icons/fc";
 
 import { signIn } from "@/auth";
+import { ROUTES } from "@/lib/constants";
 
 import { Button } from "./ui/button";
 
@@ -11,7 +12,7 @@ const SocialLogin = () => {
         action={async () => {
           "use server";
 
-          await signIn("google");
+          await signIn("google", { redirectTo: ROUTES.REGISTER });
         }}
       >
         <Button

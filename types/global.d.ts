@@ -19,6 +19,7 @@ type User = {
   email: string;
   telegramId: string;
   phone: string;
+  whatsApp: string;
   bankAccounts?: BankAccount[];
   derivAccounts?: DerivAccount[];
   referralcode?: string;

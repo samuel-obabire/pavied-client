@@ -19,7 +19,7 @@ export const updateByid = async <T>(col: string, docId: string, data: T) => {
   await db
     .collection(col)
     .doc(docId)
-    .update({ ...data, updateAt: Date.now() });
+    .update({ ...data, updatedAt: Date.now() });
 };
 
 export const deleteById = async (col: string, docId: string) => {

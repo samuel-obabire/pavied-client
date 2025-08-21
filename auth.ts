@@ -63,21 +63,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
     },
 
-    async session({ session }) {
-      try {
-        const { success, data: user } = await api.users.getByEmail(
-          session.user.email
+    async session({ session, token }) {
+      session.user.id = token.id as string;
+      return session;
+    },
+
+    async jwt({ token, user }) {
+      if (user?.email) {
+        const { success, data: dbUser } = await api.users.getByEmail(
+          user.email.toLowerCase()
         );
 
-        if (!success || !user) return session;
-
-        session.user.id = user.id;
-        session.user.telegramId = user.telegramId;
-        session.user.fullName = user.fullName;
-      } catch (error) {
-        logger.error(error);
+        if (success && dbUser) {
+          token.id = dbUser.id;
+        } else {
+          token.id = null;
+        }
       }
-      return session;
+      return token;
     },
   },
 });

@@ -8,16 +8,16 @@ export default async function Home() {
         <BrandName />
       </div>
 
-      <section className="space-y-5">
+      <header className="space-y-5">
         <h1 className="text-28-bold text-primary">
-          Register <span className="text-secondary">account</span>
+          Create <span className="text-secondary">account</span>
         </h1>
 
         <p className="text-14-medium md:text-20-medium">
           Please log in or create an account to continue. You can do this
-          quickly using your Google.
+          quickly using your Google account.
         </p>
-      </section>
+      </header>
 
       <section className="flex-center flex flex-col gap-4">
         <SocialLogin />
