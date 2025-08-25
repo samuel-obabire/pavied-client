@@ -13,6 +13,7 @@
 
   --color-primary: #1c1655;
   --color-secondary: #e2a704;
+  --color-accent: #f5f6f8;
 }
 
 @theme inline {
@@ -40,6 +41,10 @@
   @apply justify-center items-center;
 }
 
+@utility no-ring {
+  @apply focus-visible:!ring-0 focus-visible:!ring-offset-0 !outline-none !border-0;
+}
+
 @utility text-36-bold {
   @apply text-[36px] leading-[40px] font-bold;
 }
@@ -62,6 +67,10 @@
 
 @utility text-18-bold {
   @apply text-[18px] leading-[24px] font-bold;
+}
+
+@utility text-18-medium {
+  @apply text-[18px] leading-[24px] font-medium;
 }
 
 @utility text-16-bold {
@@ -93,11 +102,7 @@
 }
 
 @utility btn {
-  @apply cursor-pointer  !text-16-bold !p-5 transition-transform duration-200 hover:scale-105 active:scale-95;
-}
-
-.inputClass {
-  @apply focus-visible:ring-primary border-0 !py-5 bg-white !text-16-regular rounded-sm;
+  @apply cursor-pointer   !rounded-lg  !text-16-bold !p-5 transition-transform duration-200 hover:scale-105 active:scale-95;
 }
 
 @layer components {
@@ -110,9 +115,11 @@
   }
 
   .react-select__control--is-focused {
-    @apply !ring-primary !ring-[3px] !ring-offset-2 
-           !outline-0 !shadow-none !rounded-sm 
-           transition-all duration-50 ease-in-out;
+    @apply !ring-0 !outline-0 !shadow-none !rounded-sm;
+  }
+
+  .react-select__input {
+    @apply h-[30px];
   }
 
   .react-select__input:focus-visible {
@@ -123,21 +130,23 @@
   /* Phone Input */
   /* ============================= */
   .PhoneInput {
-    @apply !border-0 !bg-white !rounded-sm !shadow-none px-2 
-           transition-all duration-50 ease-in-out;
-  }
-
-  .PhoneInput--focus {
-    @apply !ring-primary !ring-[3px] !ring-offset-2 
-           !bg-white !rounded-sm 
-           transition-all duration-50 ease-in-out;
+    @apply !border-0 !bg-white !rounded-sm !shadow-none px-2 !h-[44px];
   }
 
   .PhoneInputInput {
     @apply !outline-0 !p-2 !bg-white !rounded-sm;
   }
 
+  /* Shad drawer handle */
+  [data-vaul-drawer] > div:first-child {
+    @apply bg-[#F5F6F8] w-24 h-2 rounded-full;
+  }
+
   /* Custom CSS */
+
+  .inputClass {
+    @apply !border-0 !h-[44px] !py-5 !bg-white !text-16-regular rounded-sm focus-visible:!ring-0;
+  }
 
   .btn-primary {
     @apply btn bg-primary   text-white;
@@ -148,10 +157,22 @@
   }
 
   .btn-outline {
-    @apply btn outline-primary;
+    @apply btn outline-primary w-20;
+  }
+
+  .btn-ghost {
+    @apply btn !bg-[#E2A7040D] !text-secondary !font-medium !text-[12px] sm:!text-16-regular;
   }
 
   .underline-button {
-    @apply !text-14-medium cursor-pointer text-black underline;
+    @apply btn cursor-pointer text-black underline;
+  }
+
+  .form-error {
+    @apply text-[#A40000] text-14-medium bg-[#FFF8F8] rounded-md p-2;
+  }
+
+  .select {
+    @apply bg-white !rounded-lg  cursor-pointer focus:bg-gray-50 data-[state=checked]:bg-accent data-[state=checked]:font-medium;
   }
 }

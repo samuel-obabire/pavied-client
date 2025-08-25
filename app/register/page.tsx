@@ -1,5 +1,5 @@
 import BrandName from "@/components/BrandName";
-import RegistrationForm from "@/components/forms/Registration";
+import AccountRegister from "@/components/forms/AccountRegister";
 
 const Register = () => {
   return (
@@ -19,7 +19,7 @@ const Register = () => {
       </header>
 
       <section>
-        <RegistrationForm />
+        <AccountRegister />
       </section>
     </main>
   );

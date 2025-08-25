@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { ReactNode, useState, useEffect } from "react";
 
@@ -153,7 +155,7 @@ const ActionError = ({
 
       <p className="text-center">{errorMessage}</p>
 
-      <AlertDialogFooter className="mx-auto flex w-[70%] flex-row !justify-around">
+      <AlertDialogFooter className="mx-auto flex w-[70%] flex-row items-baseline !justify-around">
         <AlertDialogCancel className="btn-outline">Cancel</AlertDialogCancel>
         <AlertDialogAction
           className="btn-secondary"

@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { FieldValue, FieldValues } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import Select from "react-select";
 import countryList from "react-select-country-list";
@@ -18,13 +19,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import "react-phone-number-input/style.css";
 import { updateUser } from "@/lib/actions/user.action";
 import { ROUTES } from "@/lib/constants";
 import { AccountRegistrationSchema } from "@/lib/validation";
 
 import ActionState, { ActionStateType } from "../ActionState";
+import CustomFormField, { FormFieldTypes } from "../CustomFormField";
 
 const RegistrationForm = () => {
   const form = useForm<z.infer<typeof AccountRegistrationSchema>>({
@@ -94,18 +95,15 @@ const RegistrationForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Full name</FormLabel>
-                <FormControl>
-                  <Input
-                    className="inputClass"
-                    placeholder="John Doe"
-                    type=""
-                    {...field}
-                  />
-                </FormControl>
+                <CustomFormField
+                  fieldType={FormFieldTypes.INPUT}
+                  placeholder="John Doe"
+                  field={field as FieldValue<FieldValues>}
+                />
                 <FormDescription>
                   This is your full name eg. John Doe
                 </FormDescription>
-                <FormMessage className="text-red-400" />
+                <FormMessage className="form-error" />
               </FormItem>
             )}
           />
@@ -116,26 +114,33 @@ const RegistrationForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Country of residence</FormLabel>
-                <Select
-                  instanceId="residence-select"
-                  classNamePrefix="react-select"
-                  className=""
-                  options={options}
-                  value={options.find((option) => option.value === field.value)}
-                  onChange={(selected) => {
-                    return field.onChange(
-                      (selected as { value: string })?.value ?? ""
-                    );
-                  }}
-                  getOptionLabel={(option) => option.label}
-                  getOptionValue={(option) => option.value}
-                  isClearable
-                />
+                <CustomFormField
+                  fieldType={FormFieldTypes.SKELETON}
+                  field={field as FieldValue<FieldValues>}
+                >
+                  <Select
+                    instanceId="residence-select"
+                    classNamePrefix="react-select"
+                    className=""
+                    options={options}
+                    value={options.find(
+                      (option) => option.value === field.value
+                    )}
+                    onChange={(selected) => {
+                      return field.onChange(
+                        (selected as { value: string })?.value ?? ""
+                      );
+                    }}
+                    getOptionLabel={(option) => option.label}
+                    getOptionValue={(option) => option.value}
+                    isClearable
+                  />
+                </CustomFormField>
 
                 <FormDescription>
                   Select your country of residence
                 </FormDescription>
-                <FormMessage className="text-red-400" />
+                <FormMessage className="form-error" />
               </FormItem>
             )}
           />
@@ -146,16 +151,21 @@ const RegistrationForm = () => {
             render={({ field }) => (
               <FormItem className="flex flex-col items-start">
                 <FormLabel>Phone number</FormLabel>
-                <FormControl className="w-full">
-                  <PhoneInput
-                    className=""
-                    placeholder="8122233345"
-                    {...field}
-                    defaultCountry="NG"
-                  />
-                </FormControl>
+                <CustomFormField
+                  fieldType={FormFieldTypes.SKELETON}
+                  field={field as FieldValue<FieldValues>}
+                >
+                  <FormControl className="w-full">
+                    <PhoneInput
+                      className=""
+                      placeholder="+2348122233345"
+                      defaultCountry="NG"
+                      {...field}
+                    />
+                  </FormControl>
+                </CustomFormField>
                 <FormDescription>Enter your phone number.</FormDescription>
-                <FormMessage className="text-red-400" />
+                <FormMessage className="form-error" />
               </FormItem>
             )}
           />
@@ -166,16 +176,21 @@ const RegistrationForm = () => {
             render={({ field }) => (
               <FormItem className="flex flex-col items-start">
                 <FormLabel>Whatsapp number (Optional)</FormLabel>
-                <FormControl className="w-full">
-                  <PhoneInput
-                    className=""
-                    placeholder="8122233345"
-                    {...field}
-                    defaultCountry="NG"
-                  />
-                </FormControl>
+                <CustomFormField
+                  fieldType={FormFieldTypes.SKELETON}
+                  field={field as FieldValue<FieldValues>}
+                >
+                  <FormControl className="w-full">
+                    <PhoneInput
+                      className=""
+                      placeholder="+2348122233345"
+                      defaultCountry="NG"
+                      {...field}
+                    />
+                  </FormControl>
+                </CustomFormField>
                 <FormDescription>Enter your whatsapp number.</FormDescription>
-                <FormMessage className="text-red-400" />
+                <FormMessage className="form-error" />
               </FormItem>
             )}
           />

@@ -2,15 +2,18 @@ type BankAccount = {
   accountNumber: string;
   accountName: string;
   bankName: string;
+  bankCode: string;
+  userId?: string;
+  dateAdded?: number;
 };
 
-type Currencies = "USD" | "USDC" | "eUSDT" | "tUSDT";
-
-type AccountType = Currencies;
+type Currency = "USD" | "USDC" | "tUSDT";
 
 type DerivAccount = {
   accountId: string;
-  accountType: AccountType;
+  currency: Currency;
+  userId?: string;
+  dateAdded?: number;
 };
 
 type User = {
