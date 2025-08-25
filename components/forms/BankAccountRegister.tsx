@@ -16,12 +16,12 @@ import {
 import "react-phone-number-input/style.css";
 import { SelectItem } from "@/components/ui/select";
 import { addUserBankAccount } from "@/lib/actions/user.action";
-import { derivAcccounts } from "@/lib/constants";
+import { nigeriaBanks } from "@/lib/constants";
 import { bankAccountSchema } from "@/lib/validation";
 
 import ActionState, { ActionStateType } from "../ActionState";
+import BankIcon from "../BankIcon";
 import CustomFormField, { FormFieldTypes } from "../CustomFormField";
-import DerivCurrencyIcon from "../DerivCurrencyIcon";
 
 const Schema = bankAccountSchema.client;
 
@@ -41,9 +41,18 @@ const BankAccountRegister = () => {
 
   async function onSubmit(values: z.infer<typeof Schema>) {
     try {
+      const bankCode = nigeriaBanks.find(
+        ({ name }) => values.bankName === name
+      )?.code;
+
+      if (!bankCode) throw new Error("Invalid Bank");
+
       setActionState("pending");
 
-      const response = await addUserBankAccount({ ...values, bankCode: "030" });
+      const response = await addUserBankAccount({
+        ...values,
+        bankCode,
+      });
 
       if (response.success) {
         setActionState("success");
@@ -89,14 +98,14 @@ const BankAccountRegister = () => {
                   fieldType={FormFieldTypes.SELECT}
                   placeholder="Select bank"
                 >
-                  {derivAcccounts.map((account) => (
+                  {nigeriaBanks.map((account) => (
                     <SelectItem
                       className="select p-4"
-                      key={account.currency}
-                      value={account.currency}
+                      key={account.code}
+                      value={account.name}
                     >
                       <div className="flex items-center justify-between">
-                        <DerivCurrencyIcon currency={account.currency} />
+                        <BankIcon bankCode={account.code} />
                       </div>
                       <span className="!font-normal">|</span>
                       <span className="text-12-semibold">{account.name}</span>

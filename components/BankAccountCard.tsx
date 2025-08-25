@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { removeUserBankAccount } from "@/lib/actions/user.action";
 
 import ActionState, { ActionStateType } from "./ActionState";
+import BankIcon from "./BankIcon";
 
 const BankAccountCard = ({ bankAccounts }: { bankAccounts: BankAccount[] }) => {
   const [actionState, setActionState] = useState<ActionStateType>("idle");
@@ -41,14 +42,12 @@ const BankAccountCard = ({ bankAccounts }: { bankAccounts: BankAccount[] }) => {
 
           return (
             <div
-              key={accountNumber}
+              key={`${accountNumber}_${bankCode}`}
               className="bg-accent space-y-3  rounded-lg p-2"
             >
               <div className="flex justify-between">
-                <div className="space-x-3">
-                  <span
-                    className={`nbi nbi-${bankCode} text-14-medium block scale-110`}
-                  />
+                <div className="flex space-x-3">
+                  <BankIcon bankCode={bankCode} />
                   <span className="">{bankName}</span>
                 </div>
 
