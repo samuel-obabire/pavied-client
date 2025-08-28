@@ -1,3 +1,4 @@
+/* eslint-disable @stylistic/brace-style */
 import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
@@ -49,15 +50,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           derivAccounts: [],
           referralCode: "",
           referredBy: "",
-          referralEarning: 0,
+          referralEarnings: 0,
+          onboardingStep: "bio",
           referralCount: 0,
           totalDeposits: 0,
           totalWithdrawals: 0,
           createdAt: Date.now(),
           updatedAt: Date.now(),
-        };
+          phone: "",
+          whatsApp: "",
+        } satisfies User;
 
-        const { success } = (await api.users.create(newUser)) as ActionResponse;
+        const { success } = await api.users.create(newUser);
 
         return !!success;
       }
@@ -65,10 +69,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
     async session({ session, token }) {
       session.user.id = token.id as string;
+      session.user.onboardingStep = token.onboardingStep as OnboardingStep;
       return session;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
+      // Handle first sign in
       if (user?.email) {
         const { success, data: dbUser } = await api.users.getByEmail(
           user.email.toLowerCase()
@@ -76,10 +82,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (success && dbUser) {
           token.id = dbUser.id;
+          token.onboardingStep = dbUser.onboardingStep;
         } else {
           token.id = null;
         }
       }
+
+      // Handle explicit updates
+      else if (trigger === "update" && token.id) {
+        const { success, data: dbUser } = await api.users.getById(
+          token.id as string
+        );
+
+        if (success && dbUser) {
+          token.id = dbUser.id;
+          token.onboardingStep = dbUser.onboardingStep;
+        } else {
+          token.id = null;
+        }
+      }
+
       return token;
     },
   },

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { derivAcccounts } from "./constants";
+import { derivAcccounts, OnboardingStep } from "./constants";
 
 export const AccountRegistrationSchema = z.object({
   fullName: z.string().min(5, {
@@ -58,3 +58,7 @@ export const bankAccountSchema = {
       .min(3, { error: "Please provide bank code with min of 3 characters" }),
   }),
 };
+
+export const OnboardingStepSchema = z.object({
+  onboardingStep: z.enum(OnboardingStep),
+});

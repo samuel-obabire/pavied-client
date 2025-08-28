@@ -25,16 +25,20 @@ type User = {
   whatsApp: string;
   bankAccounts?: BankAccount[];
   derivAccounts?: DerivAccount[];
-  referralcode?: string;
+  referralCode?: string;
   referredBy?: string;
   referralEarnings?: number;
+  referralCount?: number;
   totalDeposits?: number;
   totalWithdrawals?: number;
   provider: string;
   providerAccountId: string;
   createdAt: number;
   updatedAt: number;
+  onboardingStep: "bio" | "deriv" | "bank" | "complete";
 };
+
+type OnboardingStep = User["onboardingStep"];
 
 type Referral = {
   referrerId: string;

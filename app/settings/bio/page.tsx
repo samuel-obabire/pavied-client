@@ -1,7 +1,7 @@
 import BrandName from "@/components/BrandName";
-import AccountRegister from "@/components/forms/AccountRegister";
+import BioRegister from "@/components/forms/BioResgister";
 
-const Register = () => {
+const page = () => {
   return (
     <main className="container max-w-lg space-y-6  pt-8">
       <header className="space-y-5">
@@ -19,10 +19,10 @@ const Register = () => {
       </header>
 
       <section>
-        <AccountRegister />
+        <BioRegister />
       </section>
     </main>
   );
 };
 
-export default Register;
+export default page;

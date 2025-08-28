@@ -3,12 +3,13 @@ import { redirect } from "next/navigation";
 import AddAccountHeader from "@/components/AddAccountHeader";
 import DerivAccountCard from "@/components/DerivAccountCard";
 import DerivAccountRegister from "@/components/forms/DerivAccountRegister";
-import { ROUTES } from "@/lib/constants";
+import SaveStepFooter from "@/components/SaveStepFooter";
+import { OnboardingStep, ROUTES } from "@/lib/constants";
 import { getUserDerivAccounts } from "@/lib/firebase/user";
-import { getSession } from "@/lib/server";
+import { verifySession } from "@/lib/server";
 
 const page = async () => {
-  const user = await getSession();
+  const user = await verifySession();
 
   if (!user?.id) redirect(ROUTES.HOME);
 
@@ -30,6 +31,14 @@ const page = async () => {
           <DerivAccountRegister />
         </section>
       </div>
+
+      <section className="flex w-full justify-end">
+        <SaveStepFooter
+          label={derivAccounts.length ? "Continue" : "Skip, and do it later"}
+          nextRoute="ONBOARD_BANK"
+          onboardingStep={OnboardingStep.SETUP_BANK}
+        />
+      </section>
     </main>
   );
 };

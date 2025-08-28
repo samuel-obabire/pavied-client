@@ -1,10 +1,14 @@
 /* eslint-disable no-unused-vars */
 export const ROUTES = {
   HOME: "/",
-  REGISTER: "/register",
+  REGISTER_BIO: "/settings/bio",
   SETUP_DERIV: "/settings/deriv",
   SETUP_BANK: "/settings/bank",
-} as const;
+  DASHBOARD: "/dashboard",
+  ONBOARD_BIO: "/onboarding/bio",
+  ONBOARD_DERIV: "/onboarding/deriv",
+  ONBOARD_BANK: "/onboarding/bank",
+};
 
 export const derivAcccounts = [
   {
@@ -106,4 +110,11 @@ export enum DbCollections {
   USERS = "users",
   BANK_ACCOUNTS = "bank-accounts",
   DERIV_ACCOUNTS = "deriv-accounts",
+}
+
+export enum OnboardingStep {
+  REGISTER = "bio",
+  SETUP_DERIV = "deriv",
+  SETUP_BANK = "bank",
+  COMPLETE = "complete",
 }

@@ -3,12 +3,13 @@ import { redirect } from "next/navigation";
 import AddAccountHeader from "@/components/AddAccountHeader";
 import BankAccountCard from "@/components/BankAccountCard";
 import BankAccountRegister from "@/components/forms/BankAccountRegister";
-import { ROUTES } from "@/lib/constants";
+import SaveStepFooter from "@/components/SaveStepFooter";
+import { OnboardingStep, ROUTES } from "@/lib/constants";
 import { getUserBankAccounts } from "@/lib/firebase/user";
-import { getSession } from "@/lib/server";
+import { verifySession } from "@/lib/server";
 
 const page = async () => {
-  const user = await getSession();
+  const user = await verifySession();
 
   if (!user?.id) redirect(ROUTES.HOME);
 
@@ -30,6 +31,14 @@ const page = async () => {
           <BankAccountRegister />
         </section>
       </div>
+
+      <section className="flex w-full justify-end">
+        <SaveStepFooter
+          label={bankAccounts.length ? "Continue" : "Finish, and do it later"}
+          nextRoute="DASHBOARD"
+          onboardingStep={OnboardingStep.COMPLETE}
+        />
+      </section>
     </main>
   );
 };

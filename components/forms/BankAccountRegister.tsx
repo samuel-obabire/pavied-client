@@ -84,7 +84,7 @@ const BankAccountRegister = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mx-auto max-w-3xl space-y-4 pb-34"
+          className="mx-auto max-w-3xl space-y-4"
         >
           <FormField
             control={form.control}

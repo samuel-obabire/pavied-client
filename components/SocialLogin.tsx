@@ -12,7 +12,7 @@ const SocialLogin = () => {
         action={async () => {
           "use server";
 
-          await signIn("google", { redirectTo: ROUTES.REGISTER });
+          await signIn("google", { redirectTo: ROUTES.ONBOARD_BIO });
         }}
       >
         <Button

@@ -1,6 +1,5 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { FieldValue, FieldValues } from "react-hook-form";
@@ -21,7 +20,6 @@ import {
 } from "@/components/ui/form";
 import "react-phone-number-input/style.css";
 import { updateUser } from "@/lib/actions/user.action";
-import { ROUTES } from "@/lib/constants";
 import { AccountRegistrationSchema } from "@/lib/validation";
 
 import ActionState, { ActionStateType } from "../ActionState";
@@ -70,16 +68,7 @@ const RegistrationForm = () => {
       <ActionState
         state={actionState}
         pendingTitle="Registering Account"
-        successTitle="Account  successfully registered"
-        successMessage={
-          <div className="flex-center flex">
-            <Link href={ROUTES.HOME}>
-              <Button variant="ghost" className="underline-button">
-                <p className="underline">Continue to dashboard</p>
-              </Button>
-            </Link>
-          </div>
-        }
+        successTitle="Account  successfully updated"
         errorMessage={errorMessage}
         retryAction={retrySubmit}
       />
@@ -87,7 +76,7 @@ const RegistrationForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mx-auto max-w-3xl space-y-4 pb-34"
+          className="mx-auto max-w-3xl space-y-4"
         >
           <FormField
             control={form.control}

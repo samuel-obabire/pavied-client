@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { createUser, getUserById } from "@/lib/firebase/user";
 import handleError from "@/lib/handlers/error";
 
+// GET /api/users/:[id]
 export async function GET(
   _: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -13,7 +14,7 @@ export async function GET(
     const user = await getUserById(id);
 
     return user
-      ? NextResponse.json({ user, success: true })
+      ? NextResponse.json({ data: user, success: true })
       : NextResponse.json({ success: false });
   } catch (error) {
     return handleError(error, "api");
