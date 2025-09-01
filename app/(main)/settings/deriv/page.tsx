@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 
 import AddAccountHeader from "@/components/AddAccountHeader";
-import BankAccountCard from "@/components/BankAccountCard";
-import BankAccountRegister from "@/components/forms/BankAccountRegister";
+import DerivAccountCard from "@/components/DerivAccountCard";
+import DerivAccountRegister from "@/components/forms/DerivAccountRegister";
 import { ROUTES } from "@/lib/constants";
-import { getUserBankAccounts } from "@/lib/firebase/user";
+import { getUserDerivAccounts } from "@/lib/firebase/user";
 import { verifySession } from "@/lib/server";
 
 const page = async () => {
@@ -12,22 +12,22 @@ const page = async () => {
 
   if (!user?.id) redirect(ROUTES.HOME);
 
-  const bankAccounts = await getUserBankAccounts(user?.id);
+  const derivAccounts = await getUserDerivAccounts(user.id);
 
   return (
-    <main className="flex-center container max-w-lg flex-col  space-y-6 md:flex md:h-screen">
+    <main className="flex-center container max-w-lg flex-col space-y-6  md:ml-20 md:flex">
       <div className="w-full">
         <div className="mt-6">
           <AddAccountHeader
-            title="Add bank account"
-            drawerTitle="Previously added bank accounts"
+            title="Add deriv account"
+            drawerTitle="Previously added deriv accounts"
             triggerLabel="My accounts"
-            drawerContent={<BankAccountCard bankAccounts={bankAccounts} />}
+            drawerContent={<DerivAccountCard derivAccounts={derivAccounts} />}
           />
         </div>
 
         <section>
-          <BankAccountRegister />
+          <DerivAccountRegister />
         </section>
       </div>
     </main>

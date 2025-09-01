@@ -1,3 +1,5 @@
+import { LayoutDashboard, Logs, Wallet, WalletCards } from "lucide-react";
+
 /* eslint-disable no-unused-vars */
 export const ROUTES = {
   HOME: "/",
@@ -8,6 +10,7 @@ export const ROUTES = {
   ONBOARD_BIO: "/onboarding/bio",
   ONBOARD_DERIV: "/onboarding/deriv",
   ONBOARD_BANK: "/onboarding/bank",
+  ORDERS: "/orders",
 };
 
 export const derivAcccounts = [
@@ -118,3 +121,10 @@ export enum OnboardingStep {
   SETUP_BANK = "bank",
   COMPLETE = "complete",
 }
+
+export const sideLinks = [
+  { label: "Dashboard", Icon: LayoutDashboard, href: ROUTES.DASHBOARD },
+  { label: "Orders", Icon: Logs, href: ROUTES.ORDERS },
+  { label: "Deriv Account", Icon: Wallet, href: ROUTES.SETUP_DERIV },
+  { label: "Bank Account", Icon: WalletCards, href: ROUTES.SETUP_BANK },
+];

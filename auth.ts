@@ -7,6 +7,7 @@ import { api } from "./lib/api";
 import logger from "./lib/logger";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
