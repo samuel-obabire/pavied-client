@@ -57,20 +57,14 @@ export const addUserBankAcccountToCollection = async (
   bankAccount: BankAccount
 ) => {
   const { bankCode, accountNumber } = bankAccount;
-  await addbankAccount(accountNumber, bankCode, {
-    ...bankAccount,
-    dateAdded: Date.now(),
-  });
+  await addbankAccount(accountNumber, bankCode, bankAccount);
 };
 
 export const addUserDerivAccountToCollection = async (
   derivAccount: DerivAccount
 ) => {
   const { accountId, currency } = derivAccount;
-  await addDerivAccount(accountId, currency, {
-    ...derivAccount,
-    dateAdded: Date.now(),
-  });
+  await addDerivAccount(accountId, currency, derivAccount);
 };
 
 export const removeUserDerivAccountFromCollection = async (

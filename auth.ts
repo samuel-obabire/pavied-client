@@ -1,10 +1,10 @@
 /* eslint-disable @stylistic/brace-style */
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 import { api } from "./lib/api";
-import logger from "./lib/logger";
+// import logger from "./lib/logger";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
@@ -32,16 +32,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return true;
       } else {
         // Get the new user telegram id
-        const cookieStore = await cookies();
+        // const cookieStore = await cookies();
 
-        const tgid = cookieStore.get("tgid");
-        if (!tgid) {
-          logger.error("Create account blocked - No tgid");
-          return false;
-        }
+        // const tgid = cookieStore.get("tgid");
+        // if (!tgid) {
+        //   logger.error("Create account blocked - No tgid");
+        //   return false;
+        // }
 
         const newUser = {
-          telegramId: tgid.value,
+          telegramId: "",
           email: user.email.toLowerCase(),
           id: providerAccountId,
           provider,
@@ -56,8 +56,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           referralCount: 0,
           totalDeposits: 0,
           totalWithdrawals: 0,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
           phone: "",
           whatsApp: "",
         } satisfies User;

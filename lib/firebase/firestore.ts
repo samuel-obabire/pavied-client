@@ -1,4 +1,4 @@
-import { WhereFilterOp } from "firebase-admin/firestore";
+import { Timestamp, WhereFilterOp } from "firebase-admin/firestore";
 
 import { db } from "@/firebase.config";
 
@@ -9,19 +9,29 @@ export const getById = async <T>(
   docId: string
 ): Promise<T | null> => {
   const snap = await db.collection(col).doc(docId).get();
-  return snap.exists ? (snap.data() as T) : null;
+  return snap.exists
+    ? {
+        ...(snap.data() as T),
+        createdAt: (snap?.data()?.createdAt as Timestamp)?.toDate(),
+        updatedAt: (snap?.data()?.createdAt as Timestamp)?.toDate(),
+      }
+    : null;
 };
 
 export const setById = async <T>(col: string, docId: string, data: T) => {
   const docRef = db.collection(col).doc(docId);
-  await docRef.set({ ...data, createdAt: Date.now(), updatedAt: Date.now() });
+  await docRef.set({
+    ...data,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+  });
 };
 
 export const updateByid = async <T>(col: string, docId: string, data: T) => {
   await db
     .collection(col)
     .doc(docId)
-    .update({ ...data, updatedAt: Date.now() });
+    .update({ ...data, updatedAt: Timestamp.now() });
 };
 
 export const deleteById = async (col: string, docId: string) => {
@@ -37,7 +47,18 @@ export const queryWhere = async <T, B extends WhereFilterOp>(
   const snap = await db.collection(col).where(field, op, value).get();
 
   if (snap.empty) return [];
-  return snap.docs.map((value) => value.data()) as T[];
+  return snap.docs.map((value) => {
+    const data = value.data();
+
+    // Convert Firestore Timestamps to JS Date
+    for (const [key, val] of Object.entries(data)) {
+      if (val instanceof Timestamp) {
+        data[key] = val.toDate();
+      }
+    }
+
+    return data as T;
+  });
 };
 
 export const addbankAccount = async (
@@ -54,7 +75,7 @@ export const addbankAccount = async (
 
     if (res.exists) throw new Error("Account already exist in the database");
 
-    t.set(bankAccountRef, bankAccount);
+    t.set(bankAccountRef, { ...bankAccount, dateAdded: Timestamp.now() });
   });
 };
 
@@ -72,6 +93,6 @@ export const addDerivAccount = async (
 
     if (res.exists) throw new Error("Account already exist in database");
 
-    t.set(derivAccountRef, derivAccount);
+    t.set(derivAccountRef, { ...derivAccount, dateAdded: Timestamp.now() });
   });
 };

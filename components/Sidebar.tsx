@@ -17,7 +17,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-full flex-col bg-white p-4 md:flex md:w-[270px]">
+    <aside className="sticky top-0 left-0 hidden w-full flex-col bg-white p-4 md:flex md:w-[190px] lg:w-[270px]">
       <div className="my-2 scale-85">
         <BrandName />
       </div>
@@ -55,7 +55,7 @@ const Sidebar = () => {
           onClick={() => signOut()}
           className="shadow-accent flex cursor-pointer flex-row items-center justify-between gap-2  shadow-2xl"
         >
-          <Avatar className="size-10">
+          <Avatar className="hidden size-10 lg:block">
             <AvatarImage
               className="rounded-full"
               src="https://github.com/shadcn.png"

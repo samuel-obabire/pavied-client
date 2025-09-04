@@ -5,7 +5,7 @@ import MobileSheet from "./MobileSheet";
 
 const MobileHeader = () => {
   return (
-    <header className="flex h-12 items-center justify-between bg-white p-2 md:hidden">
+    <header className="sticky top-0 left-0 flex h-12 w-full items-center justify-between bg-white p-4 md:hidden">
       <Avatar className="size-8">
         <AvatarImage
           className="rounded-full"

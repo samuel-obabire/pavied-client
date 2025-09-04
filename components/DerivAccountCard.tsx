@@ -70,7 +70,7 @@ const DerivAccountCard = ({
                 <div className="flex flex-col">
                   <span className="text-14-medium self-end">Date added</span>
                   <span className="text-12-regular">
-                    {new Date(dateAdded!).toDateString()}
+                    {dateAdded!.toDateString()}
                   </span>
                 </div>
               </div>
