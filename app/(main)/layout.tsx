@@ -31,7 +31,9 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
           </div>
         </header>
 
-        <main>{children}</main>
+        <main className="container flex h-[calc(100vh-40px)] flex-col space-y-4 pt-6 md:h-[calc(100vh-56px)]">
+          {children}
+        </main>
       </div>
     </div>
   );

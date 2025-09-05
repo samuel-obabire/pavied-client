@@ -184,7 +184,7 @@ const RegistrationForm = () => {
             )}
           />
 
-          <Button className="btn-primary w-full" type="submit">
+          <Button className="btn-primary  w-full" type="submit">
             Submit
           </Button>
         </form>

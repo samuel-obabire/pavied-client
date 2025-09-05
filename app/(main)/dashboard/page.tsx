@@ -5,7 +5,7 @@ import TransactionList from "@/components/TransactionList";
 
 const Dashboard = () => {
   return (
-    <div className="container flex h-[calc(100vh-40px)] flex-col space-y-4 pt-6 md:h-[calc(100vh-56px)]">
+    <>
       <section className="grid  flex-none grid-cols-2 gap-4 xl:flex">
         <StatsCard
           title="Total Transactions"
@@ -41,7 +41,7 @@ const Dashboard = () => {
 
         <TransactionList />
       </article>
-    </div>
+    </>
   );
 };
 

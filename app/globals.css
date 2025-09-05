@@ -142,8 +142,6 @@
     @apply bg-[#F5F6F8] w-24 h-2 rounded-full;
   }
 
-  /* Custom CSS */
-
   .inputClass {
     @apply !border-0 !h-[44px] !py-5 !bg-white !text-16-regular rounded-sm focus-visible:!ring-0;
   }
