@@ -9,7 +9,7 @@ export default async function Home() {
       </div>
 
       <header className="space-y-5">
-        <h1 className="text-28-bold text-primary">
+        <h1 className="text-28-bold text-primary dark:text-white">
           Create <span className="text-secondary">account</span>
         </h1>
 

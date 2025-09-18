@@ -1,19 +1,27 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #f5f6f8;
+  --background: #ffffff;
   --foreground: #101010;
+}
+
+.dark {
+  --background: #101010;
+  --foreground: #ffffff;
 }
 
 @theme {
   --radius: 0.625rem;
 
-  --font-federo: var(--font-federo-sans);
-
   --color-primary: #1c1655;
   --color-secondary: #e2a704;
   --color-accent: #f5f6f8;
+  --color-black-1: #1c1c1c;
+  --color-black-2: #101010;
+  --color-white: #ffffff;
 }
 
 @theme inline {
@@ -105,12 +113,24 @@
   @apply cursor-pointer   !rounded-lg  !text-16-bold !p-5 transition-transform duration-200 hover:scale-105 active:scale-95;
 }
 
+@utility text-black-1_dark-white {
+  @apply text-black-1 dark:text-white;
+}
+
+@utility bg-white_dark-black-1 {
+  @apply bg-white dark:bg-black-1;
+}
+
+@utility bg-white_dark-black-2 {
+  @apply bg-white dark:bg-black-2;
+}
+
 @layer components {
   /* ============================= */
   /* React Select */
   /* ============================= */
   .react-select__control {
-    @apply !border-0 !rounded-sm !shadow-none !bg-white 
+    @apply !border-0 !rounded-sm !shadow-none !bg-white_dark-black-1 
            transition-all duration-50 ease-in-out;
   }
 
@@ -122,6 +142,14 @@
     @apply h-[30px];
   }
 
+  .react-select__single-value {
+    @apply !text-black-1_dark-white;
+  }
+
+  .react-select__menu {
+    @apply !bg-white_dark-black-1;
+  }
+
   .react-select__input:focus-visible {
     @apply !outline-0;
   }
@@ -130,11 +158,11 @@
   /* Phone Input */
   /* ============================= */
   .PhoneInput {
-    @apply !border-0 !bg-white !rounded-sm !shadow-none px-2 !h-[44px];
+    @apply !border-0 !bg-white_dark-black-1 !rounded-sm !shadow-none px-2 !h-[44px];
   }
 
   .PhoneInputInput {
-    @apply !outline-0 !p-2 !bg-white !rounded-sm;
+    @apply !outline-0 !p-2 !bg-white_dark-black-1 !rounded-sm;
   }
 
   /* Shad drawer handle */
@@ -143,7 +171,7 @@
   }
 
   .inputClass {
-    @apply !border-0 !h-[44px] !py-5 !bg-white !text-16-regular rounded-sm focus-visible:!ring-0;
+    @apply !border-0 !h-[44px] !py-5 !bg-white_dark-black-1 !text-16-regular rounded-sm focus-visible:!ring-0;
   }
 
   .btn-primary {
@@ -171,6 +199,6 @@
   }
 
   .select {
-    @apply bg-white !rounded-lg  cursor-pointer focus:bg-gray-50 data-[state=checked]:bg-accent data-[state=checked]:font-medium;
+    @apply !bg-white_dark-black-1 !rounded-lg  cursor-pointer focus:bg-gray-50 data-[state=checked]:bg-accent data-[state=checked]:font-medium;
   }
 }

@@ -213,7 +213,7 @@ const transactions: Transaction[] = [
 
 const TransactionList = () => {
   return (
-    <div className="flex-col space-y-4">
+    <div className="bg-white_dark-black-1 flex-col space-y-4 p-2">
       {transactions.map((transaction) => {
         return (
           <TransactionCard

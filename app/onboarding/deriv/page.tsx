@@ -4,7 +4,8 @@ import AddAccountHeader from "@/components/AddAccountHeader";
 import DerivAccountCard from "@/components/DerivAccountCard";
 import DerivAccountRegister from "@/components/forms/DerivAccountRegister";
 import SaveStepFooter from "@/components/SaveStepFooter";
-import { OnboardingStep, ROUTES } from "@/lib/constants";
+import { OnboardingStep } from "@/lib/constants/onBoardingStep";
+import { ROUTES } from "@/lib/constants/routes";
 import { getUserDerivAccounts } from "@/lib/firebase/user";
 import { verifySession } from "@/lib/server";
 

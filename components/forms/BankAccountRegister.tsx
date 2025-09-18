@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/form";
 import "react-phone-number-input/style.css";
 import { SelectItem } from "@/components/ui/select";
-import { addUserBankAccount } from "@/lib/actions/user.action";
-import { nigeriaBanks } from "@/lib/constants";
+import { addUserBankAccount } from "@/lib/actions/bank.action";
+import { nigeriaBanks } from "@/lib/constants/nigerianBanks";
 import { bankAccountSchema } from "@/lib/validation";
 
 import ActionState, { ActionStateType } from "../ActionState";

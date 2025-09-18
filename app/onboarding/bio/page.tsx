@@ -1,7 +1,7 @@
 import BrandName from "@/components/BrandName";
 import BioRegister from "@/components/forms/BioResgister";
 import SaveStepFooter from "@/components/SaveStepFooter";
-import { OnboardingStep } from "@/lib/constants";
+import { OnboardingStep } from "@/lib/constants/onBoardingStep";
 
 const page = () => {
   return (
@@ -11,7 +11,7 @@ const page = () => {
           <BrandName />
         </div>
 
-        <h1 className="text-28-bold text-primary">
+        <h1 className="text-28-bold text-primary dark:text-white">
           Register <span className="text-secondary">account</span>
         </h1>
         <p>
@@ -26,7 +26,7 @@ const page = () => {
 
       <section className="flex w-full justify-end">
         <SaveStepFooter
-          label="Continue to next step ➡️"
+          label="Continue to next step"
           nextRoute="ONBOARD_DERIV"
           onboardingStep={OnboardingStep.SETUP_DERIV}
         />

@@ -33,8 +33,8 @@ const Dashboard = () => {
         />
       </section>
 
-      <article className="flex-1 overflow-y-scroll rounded-2xl  px-4 pt-0">
-        <header className="bg-accent sticky top-0 left-0 z-3  flex items-center justify-between py-6">
+      <article className="flex-1 overflow-y-scroll rounded-2xl  pt-0">
+        <header className="bg-white_dark-black-1  sticky top-0 left-0 z-3 flex items-center  justify-between rounded-lg p-2 py-6">
           <h2 className="">Recent Transactions</h2>
           <Link href="/">See More</Link>
         </header>

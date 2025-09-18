@@ -108,9 +108,9 @@ const RegistrationForm = () => {
                   field={field as FieldValue<FieldValues>}
                 >
                   <Select
+                    menuPortalTarget={null}
                     instanceId="residence-select"
                     classNamePrefix="react-select"
-                    className=""
                     options={options}
                     value={options.find(
                       (option) => option.value === field.value

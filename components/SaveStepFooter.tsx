@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
-import { updateOnboardingStep } from "@/lib/actions/user.action";
-import { OnboardingStep, ROUTES } from "@/lib/constants";
+import { updateOnboardingStep } from "@/lib/actions/onboadingStep.action";
+import { ROUTES } from "@/lib/constants/routes";
 
 import CustomButton from "./CustomButton";
 
@@ -44,7 +44,7 @@ const SaveStepFooter = ({
   };
 
   return (
-    <footer className="flex justify-end">
+    <footer className="flex w-full place-content-center">
       <CustomButton
         isLoading={isLoading}
         variant="ghost"

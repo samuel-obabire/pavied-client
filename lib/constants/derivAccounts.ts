@@ -1,0 +1,17 @@
+export const derivAcccounts = [
+  {
+    currency: "USD",
+    icon: "/assets/usd-currency.svg",
+    name: "US Dollar",
+  },
+  {
+    currency: "tUSDT",
+    icon: "/assets/usdt-currency.svg",
+    name: "Tether TRC20",
+  },
+  {
+    currency: "USDC",
+    icon: "/assets/usdc-currency.svg",
+    name: "USD Coin",
+  },
+] as const;

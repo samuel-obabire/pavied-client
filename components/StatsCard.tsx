@@ -18,7 +18,7 @@ type StatsCardProps = {
 
 const StatsCard = ({ title, subText, count, description }: StatsCardProps) => {
   return (
-    <div className="flex flex-1  flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-xs">
+    <div className="bg-white_dark-black-1 flex  flex-1 flex-col gap-3 rounded-lg border border-gray-200 p-4 shadow-xs dark:border-none">
       <div className="flex  items-center justify-between">
         <span className="md:text-16-regular">{title}</span>
 

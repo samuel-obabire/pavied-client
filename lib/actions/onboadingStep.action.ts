@@ -4,14 +4,14 @@ import { updateUserById } from "../firebase/user";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
-import { AccountRegistrationSchema } from "../validation";
+import { OnboardingStepSchema } from "../validation";
 
-export const updateUser = async (
-  userData: Partial<User>
-): Promise<ActionResponse> => {
+export const updateOnboardingStep = async (onboardingStep: {
+  onboardingStep: OnboardingStep;
+}): Promise<ActionResponse> => {
   const result = await action({
-    params: userData,
-    schema: AccountRegistrationSchema,
+    params: onboardingStep,
+    schema: OnboardingStepSchema,
     authorise: true,
   });
 
@@ -19,16 +19,14 @@ export const updateUser = async (
     return handleError(result) as ActionResponse;
   }
 
-  const { session, params: user } = result;
+  const { session, params: step } = result;
+
+  const userId = session?.user.id;
 
   try {
-    const userId = session?.user.id;
-
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await updateUserById(userId, {
-      ...user,
-    });
+    await updateUserById(userId, { onboardingStep: step.onboardingStep });
   } catch (error) {
     return handleError(error) as ActionResponse;
   }

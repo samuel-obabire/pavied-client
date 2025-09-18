@@ -57,7 +57,7 @@ const ResponsiveDrawer = ({
             {triggerLabel}
           </Button>
         </DialogTrigger>
-        <DialogContent className="no-ring  bg-white sm:max-w-[425px]">
+        <DialogContent className="no-ring  bg-white_dark-black-1 sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="!text-16-regular">{title}</DialogTitle>
           </DialogHeader>
@@ -74,11 +74,14 @@ const ResponsiveDrawer = ({
           {triggerLabel}
         </Button>
       </DrawerTrigger>
-      <DrawerContent color="red" className="no-ring min-h-[40%] bg-white">
+      <DrawerContent
+        color="red"
+        className="no-ring bg-white_dark-black-1 min-h-[40%]"
+      >
         <DrawerHeader className="flex flex-row justify-between">
           <DrawerTitle className="!text-16-regular">{title}</DrawerTitle>
           <X
-            className="bg-accent size-6 rounded-full p-0.5"
+            className="bg-accent dark:bg-black-2 size-6 rounded-full p-0.5"
             onClick={() => setOpen(false)}
           />
         </DrawerHeader>

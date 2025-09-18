@@ -1,3 +1,4 @@
+import { RequestError } from "../http-errors";
 import logger from "../logger";
 import handleError from "./error";
 
@@ -20,7 +21,10 @@ export const fetchHandler = async <T>(
     const response = await fetch(url, config);
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      throw new RequestError(
+        response.status,
+        `Request failed with status ${response.status}`
+      );
     }
     return await response.json();
   } catch (error) {

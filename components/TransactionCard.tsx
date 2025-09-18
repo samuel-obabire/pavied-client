@@ -8,7 +8,7 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="bg-white_dark-black-1 flex justify-between">
         <div className="flex items-center gap-2">
           <div>
             <Image

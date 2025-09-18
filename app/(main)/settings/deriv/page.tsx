@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import AddAccountHeader from "@/components/AddAccountHeader";
 import DerivAccountCard from "@/components/DerivAccountCard";
 import DerivAccountRegister from "@/components/forms/DerivAccountRegister";
-import { ROUTES } from "@/lib/constants";
+import { ROUTES } from "@/lib/constants/routes";
 import { getUserDerivAccounts } from "@/lib/firebase/user";
 import { verifySession } from "@/lib/server";
 

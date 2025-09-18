@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 
-import { removeUserBankAccount } from "@/lib/actions/user.action";
+import { removeUserBankAccount } from "@/lib/actions/bank.action";
 
 import ActionState, { ActionStateType } from "./ActionState";
 import BankIcon from "./BankIcon";
@@ -43,7 +43,7 @@ const BankAccountCard = ({ bankAccounts }: { bankAccounts: BankAccount[] }) => {
           return (
             <div
               key={`${accountNumber}_${bankCode}`}
-              className="bg-accent space-y-3  rounded-lg p-2"
+              className="bg-accent dark:bg-black-2 mx-2  space-y-3 rounded-lg p-3"
             >
               <div className="flex justify-between">
                 <div className="flex space-x-3">

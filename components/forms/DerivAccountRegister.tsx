@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/form";
 import "react-phone-number-input/style.css";
 import { SelectItem } from "@/components/ui/select";
-import { addUserDerivAccount } from "@/lib/actions/user.action";
-import { derivAcccounts } from "@/lib/constants";
+import { addUserDerivAccount } from "@/lib/actions/deriv.action";
+import { derivAcccounts } from "@/lib/constants/derivAccounts";
 import { DerivAccountSchema } from "@/lib/validation";
 
 import ActionState, { ActionStateType } from "../ActionState";

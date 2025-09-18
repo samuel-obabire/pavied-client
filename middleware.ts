@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { api } from "./lib/api";
-import { ROUTES } from "./lib/constants";
+import { ROUTES } from "./lib/constants/routes";
 import logger from "./lib/logger";
 import { verifySession } from "./lib/server";
 

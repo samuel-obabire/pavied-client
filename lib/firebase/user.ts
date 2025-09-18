@@ -1,4 +1,3 @@
-import { DbCollections } from "../constants";
 import {
   addbankAccount,
   addDerivAccount,
@@ -8,6 +7,7 @@ import {
   setById,
   updateByid,
 } from "./firestore";
+import { DbCollections } from "../constants/dbCollections";
 
 export const getUserById = async (userId: string) => {
   return await getById<User>("users", userId);

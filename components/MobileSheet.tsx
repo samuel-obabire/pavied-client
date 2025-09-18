@@ -8,7 +8,7 @@ import { signOut } from "next-auth/react";
 import React from "react";
 
 import { Separator } from "@/components/ui/separator";
-import { sideLinks } from "@/lib/constants";
+import { sideLinks } from "@/lib/constants/sideLinks";
 import { cn } from "@/lib/utils";
 
 import BrandName from "./BrandName";
@@ -30,10 +30,13 @@ const MobileSheet = () => {
         <SheetTrigger asChild>
           <Menu />
         </SheetTrigger>
-        <SheetContent className="no-ring  bg-white  md:hidden" side="left">
+        <SheetContent
+          className="no-ring  bg-white_dark-black-1  md:hidden"
+          side="left"
+        >
           <DialogTitle className="sr-only" />
 
-          <div className="w-full bg-white md:w-[208px]">
+          <div className="bg-white_dark-black-1 w-full md:w-[208px]">
             <div className="my-2 scale-85">
               <BrandName />
             </div>
@@ -68,7 +71,7 @@ const MobileSheet = () => {
             </nav>
           </div>
 
-          <SheetFooter className="shadow-accent  flex cursor-pointer flex-row items-center  gap-4  shadow-2xl">
+          <SheetFooter className="flex cursor-pointer flex-row items-center  gap-4  shadow-2xl">
             <Avatar className="size-10">
               <AvatarImage
                 className="rounded-full"

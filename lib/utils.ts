@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import { derivAcccounts } from "./constants";
+import { derivAcccounts } from "./constants/derivAccounts";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

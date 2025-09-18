@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-import { derivAcccounts } from "@/lib/constants";
+import { derivAcccounts } from "@/lib/constants/derivAccounts";
 
 const DerivCurrencyIcon = ({ currency }: { currency: Currency }) => {
   const { icon } = derivAcccounts.find(

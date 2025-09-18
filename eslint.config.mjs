@@ -32,7 +32,7 @@ const eslintConfig = [
     },
   },
 
-  // 4️⃣ FINAL overrides (these always win)
+  // 4️⃣  overrides
   {
     rules: {
       "@stylistic/quotes": "off",
@@ -69,6 +69,16 @@ const eslintConfig = [
           },
         },
       ],
+    },
+  },
+
+  // 5️⃣ Overrides for shadcn components
+  {
+    files: ["components/ui/**"],
+    rules: {
+      "import/order": "off",
+      "@stylistic/indent": "off",
+      "@stylistic/comma-dangle": "off",
     },
   },
 ];

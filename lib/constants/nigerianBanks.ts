@@ -1,36 +1,3 @@
-import { LayoutDashboard, Logs, Wallet, WalletCards } from "lucide-react";
-
-/* eslint-disable no-unused-vars */
-export const ROUTES = {
-  HOME: "/",
-  REGISTER_BIO: "/settings/bio",
-  SETUP_DERIV: "/settings/deriv",
-  SETUP_BANK: "/settings/bank",
-  DASHBOARD: "/dashboard",
-  ONBOARD_BIO: "/onboarding/bio",
-  ONBOARD_DERIV: "/onboarding/deriv",
-  ONBOARD_BANK: "/onboarding/bank",
-  ORDERS: "/orders",
-};
-
-export const derivAcccounts = [
-  {
-    currency: "USD",
-    icon: "/assets/usd-currency.svg",
-    name: "US Dollar",
-  },
-  {
-    currency: "tUSDT",
-    icon: "/assets/usdt-currency.svg",
-    name: "Tether TRC20",
-  },
-  {
-    currency: "USDC",
-    icon: "/assets/usdc-currency.svg",
-    name: "USD Coin",
-  },
-] as const;
-
 export const nigeriaBanks = [
   {
     name: "Kuda Bank",
@@ -107,24 +74,4 @@ export const nigeriaBanks = [
     code: "057",
     icon: "/assets/bank-logos/zenith.jpg",
   },
-];
-
-export enum DbCollections {
-  USERS = "users",
-  BANK_ACCOUNTS = "bank-accounts",
-  DERIV_ACCOUNTS = "deriv-accounts",
-}
-
-export enum OnboardingStep {
-  REGISTER = "bio",
-  SETUP_DERIV = "deriv",
-  SETUP_BANK = "bank",
-  COMPLETE = "complete",
-}
-
-export const sideLinks = [
-  { label: "Dashboard", Icon: LayoutDashboard, href: ROUTES.DASHBOARD },
-  { label: "Orders", Icon: Logs, href: ROUTES.ORDERS },
-  { label: "Deriv Account", Icon: Wallet, href: ROUTES.SETUP_DERIV },
-  { label: "Bank Account", Icon: WalletCards, href: ROUTES.SETUP_BANK },
 ];

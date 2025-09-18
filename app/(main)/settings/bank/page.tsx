@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import AddAccountHeader from "@/components/AddAccountHeader";
 import BankAccountCard from "@/components/BankAccountCard";
 import BankAccountRegister from "@/components/forms/BankAccountRegister";
-import { ROUTES } from "@/lib/constants";
+import { ROUTES } from "@/lib/constants/routes";
 import { getUserBankAccounts } from "@/lib/firebase/user";
 import { verifySession } from "@/lib/server";
 

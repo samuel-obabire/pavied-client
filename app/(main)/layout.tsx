@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 
 import MobileHeader from "@/components/MobileHeader";
 import Sidebar from "@/components/Sidebar";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { verifySession } from "@/lib/server";
 
 const MainLayout = async ({ children }: { children: ReactNode }) => {
@@ -15,7 +16,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
       <Sidebar />
 
       <div className="flex-1">
-        <header className="sticky top-0 left-0 flex h-14 items-center justify-between bg-white  px-4  max-md:hidden">
+        <header className="bg-white_dark-black-1 sticky top-0 left-0 flex h-14 items-center justify-between  px-4  max-md:hidden">
           <div className="flex items-center gap-2">
             <Avatar className="size-8">
               <AvatarImage
@@ -29,6 +30,8 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
               Welcome, {user?.name?.split(" ")[0] ?? "Trader"} 👋
             </h1>
           </div>
+
+          <ThemeSwitcher />
         </header>
 
         <main className="container flex h-[calc(100vh-40px)] flex-col space-y-4 pt-6 md:h-[calc(100vh-56px)]">

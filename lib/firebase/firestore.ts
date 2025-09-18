@@ -2,7 +2,7 @@ import { Timestamp, WhereFilterOp } from "firebase-admin/firestore";
 
 import { db } from "@/firebase.config";
 
-import { DbCollections } from "../constants";
+import { DbCollections } from "../constants/dbCollections";
 
 export const getById = async <T>(
   col: string,

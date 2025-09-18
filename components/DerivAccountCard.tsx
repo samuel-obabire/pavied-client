@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 
-import { removeUserDerivAccount } from "@/lib/actions/user.action";
+import { removeUserDerivAccount } from "@/lib/actions/deriv.action";
 import { getDerivAccount } from "@/lib/utils";
 
 import ActionState, { ActionStateType } from "./ActionState";

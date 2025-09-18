@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-import { derivAcccounts, OnboardingStep } from "./constants";
+import { derivAcccounts } from "./constants/derivAccounts";
+import { OnboardingStep } from "./constants/onBoardingStep";
 
 export const AccountRegistrationSchema = z.object({
   fullName: z.string().min(5, {
