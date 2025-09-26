@@ -3,7 +3,7 @@ import Link from "next/link";
 import StatsCard from "@/components/StatsCard";
 import TransactionList from "@/components/TransactionList";
 
-const Dashboard = () => {
+const DashboardPage = () => {
   return (
     <>
       <section className="grid  flex-none grid-cols-2 gap-4 xl:flex">
@@ -45,4 +45,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { derivAcccounts } from "./constants/derivAccounts";
-import { OnboardingStep } from "./constants/onBoardingStep";
+import { OnboardingStep } from "./constants/onboarding";
+import { supportedDerivAccountsType } from "./constants/supportedDerivAccountsType";
 
 export const AccountRegistrationSchema = z.object({
   fullName: z.string().min(5, {
@@ -19,21 +19,35 @@ export const AccountRegistrationSchema = z.object({
 });
 
 export const DerivAccountSchema = {
-  client: z.object({
-    currency: z
-      .enum(derivAcccounts.map((account) => account.currency))
-      .or(z.literal("")),
-    accountId: z
-      .string()
-      .min(3, { error: "Please provide your the currency account number" }),
-  }),
+  // client: z.object({
+  //   currency: z
+  //     .enum(supportedDerivAccountsType.map((account) => account.currency))
+  //     .or(z.literal("")),
+  //   accountId: z
+  //     .string()
+  //     .min(3, { error: "Please provide your the currency account number" }),
+  // }),
   server: z.object({
-    currency: z.enum(derivAcccounts.map((account) => account.currency)),
+    currency: z.enum(
+      supportedDerivAccountsType.map((account) => account.currency)
+    ),
     accountId: z
       .string()
       .min(3, { error: "Please provide your the currency account number" }),
   }),
 };
+
+export const DerivAccountLinkSchema = z.array(
+  z.object({
+    currency: z
+      .enum(supportedDerivAccountsType.map((account) => account.currency))
+      .or(z.literal("")),
+    accountId: z
+      .string()
+      .min(3, { error: "Please provide your the currency account number" }),
+    token: z.string().min(5, { error: "Token is required" }),
+  })
+);
 
 export const bankAccountSchema = {
   client: z.object({

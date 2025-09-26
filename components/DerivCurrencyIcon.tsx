@@ -1,10 +1,10 @@
 import Image from "next/image";
 import React from "react";
 
-import { derivAcccounts } from "@/lib/constants/derivAccounts";
+import { supportedDerivAccountsType } from "@/lib/constants/supportedDerivAccountsType";
 
-const DerivCurrencyIcon = ({ currency }: { currency: Currency }) => {
-  const { icon } = derivAcccounts.find(
+const DerivCurrencyIcon = ({ currency }: { currency: string }) => {
+  const { icon } = supportedDerivAccountsType.find(
     (derivCurrency) => currency === derivCurrency.currency
   )!;
 

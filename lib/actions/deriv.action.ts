@@ -2,39 +2,41 @@
 
 import { revalidatePath } from "next/cache";
 
+import { DerivAccountLink } from "@/components/DerivAccountSelectionList";
+
 import { ROUTES } from "../constants/routes";
 import {
-  addUserDerivAccountToCollection,
-  removeUserDerivAccountFromCollection,
-} from "../firebase/user";
+  addDerivAccountsToCollection,
+  removeDerivAccountFromCollection,
+} from "../firebase/deriv";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
-import { DerivAccountSchema } from "../validation";
+import { DerivAccountLinkSchema, DerivAccountSchema } from "../validation";
 
-export const addUserDerivAccount = async (
-  derivAccount: DerivAccount
+export const addDerivAccounts = async (
+  derivAccounts: DerivAccountLink[]
 ): Promise<ActionResponse> => {
   const result = await action({
-    params: derivAccount,
-    schema: DerivAccountSchema.server,
+    params: derivAccounts,
+    schema: DerivAccountLinkSchema,
     authorise: true,
   });
 
   if (result instanceof Error) {
-    return handleError(result) as ActionResponse;
+    return handleError(result) as ErrorResponse;
   }
 
-  const { session, params: parsedDerivAccount } = result;
+  const { session, params: parsedDerivAccounts } = result;
 
   try {
     const userId = session?.user.id;
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await addUserDerivAccountToCollection({ ...parsedDerivAccount, userId });
+    await addDerivAccountsToCollection(parsedDerivAccounts, userId);
   } catch (error) {
-    return handleError(error) as ActionResponse;
+    return handleError(error) as ErrorResponse;
   }
 
   revalidatePath(ROUTES.SETUP_DERIV);
@@ -42,7 +44,7 @@ export const addUserDerivAccount = async (
   return { success: true };
 };
 
-export const removeUserDerivAccount = async (
+export const removeDerivAccount = async (
   derivAccount: DerivAccount
 ): Promise<ActionResponse> => {
   const result = await action({
@@ -52,7 +54,7 @@ export const removeUserDerivAccount = async (
   });
 
   if (result instanceof Error) {
-    return handleError(result) as ActionResponse;
+    return handleError(result) as ErrorResponse;
   }
 
   const { session, params: parsedDerivAccount } = result;
@@ -62,12 +64,12 @@ export const removeUserDerivAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await removeUserDerivAccountFromCollection({
+    await removeDerivAccountFromCollection({
       ...parsedDerivAccount,
       userId,
     });
   } catch (error) {
-    return handleError(error) as ActionResponse;
+    return handleError(error) as ErrorResponse;
   }
 
   revalidatePath(ROUTES.SETUP_DERIV);

@@ -1,18 +1,18 @@
 import { redirect } from "next/navigation";
 
 import AddAccountHeader from "@/components/AddAccountHeader";
+import ConnectDeriv from "@/components/ConnectDeriv";
 import DerivAccountCard from "@/components/DerivAccountCard";
-import DerivAccountRegister from "@/components/forms/DerivAccountRegister";
 import { ROUTES } from "@/lib/constants/routes";
-import { getUserDerivAccounts } from "@/lib/firebase/user";
+import { getDerivAccounts } from "@/lib/firebase/deriv";
 import { verifySession } from "@/lib/server";
 
-const page = async () => {
+const DerivSettingsPage = async () => {
   const user = await verifySession();
 
   if (!user?.id) redirect(ROUTES.HOME);
 
-  const derivAccounts = await getUserDerivAccounts(user.id);
+  const derivAccounts = await getDerivAccounts(user.id);
 
   return (
     <main className="flex-center container max-w-lg flex-col space-y-6  md:ml-20 md:flex">
@@ -27,11 +27,11 @@ const page = async () => {
         </div>
 
         <section>
-          <DerivAccountRegister />
+          <ConnectDeriv existingDerivAccounts={derivAccounts} />
         </section>
       </div>
     </main>
   );
 };
 
-export default page;
+export default DerivSettingsPage;

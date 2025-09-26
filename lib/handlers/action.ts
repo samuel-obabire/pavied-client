@@ -12,7 +12,7 @@ type ActionProps<T> = {
 const action = async <T>({
   params,
   schema,
-  authorise = false,
+  authorise = true, // must be authorised by default
 }: ActionProps<T>) => {
   let parsedResult: zod.infer<typeof schema>;
 

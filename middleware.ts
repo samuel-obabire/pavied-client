@@ -1,35 +1,16 @@
-/* eslint-disable no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
 
 import { api } from "./lib/api";
+import {
+  onBoardingRoutes,
+  pathnameToStep,
+  stepToRoute,
+} from "./lib/constants/onboarding";
 import { ROUTES } from "./lib/constants/routes";
 import logger from "./lib/logger";
 import { verifySession } from "./lib/server";
 
 const publicRoutes = [ROUTES.HOME];
-const onBoardingRoutes = [
-  ROUTES.ONBOARD_BIO,
-  ROUTES.ONBOARD_DERIV,
-  ROUTES.ONBOARD_BANK,
-];
-
-enum OnboardingStep {
-  REGISTER = "bio",
-  SETUP_DERIV = "deriv",
-  SETUP_BANK = "bank",
-}
-
-const pathnameToStep: Record<string, OnboardingStep> = {
-  [ROUTES.ONBOARD_BIO]: OnboardingStep.REGISTER,
-  [ROUTES.ONBOARD_DERIV]: OnboardingStep.SETUP_DERIV,
-  [ROUTES.ONBOARD_BANK]: OnboardingStep.SETUP_BANK,
-};
-
-const stepToRoute: Record<OnboardingStep, string> = {
-  [OnboardingStep.REGISTER]: ROUTES.ONBOARD_BIO,
-  [OnboardingStep.SETUP_DERIV]: ROUTES.ONBOARD_DERIV,
-  [OnboardingStep.SETUP_BANK]: ROUTES.ONBOARD_BANK,
-};
 
 export async function middleware(request: NextRequest) {
   const user = await verifySession();
@@ -43,6 +24,7 @@ export async function middleware(request: NextRequest) {
   if (!user?.id && !publicRoutes.includes(pathname)) {
     const newUrl = new URL(ROUTES.HOME, request.url);
     newUrl.searchParams.set("callback", pathname);
+
     return NextResponse.redirect(newUrl);
   }
 
@@ -56,8 +38,6 @@ export async function middleware(request: NextRequest) {
       }
 
       const onboardingStep = data.onboardingStep;
-
-      if (onboardingStep === "complete") return redirect(ROUTES.DASHBOARD);
 
       // Add second guard to prevent redirect loop
       if (onboardingStep && onboardingStep !== pathnameToStep[pathname]) {
@@ -75,7 +55,10 @@ export async function middleware(request: NextRequest) {
     !onBoardingRoutes.includes(pathname) &&
     !publicRoutes.includes(pathname)
   ) {
-    if (user?.onboardingStep !== "complete") {
+    if (
+      user?.onboardingStep !== "complete" &&
+      pathname !== ROUTES.CONNECT_DERIV
+    ) {
       return redirect(stepToRoute[user?.onboardingStep ?? "bio"]);
     }
   }

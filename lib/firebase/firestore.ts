@@ -2,8 +2,6 @@ import { Timestamp, WhereFilterOp } from "firebase-admin/firestore";
 
 import { db } from "@/firebase.config";
 
-import { DbCollections } from "../constants/dbCollections";
-
 export const getById = async <T>(
   col: string,
   docId: string
@@ -58,41 +56,5 @@ export const queryWhere = async <T, B extends WhereFilterOp>(
     }
 
     return data as T;
-  });
-};
-
-export const addbankAccount = async (
-  accountNumber: string,
-  bankCode: string,
-  bankAccount: BankAccount
-) => {
-  const bankAccountRef = db
-    .collection("bank-accounts")
-    .doc(`${bankCode}_${accountNumber}`);
-
-  await db.runTransaction(async (t) => {
-    const res = await t.get(bankAccountRef);
-
-    if (res.exists) throw new Error("Account already exist in the database");
-
-    t.set(bankAccountRef, { ...bankAccount, dateAdded: Timestamp.now() });
-  });
-};
-
-export const addDerivAccount = async (
-  accountId: string,
-  currency: string,
-  derivAccount: DerivAccount
-) => {
-  const derivAccountRef = db
-    .collection(DbCollections.DERIV_ACCOUNTS)
-    .doc(`${currency}_${accountId}`);
-
-  await db.runTransaction(async (t) => {
-    const res = await t.get(derivAccountRef);
-
-    if (res.exists) throw new Error("Account already exist in database");
-
-    t.set(derivAccountRef, { ...derivAccount, dateAdded: Timestamp.now() });
   });
 };

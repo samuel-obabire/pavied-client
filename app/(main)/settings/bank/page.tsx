@@ -4,15 +4,15 @@ import AddAccountHeader from "@/components/AddAccountHeader";
 import BankAccountCard from "@/components/BankAccountCard";
 import BankAccountRegister from "@/components/forms/BankAccountRegister";
 import { ROUTES } from "@/lib/constants/routes";
-import { getUserBankAccounts } from "@/lib/firebase/user";
+import { getBankAccounts } from "@/lib/firebase/bank";
 import { verifySession } from "@/lib/server";
 
-const page = async () => {
+const BankSettiingsPage = async () => {
   const user = await verifySession();
 
   if (!user?.id) redirect(ROUTES.HOME);
 
-  const bankAccounts = await getUserBankAccounts(user?.id);
+  const bankAccounts = await getBankAccounts(user?.id);
 
   return (
     <main className="flex-center container max-w-lg flex-col space-y-6  md:ml-20 md:flex ">
@@ -34,4 +34,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default BankSettiingsPage;

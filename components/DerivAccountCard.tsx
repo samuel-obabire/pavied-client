@@ -2,8 +2,8 @@
 
 import { useRef, useState } from "react";
 
-import { removeUserDerivAccount } from "@/lib/actions/deriv.action";
-import { getDerivAccount } from "@/lib/utils";
+import { removeDerivAccount } from "@/lib/actions/deriv.action";
+import { getDerivAccount } from "@/lib/utils/deriv";
 
 import ActionState, { ActionStateType } from "./ActionState";
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
@@ -22,7 +22,7 @@ const DerivAccountCard = ({
     try {
       setActionState("pending");
 
-      const response = await removeUserDerivAccount(derivAccount);
+      const response = await removeDerivAccount(derivAccount);
 
       if (response.success) {
         setActionState("success");
@@ -44,12 +44,12 @@ const DerivAccountCard = ({
 
           derivAccountRef.current = derivAccount;
 
-          const currencyName = getDerivAccount(currency as Currency).name;
+          const currencyName = getDerivAccount(currency).name;
 
           return (
             <div
               key={`${accountId}_${dateAdded}`}
-              className="bg-accent space-y-3  rounded-lg p-2"
+              className="bg-accent dark:bg-white_dark-black-2 space-y-3  rounded-lg p-2"
             >
               <div className="flex justify-between">
                 <div className="flex space-x-3">

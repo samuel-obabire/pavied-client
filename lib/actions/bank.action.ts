@@ -4,9 +4,9 @@ import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "../constants/routes";
 import {
-  addUserBankAcccountToCollection,
-  removeUserBankAccountFromCollection,
-} from "../firebase/user";
+  addBankAcccountToCollection,
+  removeBankAccountFromCollection,
+} from "../firebase/bank";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
@@ -22,7 +22,7 @@ export const addUserBankAccount = async (
   });
 
   if (result instanceof Error) {
-    return handleError(result) as ActionResponse;
+    return handleError(result) as ErrorResponse;
   }
 
   const { session, params: parsedBankAccount } = result;
@@ -32,9 +32,9 @@ export const addUserBankAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await addUserBankAcccountToCollection({ ...parsedBankAccount, userId });
+    await addBankAcccountToCollection({ ...parsedBankAccount, userId });
   } catch (error) {
-    return handleError(error) as ActionResponse;
+    return handleError(error) as ErrorResponse;
   }
 
   revalidatePath(ROUTES.SETUP_DERIV);
@@ -52,7 +52,7 @@ export const removeUserBankAccount = async (
   });
 
   if (result instanceof Error) {
-    return handleError(result) as ActionResponse;
+    return handleError(result) as ErrorResponse;
   }
 
   const { session, params: parsedBankAccount } = result;
@@ -62,12 +62,12 @@ export const removeUserBankAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await removeUserBankAccountFromCollection({
+    await removeBankAccountFromCollection({
       ...parsedBankAccount,
       userId,
     });
   } catch (error) {
-    return handleError(error) as ActionResponse;
+    return handleError(error) as ErrorResponse;
   }
 
   revalidatePath(ROUTES.SETUP_BANK);

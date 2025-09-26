@@ -7,11 +7,9 @@ type BankAccount = {
   dateAdded?: Date;
 };
 
-type Currency = "USD" | "USDC" | "tUSDT";
-
 type DerivAccount = {
   accountId: string;
-  currency: Currency;
+  currency: string;
   userId?: string;
   dateAdded?: Date;
 };
@@ -23,8 +21,6 @@ type User = {
   telegramId: string;
   phone: string;
   whatsApp: string;
-  bankAccounts?: BankAccount[];
-  derivAccounts?: DerivAccount[];
   referralCode?: string;
   referredBy?: string;
   referralEarnings?: number;

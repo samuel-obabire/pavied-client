@@ -20,10 +20,12 @@ import {
 } from "@/components/ui/form";
 import "react-phone-number-input/style.css";
 import { updateUser } from "@/lib/actions/user.action";
+import { OnboardingStep } from "@/lib/constants/onboarding";
 import { AccountRegistrationSchema } from "@/lib/validation";
 
 import ActionState, { ActionStateType } from "../ActionState";
 import CustomFormField, { FormFieldTypes } from "../CustomFormField";
+import SaveOnboardingStep from "../SaveOnboardingStep";
 
 const RegistrationForm = () => {
   const form = useForm<z.infer<typeof AccountRegistrationSchema>>({
@@ -64,13 +66,22 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div>
+    <div className="space-y-8 pb-10">
       <ActionState
         state={actionState}
         pendingTitle="Registering Account"
         successTitle="Account  successfully updated"
         errorMessage={errorMessage}
         retryAction={retrySubmit}
+        successMessage={
+          actionState === "success" && (
+            <SaveOnboardingStep
+              label="Continue to next step"
+              nextRoute="ONBOARD_DERIV"
+              onboardingStep={OnboardingStep.SETUP_DERIV}
+            />
+          )
+        }
       />
 
       <Form {...form}>

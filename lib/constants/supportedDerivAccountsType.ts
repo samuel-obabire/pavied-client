@@ -1,4 +1,4 @@
-export const derivAcccounts = [
+export const supportedDerivAccountsType = [
   {
     currency: "USD",
     icon: "/assets/usd-currency.svg",
@@ -14,4 +14,9 @@ export const derivAcccounts = [
     icon: "/assets/usdc-currency.svg",
     name: "USD Coin",
   },
-] as const;
+  {
+    currency: "eUSDT",
+    icon: "/assets/usdt-currency.svg",
+    name: "Tether ER20",
+  },
+];

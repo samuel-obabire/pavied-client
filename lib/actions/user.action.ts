@@ -16,7 +16,7 @@ export const updateUser = async (
   });
 
   if (result instanceof Error) {
-    return handleError(result) as ActionResponse;
+    return handleError(result) as ErrorResponse;
   }
 
   const { session, params: user } = result;
@@ -30,7 +30,7 @@ export const updateUser = async (
       ...user,
     });
   } catch (error) {
-    return handleError(error) as ActionResponse;
+    return handleError(error) as ErrorResponse;
   }
 
   return { success: true };

@@ -1,27 +1,11 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import { derivAcccounts } from "./constants/derivAccounts";
+import { getDerivTransactionDetails } from "./utils/deriv";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-export const getDerivAccount = (currency: Currency) => {
-  return derivAcccounts.find(
-    (derivCurrency) => currency === derivCurrency.currency
-  )!;
-};
-
-const getDerivTransactionDetails = (transaction: Transaction) => {
-  return {
-    label:
-      transaction.type === "deriv_deposit"
-        ? "Deriv deposit"
-        : "Deriv withdrawal",
-    icon: "/assets/bank-logos/palmpay.jpg",
-  };
-};
 
 const getTransactionDetails = (transaction: Transaction) => {
   const transactionsDetailsType = {

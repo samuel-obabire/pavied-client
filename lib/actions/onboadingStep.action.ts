@@ -16,7 +16,7 @@ export const updateOnboardingStep = async (onboardingStep: {
   });
 
   if (result instanceof Error) {
-    return handleError(result) as ActionResponse;
+    return handleError(result) as ErrorResponse;
   }
 
   const { session, params: step } = result;
@@ -28,7 +28,7 @@ export const updateOnboardingStep = async (onboardingStep: {
 
     await updateUserById(userId, { onboardingStep: step.onboardingStep });
   } catch (error) {
-    return handleError(error) as ActionResponse;
+    return handleError(error) as ErrorResponse;
   }
 
   return { success: true };

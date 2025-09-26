@@ -1,10 +1,8 @@
 /* eslint-disable @stylistic/brace-style */
-// import { cookies } from "next/headers";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
 import { api } from "./lib/api";
-// import logger from "./lib/logger";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
@@ -16,9 +14,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      if (!account || !user.email) {
-        throw new Error("Missing login parameters");
-      }
+      if (!account || !user.email) return false;
 
       const { provider, providerAccountId } = account;
 
@@ -31,15 +27,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (success) {
         return true;
       } else {
-        // Get the new user telegram id
-        // const cookieStore = await cookies();
-
-        // const tgid = cookieStore.get("tgid");
-        // if (!tgid) {
-        //   logger.error("Create account blocked - No tgid");
-        //   return false;
-        // }
-
         const newUser = {
           telegramId: "",
           email: user.email.toLowerCase(),
@@ -47,8 +34,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           provider,
           providerAccountId,
           fullName: "",
-          bankAccounts: [],
-          derivAccounts: [],
           referralCode: "",
           referredBy: "",
           referralEarnings: 0,
