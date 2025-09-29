@@ -1,4 +1,5 @@
 import DataRenderer from "./DataRenderer";
+import RecentTransactionsTable from "./tables/RecentTransactionTable";
 import TransactionCard from "./TransactionCard";
 
 const TransactionList = ({
@@ -13,14 +14,24 @@ const TransactionList = ({
         success={transactionRes.success}
         error={transactionRes.error}
         render={(transactions) => {
-          return transactions.map((transaction) => {
-            return (
-              <TransactionCard
-                key={transaction.transactionId}
-                transaction={transaction as Transaction}
-              />
-            );
-          });
+          return (
+            <>
+              <div className="md:hidden">
+                {transactions.map((transaction) => {
+                  return (
+                    <TransactionCard
+                      key={transaction.transactionId}
+                      transaction={transaction as Transaction}
+                    />
+                  );
+                })}
+              </div>
+
+              <div className="max-md:hidden">
+                <RecentTransactionsTable transactions={transactions} />
+              </div>
+            </>
+          );
         }}
       />
     </div>

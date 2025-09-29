@@ -105,6 +105,10 @@
   @apply text-[12px] leading-[16px] font-normal;
 }
 
+@utility text-12-medium {
+  @apply text-[12px] leading-[16px] font-medium;
+}
+
 @utility text-12-semibold {
   @apply text-[12px] leading-[16px] font-semibold;
 }

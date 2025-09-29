@@ -9,7 +9,7 @@ const transactions: Transaction[] = [
     userId: "user1",
     amount: 150,
     currency: "USD",
-    status: "completed",
+    status: "success",
     provider: "Deriv",
     reference: "REF-001",
     fulfilledTo: "CR12345",
@@ -37,7 +37,7 @@ const transactions: Transaction[] = [
     userId: "user3",
     amount: 1000,
     currency: "NGN",
-    status: "completed",
+    status: "success",
     provider: "MTN",
     reference: "REF-003",
     fulfilledTo: "08031234567",
@@ -52,7 +52,7 @@ const transactions: Transaction[] = [
     userId: "user4",
     amount: 2000,
     currency: "NGN",
-    status: "completed",
+    status: "success",
     provider: "Airtel",
     reference: "REF-004",
     fulfilledTo: "08071234567",
@@ -83,7 +83,7 @@ const transactions: Transaction[] = [
     userId: "user1",
     amount: 300,
     currency: "USD",
-    status: "completed",
+    status: "success",
     provider: "Deriv",
     reference: "REF-006",
     fulfilledTo: "CR12345",
@@ -97,7 +97,7 @@ const transactions: Transaction[] = [
     userId: "user2",
     amount: 1500,
     currency: "NGN",
-    status: "completed",
+    status: "success",
     provider: "MTN",
     reference: "REF-007",
     fulfilledTo: "08064567891",
@@ -128,7 +128,7 @@ const transactions: Transaction[] = [
     userId: "user4",
     amount: 800,
     currency: "NGN",
-    status: "completed",
+    status: "success",
     provider: "MTN",
     reference: "REF-009",
     fulfilledTo: "08094567891",
@@ -157,7 +157,7 @@ const transactions: Transaction[] = [
     userId: "user1",
     amount: 750,
     currency: "NGN",
-    status: "completed",
+    status: "success",
     provider: "Glo",
     reference: "REF-011",
     fulfilledTo: "08134567890",
@@ -172,7 +172,7 @@ const transactions: Transaction[] = [
     userId: "user2",
     amount: 1800,
     currency: "NGN",
-    status: "completed",
+    status: "success",
     provider: "Airtel",
     reference: "REF-012",
     fulfilledTo: "08024567890",
@@ -203,7 +203,7 @@ const transactions: Transaction[] = [
     userId: "user4",
     amount: 400,
     currency: "USD",
-    status: "completed",
+    status: "success",
     provider: "Deriv",
     reference: "REF-014",
     fulfilledTo: "CR98765",
@@ -216,7 +216,7 @@ const transactions: Transaction[] = [
 
 const DashboardPage = () => {
   const getTransactionResponse = {
-    success: false,
+    success: true,
     data: transactions,
     error: {
       message: "Unable to get transactions.",
@@ -241,21 +241,21 @@ const DashboardPage = () => {
         <StatsCard
           title="Pending Transactions"
           subText="Total pending transactions"
-          description="Total pending transactions made so far. Transactions that are yet to be completed"
+          description="Total pending transactions made so far. Transactions that are yet to be success"
           count={31}
         />
         <StatsCard
           title="Succesful Transactions"
           subText="Total succesful transactions"
-          description="Total succesful transactions made so far. Transactions that were completed"
+          description="Total succesful transactions made so far. Transactions that were success"
           count={19}
         />
       </section>
 
       <article className="flex-1 overflow-y-scroll rounded-2xl  pt-0">
-        <header className="bg-white_dark-black-1  sticky top-0 left-0 z-3 flex items-center  justify-between rounded-lg p-2 py-6">
+        <header className="bg-white_dark-black-1 sticky  top-0 left-0 z-3 flex items-center justify-between  rounded-lg px-2  py-4 md:px-6">
           <h2 className="">Recent Transactions</h2>
-          <Link href="/">See More</Link>
+          <Link href="/">View all</Link>
         </header>
 
         <TransactionList transactionRes={getTransactionResponse} />

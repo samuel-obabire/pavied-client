@@ -48,7 +48,7 @@ interface BaseTransaction {
   userId: string;
   amount: number;
   currency: string;
-  status: "pending" | "completed" | "failed";
+  status: "pending" | "success" | "failed";
   provider: string; // e.g. "Deriv", "MTN", "Airtel"
   reference: string;
   fulfilledTo: string;
