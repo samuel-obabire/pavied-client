@@ -7,6 +7,12 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import React from "react";
 
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import { sideLinks } from "@/lib/constants/sideLinks";
 import { cn } from "@/lib/utils";
@@ -44,6 +50,60 @@ const MobileSheet = () => {
             <nav aria-label="Main">
               <ul className="flex flex-col gap-1 p-4">
                 {sideLinks.map((link) => {
+                  if (link.deposit && link.withdrawal) {
+                    return (
+                      <React.Fragment key={link.deposit.href}>
+                        <Separator className="border-accent mb-2 border-1" />
+
+                        <Accordion
+                          type="single"
+                          defaultValue="deriv-item"
+                          collapsible
+                        >
+                          <AccordionItem value="deriv-item">
+                            <AccordionTrigger className="no-ring">
+                              Deriv Transaction
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <Link href={link.deposit.href}>
+                                <li
+                                  className={cn(
+                                    "mb-2 flex h-10  cursor-pointer items-center gap-2 space-x-2 rounded-sm p-2 ",
+                                    {
+                                      "bg-primary":
+                                        pathname === link.deposit.href,
+                                      "text-white":
+                                        pathname === link.deposit.href,
+                                    }
+                                  )}
+                                >
+                                  <link.deposit.Icon size={15} />{" "}
+                                  {link.deposit.label}
+                                </li>
+                              </Link>
+
+                              <Link href={link.withdrawal.href}>
+                                <li
+                                  className={cn(
+                                    "mb-2 flex h-10  cursor-pointer items-center gap-2 space-x-2 rounded-sm p-2 ",
+                                    {
+                                      "bg-primary":
+                                        pathname === link.withdrawal.href,
+                                      "text-white":
+                                        pathname === link.withdrawal.href,
+                                    }
+                                  )}
+                                >
+                                  <link.withdrawal.Icon size={15} />{" "}
+                                  {link.withdrawal.label}
+                                </li>
+                              </Link>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      </React.Fragment>
+                    );
+                  }
                   const { Icon, href, label } = link;
 
                   return (

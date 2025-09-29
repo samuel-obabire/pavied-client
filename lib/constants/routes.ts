@@ -1,5 +1,6 @@
 export const ROUTES = {
   HOME: "/",
+  SIGN_IN: "/",
   REGISTER_BIO: "/settings/bio",
   SETUP_DERIV: "/settings/deriv",
   SETUP_BANK: "/settings/bank",
@@ -9,4 +10,8 @@ export const ROUTES = {
   ONBOARD_BANK: "/onboarding/bank",
   ORDERS: "/orders",
   CONNECT_DERIV: "/connect-deriv",
+  DERIV: {
+    DEPOSIT: "/deriv/deposit",
+    WITHDRAWAL: "/deriv/withdrawal",
+  },
 };
