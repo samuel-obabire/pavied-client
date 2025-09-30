@@ -2,11 +2,12 @@ import { redirect } from "next/navigation";
 
 import AddAccountHeader from "@/components/AddAccountHeader";
 import BankAccountCard from "@/components/BankAccountCard";
+import DataRenderer from "@/components/DataRenderer";
 import BankAccountRegister from "@/components/forms/BankAccountRegister";
 import SaveOnboardingStep from "@/components/SaveOnboardingStep";
+import { getUserBankAccounts } from "@/lib/actions/bank.action";
 import { OnboardingStep } from "@/lib/constants/onboarding";
 import { ROUTES } from "@/lib/constants/routes";
-import { getBankAccounts } from "@/lib/firebase/bank";
 import { verifySession } from "@/lib/server";
 
 const BankAccountOnboardingPage = async () => {
@@ -14,7 +15,7 @@ const BankAccountOnboardingPage = async () => {
 
   if (!user?.id) redirect(ROUTES.HOME);
 
-  const bankAccounts = await getBankAccounts(user?.id);
+  const bankAccountRes = await getUserBankAccounts(user?.id);
 
   return (
     <main className="flex-center container max-w-lg flex-col  space-y-6">
@@ -24,7 +25,22 @@ const BankAccountOnboardingPage = async () => {
             title="Add bank account"
             drawerTitle="Previously added bank accounts"
             triggerLabel="My accounts"
-            drawerContent={<BankAccountCard bankAccounts={bankAccounts} />}
+            drawerContent={
+              <DataRenderer
+                data={bankAccountRes.data}
+                success={bankAccountRes.success}
+                render={(bankAccounts) => {
+                  return bankAccounts.map((bankAcccount) => {
+                    return (
+                      <BankAccountCard
+                        key={bankAcccount.bankCode + bankAcccount.accountNumber}
+                        bankAccount={bankAcccount}
+                      />
+                    );
+                  });
+                }}
+              />
+            }
           />
         </div>
 
@@ -35,7 +51,11 @@ const BankAccountOnboardingPage = async () => {
 
       <section className="flex w-full justify-end">
         <SaveOnboardingStep
-          label={bankAccounts.length ? "Continue" : "Finish, and do it later"}
+          label={
+            bankAccountRes?.data?.length
+              ? "Continue"
+              : "Finish, and do it later"
+          }
           nextRoute="DASHBOARD"
           onboardingStep={OnboardingStep.COMPLETE}
         />

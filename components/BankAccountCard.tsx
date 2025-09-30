@@ -1,17 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { removeUserBankAccount } from "@/lib/actions/bank.action";
 
 import ActionState, { ActionStateType } from "./ActionState";
 import BankIcon from "./BankIcon";
 
-const BankAccountCard = ({ bankAccounts }: { bankAccounts: BankAccount[] }) => {
+const BankAccountCard = ({ bankAccount }: { bankAccount: BankAccount }) => {
   const [actionState, setActionState] = useState<ActionStateType>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const bankAccountRef = useRef<null | BankAccount>(null);
+  const { accountName, accountNumber, bankCode, bankName } = bankAccount;
 
   const removeAccount = async (bankAccount: BankAccount) => {
     try {
@@ -33,57 +33,43 @@ const BankAccountCard = ({ bankAccounts }: { bankAccounts: BankAccount[] }) => {
 
   const AccountCard = () => {
     return (
-      <>
-        {bankAccounts.map((bankAccount) => {
-          const { bankCode, accountName, accountNumber, bankName } =
-            bankAccount;
+      <div
+        key={`${accountNumber}_${bankCode}`}
+        className="bg-accent dark:bg-black-2 mx-2  space-y-3 rounded-lg p-3"
+      >
+        <div className="flex justify-between">
+          <div className="flex space-x-3">
+            <BankIcon bankCode={bankCode} />
+            <span className="">{bankName}</span>
+          </div>
 
-          bankAccountRef.current = bankAccount;
+          <span
+            className="form-error text-12-regular cursor-default p-1"
+            onClick={() => removeAccount(bankAccount)}
+          >
+            Remove
+          </span>
+        </div>
 
-          return (
-            <div
-              key={`${accountNumber}_${bankCode}`}
-              className="bg-accent dark:bg-black-2 mx-2  space-y-3 rounded-lg p-3"
-            >
-              <div className="flex justify-between">
-                <div className="flex space-x-3">
-                  <BankIcon bankCode={bankCode} />
-                  <span className="">{bankName}</span>
-                </div>
-
-                <span
-                  className="form-error text-12-regular cursor-default p-1"
-                  onClick={() => removeAccount(bankAccount)}
-                >
-                  Remove
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-18-medium">{accountName}</span>
-                <span className="text-12-regular">{accountNumber}</span>
-              </div>
-            </div>
-          );
-        })}
-      </>
+        <div className="flex items-center justify-between">
+          <span className="text-18-medium">{accountName}</span>
+          <span className="text-12-regular">{accountNumber}</span>
+        </div>
+      </div>
     );
   };
 
   return (
-    <div className="max-h-[300px] space-y-2 overflow-y-auto  max-sm:px-4 max-sm:pb-12">
+    <div className="">
       <ActionState
         pendingTitle="Removing Account"
         state={actionState}
         errorMessage={errorMessage}
-        retryAction={() => removeAccount(bankAccountRef.current!)}
+        retryAction={() => removeAccount(bankAccount)}
         successTitle="Account Successfully removed"
       />
-      {bankAccounts.length ? (
-        <AccountCard />
-      ) : (
-        <i className="block w-full text-center">No account added!</i>
-      )}
+
+      <AccountCard />
     </div>
   );
 };

@@ -1,14 +1,8 @@
 import Image from "next/image";
 
-import AddAccountHeader from "./AddAccountHeader";
-import DerivAccountCard from "./DerivAccountCard";
 import { Button } from "./ui/button";
 
-const ConnectDeriv = ({
-  existingDerivAccounts,
-}: {
-  existingDerivAccounts: DerivAccount[];
-}) => {
+const ConnectDeriv = () => {
   return (
     <>
       <div className="flex-center flex">
@@ -20,16 +14,7 @@ const ConnectDeriv = ({
         />
       </div>
       <div className="w-full space-y-8">
-        <div className="mt-6">
-          <AddAccountHeader
-            title="Add deriv account"
-            drawerTitle="Previously added deriv accounts"
-            triggerLabel="My accounts"
-            drawerContent={
-              <DerivAccountCard derivAccounts={existingDerivAccounts} />
-            }
-          />
-        </div>
+        <div className="mt-6">Connect your deriv account</div>
 
         <section>
           <a

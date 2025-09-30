@@ -1,12 +1,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import AddAccountHeader from "@/components/AddAccountHeader";
 import ConnectDeriv from "@/components/ConnectDeriv";
-import DerivAccountCard from "@/components/DerivAccountCard";
 import DerivAccountSelectionList from "@/components/DerivAccountSelectionList";
 import { ROUTES } from "@/lib/constants/routes";
-import { getDerivAccounts } from "@/lib/firebase/deriv";
 import { verifySession } from "@/lib/server";
 import { parseSelectedDerivAccounts } from "@/lib/utils/deriv";
 
@@ -20,24 +17,13 @@ const ConnectDerivPage = async () => {
   const derivAccounts = cookieStore.get("deriv-accounts")?.value ?? "";
   const parsedAccounts = parseSelectedDerivAccounts(derivAccounts);
 
-  const existingDerivAccounts = await getDerivAccounts(user.id);
-
   return (
     <main className="flex-center container mt-8 max-w-lg flex-col  space-y-14">
       {!parsedAccounts.length ? (
-        <ConnectDeriv existingDerivAccounts={existingDerivAccounts} />
+        <ConnectDeriv />
       ) : (
         <div className="w-full space-y-8">
-          <div className="mt-6">
-            <AddAccountHeader
-              title="Add deriv account"
-              drawerTitle="Previously added deriv accounts"
-              triggerLabel="My accounts"
-              drawerContent={
-                <DerivAccountCard derivAccounts={existingDerivAccounts} />
-              }
-            />
-          </div>
+          <div className="mt-6">Add deriv account</div>
 
           <section className="space-y-4">
             <DerivAccountSelectionList parsedAccounts={parsedAccounts} />
