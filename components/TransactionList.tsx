@@ -21,7 +21,7 @@ const TransactionList = ({
                   return (
                     <TransactionCard
                       key={transaction.transactionId}
-                      transaction={transaction as Transaction}
+                      transaction={transaction}
                     />
                   );
                 })}

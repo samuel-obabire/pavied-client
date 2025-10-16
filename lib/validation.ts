@@ -77,3 +77,42 @@ export const bankAccountSchema = {
 export const OnboardingStepSchema = z.object({
   onboardingStep: z.enum(OnboardingStep),
 });
+
+export const DerivDepositSchema = z.object({
+  depositBankAccount: z.object({
+    accountNumber: z
+      .string()
+      .min(10, { error: "Bank account number is required" }),
+    accountName: z.string().min(3, { error: "Bank account Name required" }),
+    bankName: z.string().min(3, { error: "Please select your bank" }),
+    bankCode: z.string().min(2, { error: "Invalid bank code" }),
+  }),
+  depositDerivAccount: z.object({
+    currency: z.enum(
+      supportedDerivAccountsType.map((account) => account.currency)
+    ),
+    accountId: z
+      .string()
+      .min(3, { error: "Please provide your the currency account number" }),
+  }),
+  nairaAmount: z.number().min(500, { error: "Invalid naira Amount" }),
+  convertedAmount: z.number().min(1, { error: "Invalid equivalent Amount" }),
+});
+
+const allowedMimeTypes = ["image/jpeg", "image/png", "application/pdf"];
+const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+export const UploadPaymentRecieptSchema = z.object({
+  file: z
+    .any()
+    .refine((file) => file instanceof File, {
+      message: "A valid file is required",
+    })
+    .refine((file) => allowedMimeTypes.includes(file.type), {
+      message: "Only JPG, PNG, or PDF files are allowed",
+    })
+    .refine((file) => file.size <= maxFileSize, {
+      message: "File size must not exceed 5MB",
+    }),
+  paymentId: z.string().min(5, { message: "Payment ID is required" }),
+});

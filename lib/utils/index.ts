@@ -46,3 +46,28 @@ export const formatCustomDate = (dateInput: Date | string): string => {
 
   return `${timePart} • ${dayPart} ${monthPart} ${yearPart}`;
 };
+
+export const calculatePaymentExpiry = (createdAt: Date, limitMinutes = 10) => {
+  const created = new Date(createdAt);
+
+  const now = new Date();
+  const limitMs = limitMinutes * 60 * 1000;
+  const expiresAt = new Date(created.getTime() + limitMs);
+  const remainingMs = Math.max(expiresAt.getTime() - now.getTime(), 0);
+
+  const isExpired = remainingMs === 0;
+
+  // Format remaining time as "mm:ss"
+  const minutes = Math.floor((remainingMs / 1000 / 60) % 60);
+  const seconds = Math.floor((remainingMs / 1000) % 60)
+    .toString()
+    .padStart(2, "0");
+  const remainingText = `${minutes}:${seconds}`;
+
+  return {
+    isExpired,
+    remainingMs,
+    remainingText,
+    expiresAt,
+  };
+};

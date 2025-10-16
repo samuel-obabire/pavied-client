@@ -14,4 +14,5 @@ export const ROUTES = {
     DEPOSIT: "/deriv/deposit",
     WITHDRAWAL: "/deriv/withdrawal",
   },
+  PAYMENT: (paymentId: string) => `/payment-checkout/${paymentId}`,
 };

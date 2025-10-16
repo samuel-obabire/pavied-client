@@ -22,6 +22,7 @@
   --color-black-1: #1c1c1c;
   --color-black-2: #101010;
   --color-white: #ffffff;
+  --color-success: #34a851;
 }
 
 @theme inline {
@@ -89,6 +90,10 @@
   @apply text-[16px] leading-[20px] font-semibold;
 }
 
+@utility text-16-medium {
+  @apply text-[16px] leading-[20px] font-medium;
+}
+
 @utility text-16-regular {
   @apply text-[16px] leading-[20px] font-normal;
 }
@@ -114,7 +119,7 @@
 }
 
 @utility btn {
-  @apply cursor-pointer   !rounded-lg  !text-16-bold !p-5 transition-transform duration-200 hover:scale-105 active:scale-95;
+  @apply cursor-pointer   !rounded-lg  !text-16-bold !p-5 transition-transform duration-200 active:scale-[97%];
 }
 
 @utility text-black-1_dark-white {
@@ -204,5 +209,13 @@
 
   .select {
     @apply !bg-white_dark-black-1 !rounded-lg  cursor-pointer focus:bg-gray-50 data-[state=checked]:bg-accent data-[state=checked]:font-medium;
+  }
+
+  .no-spinners {
+    @apply appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+  }
+
+  .card-border {
+    @apply border border-gray-200  shadow-xs dark:border-none;
   }
 }

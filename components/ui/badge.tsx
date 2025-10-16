@@ -18,6 +18,7 @@ const badgeVariants = cva(
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         pending: "text-secondary",
+        processing: "text-secondary",
         success: "text-[#02A315]",
         failed: "text-[#E20404]",
       },

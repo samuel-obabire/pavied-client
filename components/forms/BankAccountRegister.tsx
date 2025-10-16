@@ -22,6 +22,7 @@ import { bankAccountSchema } from "@/lib/validation";
 import ActionState, { ActionStateType } from "../ActionState";
 import BankIcon from "../BankIcon";
 import CustomFormField, { FormFieldTypes } from "../CustomFormField";
+import InfoCard from "../InfoCard";
 
 const Schema = bankAccountSchema.client;
 
@@ -149,13 +150,11 @@ const BankAccountRegister = () => {
             )}
           />
 
-          <div className="rounded-lg bg-[#E2A7040D] p-2">
-            <p className="text-12-regular sm:text-14-regular text-secondary">
-              For your security, please ensure that the bank account you link is
+          <InfoCard
+            message=" For your security, please ensure that the bank account you link is
               registered in your own name. Transactions from third-party or
-              mismatched accounts will not be accepted
-            </p>
-          </div>
+              mismatched accounts will not be accepted"
+          />
 
           <Button className="btn-secondary w-full" type="submit">
             Submit

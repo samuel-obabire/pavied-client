@@ -11,6 +11,7 @@ type DerivAccount = {
   accountId: string;
   currency: string;
   userId?: string;
+  token?: string;
   dateAdded?: Date;
 };
 
@@ -42,47 +43,90 @@ type Referral = {
   joinedAt: string;
 };
 
-// Common fields for ALL transactions
+type Fullfillment = {
+  fulfilled: boolean;
+  fulfilledAt?: Date;
+  actorId?: string;
+  referenceId?: string;
+  note?: string;
+};
+
 interface BaseTransaction {
   transactionId: string;
   userId: string;
   amount: number;
-  currency: string;
-  status: "pending" | "success" | "failed";
-  provider: string; // e.g. "Deriv", "MTN", "Airtel"
-  reference: string;
-  fulfilledTo: string;
+  status: "pending" | "processing" | "success" | "failed";
   createdAt: Date;
   updatedAt: Date;
+  fulfillment: Fullfillment;
 }
 
-// Deriv Deposit / Withdrawal
-interface DerivTransaction extends BaseTransaction {
-  type: "deriv_deposit" | "deriv_withdrawal";
-  accountId: string; // Deriv login ID
-}
+type DerivDeposit = BaseTransaction & {
+  type: "deriv_deposit";
+  assignedBank: {
+    bankName: string;
+    acountName: string;
+    accountNumber: string;
+  };
+  extra: {
+    currency: string;
+    derivLoginId: string;
+    paidFromBankName: string;
+    paidFromBankCode: string;
+    paidFromAccountNumber: string;
+    paidFromAccountName: string;
+    recieptPath?: string;
+  };
+};
+
+type DerivWithdrawal = BaseTransaction & {
+  type: "deriv_withdrawal";
+  extra: {
+    currency: string;
+    derivLoginId: string;
+    receivingBankAccountNumber: string;
+    recievingBankAccountName: string;
+    receivingBankCode: string;
+    receivingBankName: string;
+  };
+};
+
+type DerivTransaction = DerivDeposit | DerivWithdrawal;
 
 // Airtime Purchase
 interface AirtimePurchaseTransaction extends BaseTransaction {
   type: "airtime_purchase";
-  phoneNumber: string;
-  network: string; // "MTN", "Airtel", "Glo"
+  extra: {
+    phoneNumber: string;
+    network: string; // "MTN", "Airtel", "Glo"
+  };
 }
 
 // Data Purchase
 interface DataPurchaseTransaction extends BaseTransaction {
   type: "data_purchase";
-  phoneNumber: string;
-  bundleId: string; // e.g. "1GB_DAILY"
-  network: string;
+  extra: {
+    phoneNumber: string;
+    bundleId: string; // e.g. "1GB_DAILY"
+    network: string;
+  };
 }
 
 // Airtime to Cash
 interface AirtimeToCashTransaction extends BaseTransaction {
   type: "airtime_to_cash";
-  phoneNumber: string;
-  network: string;
+  extra: {
+    phoneNumber: string;
+    network: string;
+  };
 }
+
+// interface BonusCredit extends BaseTransaction {
+//   type: "bonus_credit";
+//   extra: {
+//     reason?: string;
+//   };
+// }
 
 // Union type of ALL transaction variations
 type Transaction =
@@ -90,6 +134,21 @@ type Transaction =
   | AirtimePurchaseTransaction
   | DataPurchaseTransaction
   | AirtimeToCashTransaction;
+// | BonusCredit;
+
+type AuditLog = {
+  id: string;
+  transactionId: string;
+  type: EventType;
+  message?: string;
+  timestamp: Date;
+  actor: "system" | "admin";
+  actorId?: string;
+  meta: {
+    source: string; // MacroDroid, email
+    autoConfirmed: boolean;
+  };
+};
 
 type ActionResponse<T = null> = {
   success: boolean;

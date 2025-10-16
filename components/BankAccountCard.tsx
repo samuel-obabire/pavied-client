@@ -1,13 +1,23 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 import { removeUserBankAccount } from "@/lib/actions/bank.action";
+import { cn } from "@/lib/utils";
 
 import ActionState, { ActionStateType } from "./ActionState";
 import BankIcon from "./BankIcon";
 
-const BankAccountCard = ({ bankAccount }: { bankAccount: BankAccount }) => {
+const BankAccountCard = ({
+  bankAccount,
+  selected,
+  removeable = true,
+}: {
+  bankAccount: BankAccount;
+  selected?: boolean;
+  removeable?: boolean;
+}) => {
   const [actionState, setActionState] = useState<ActionStateType>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -35,7 +45,13 @@ const BankAccountCard = ({ bankAccount }: { bankAccount: BankAccount }) => {
     return (
       <div
         key={`${accountNumber}_${bankCode}`}
-        className="bg-accent dark:bg-black-2 mx-2  space-y-3 rounded-lg p-3"
+        className={cn(
+          "bg-accent dark:bg-white_dark-black-1 space-y-3  rounded-2xl px-2 py-4",
+          {
+            "text-secondary": selected,
+            "bg-secondary/5": selected,
+          }
+        )}
       >
         <div className="flex justify-between">
           <div className="flex space-x-3">
@@ -43,12 +59,23 @@ const BankAccountCard = ({ bankAccount }: { bankAccount: BankAccount }) => {
             <span className="">{bankName}</span>
           </div>
 
-          <span
-            className="form-error text-12-regular cursor-default p-1"
-            onClick={() => removeAccount(bankAccount)}
-          >
-            Remove
-          </span>
+          {removeable && (
+            <span
+              className="form-error text-12-regular cursor-default p-1"
+              onClick={() => removeAccount(bankAccount)}
+            >
+              Remove
+            </span>
+          )}
+
+          {selected && (
+            <Image
+              src="/assets/check-circle.svg"
+              alt=""
+              width={20}
+              height={20}
+            />
+          )}
         </div>
 
         <div className="flex items-center justify-between">

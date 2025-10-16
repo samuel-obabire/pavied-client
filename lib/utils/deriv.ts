@@ -1,6 +1,6 @@
 import { supportedDerivAccountsType } from "@/lib/constants/supportedDerivAccountsType";
 
-export const getDerivAccount = (currency: Currency) => {
+export const getDerivAccount = (currency: string) => {
   return supportedDerivAccountsType.find(
     (derivAccount) => currency === derivAccount.currency
   )!;
