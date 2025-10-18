@@ -1,0 +1,80 @@
+import Link from "next/link";
+import React, { useCallback, useState } from "react";
+
+import { processDerivWithdrawal } from "@/lib/actions/deriv.action";
+import { ROUTES } from "@/lib/constants/routes";
+
+import ActionState, { ActionStateType } from "./ActionState";
+import InputWithdrawalOTP from "./InputWithdrawalOTP";
+import PaymentSuccess from "./PaymentSuccess";
+
+const DerivWithdrawalVerification = ({
+  transactionId,
+}: {
+  transactionId: string;
+}) => {
+  const [isWithdrawalSuccess, setIsWithdrawalSuccess] = useState(false);
+  const [actionState, setActionState] = useState<ActionStateType>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onSubmit = useCallback(
+    async (data: { pin: string }) => {
+      setActionState("pending");
+
+      try {
+        const response = await processDerivWithdrawal({
+          transactionId,
+          pin: data.pin,
+        });
+
+        if (response.success) {
+          setIsWithdrawalSuccess(true);
+          setActionState("success");
+        } else {
+          setActionState("error");
+          setErrorMessage(response.error?.message || "");
+        }
+      } catch (error) {
+        console.error(error);
+
+        setActionState("error");
+      }
+    },
+    [transactionId]
+  );
+
+  return (
+    <div className="px-4">
+      <ActionState
+        pendingTitle="Processing payment"
+        successTitle="Withdrawal Succesful"
+        state={actionState}
+        errorMessage={errorMessage}
+        successMessage={
+          actionState === "success" && (
+            <div className="space-y-3">
+              <p className="text-center">
+                Your transaction is being processed. You will be credited in a
+                bit.
+              </p>
+              <Link
+                className="btn btn-secondary flex-center  flex h-4 text-center"
+                href={ROUTES.ORDERS}
+              >
+                View Transaction
+              </Link>
+            </div>
+          )
+        }
+      />
+
+      {isWithdrawalSuccess ? (
+        <PaymentSuccess />
+      ) : (
+        <InputWithdrawalOTP onInput={onSubmit} transactionId="" />
+      )}
+    </div>
+  );
+};
+
+export default DerivWithdrawalVerification;

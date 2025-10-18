@@ -71,3 +71,17 @@ export const calculatePaymentExpiry = (createdAt: Date, limitMinutes = 10) => {
     expiresAt,
   };
 };
+
+type DerivError = {
+  code: string;
+  message: string;
+};
+
+export const isDerivError = (error: unknown): error is DerivError => {
+  return (
+    error !== null &&
+    typeof error === "object" &&
+    "code" in error &&
+    "message" in error
+  );
+};

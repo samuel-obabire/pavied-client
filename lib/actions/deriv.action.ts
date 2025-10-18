@@ -12,6 +12,7 @@ import {
   getDerivAccounts,
   removeDerivAccountFromCollection,
 } from "../firebase/deriv";
+import { getTransactionById } from "../firebase/payment";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
@@ -20,8 +21,13 @@ import {
   DerivAccountLinkSchema,
   DerivAccountSchema,
   DerivDepositSchema,
+  DerivWithdrawalOTPSchema,
+  DerivWithdrawalSchema,
 } from "../validation";
-import { DerivDepositParams } from "./types/action";
+import { updatePaymentTransaction } from "./payment.action";
+import { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
+import { setById } from "../firebase/firestore";
+import { paymentAgentWithdraw, verifyWithdrawEmail } from "../utils/deriv";
 
 export const getUserDerivAccounts = async (
   userId: string
@@ -109,7 +115,7 @@ export const removeDerivAccount = async (
   return { success: true };
 };
 
-export const createDepositTransaction = async (
+export const createDerivDepositTransaction = async (
   derivDepositParams: DerivDepositParams
 ): Promise<ActionResponse<{ transactionId: string }>> => {
   const result = await action({
@@ -123,12 +129,17 @@ export const createDepositTransaction = async (
   }
 
   const {
-    depositBankAccount: { accountName, accountNumber, bankCode, bankName },
-    depositDerivAccount: { accountId, currency },
-    nairaAmount,
-  } = result.params;
-
-  const { session, params: depositParams } = result;
+    session,
+    params: {
+      currency,
+      paidFromAccountName,
+      amount,
+      derivLoginId,
+      paidFromAccountNumber,
+      paidFromBankCode,
+      paidFromBankName,
+    },
+  } = result;
 
   let transactionId: string = "";
 
@@ -137,19 +148,23 @@ export const createDepositTransaction = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    const userPendingTransactionRef = db
+    const transactionRef = db
       .collection("transactions")
-      .where("userId", "==", userId)
-      .where("status", "==", "pending");
+      .where("status", "in", ["pending", "processing"])
+      .where("type", "==", "deriv_deposit");
 
-    const duplicateUserPendingTransactionRef = db
-      .collection("transactions")
-      .where(
-        "depositBankAccount.accountName",
-        "==",
-        depositParams.depositBankAccount.accountName
-      )
-      .where("status", "==", "pending");
+    const userPendingTransactionRef = transactionRef.where(
+      "userId",
+      "==",
+      userId
+    );
+
+    // Check to prevent users with similar name to have deposit transactions at the same time
+    const duplicateUserPendingTransactionRef = transactionRef.where(
+      "extra.paidFromAccountName",
+      "==",
+      paidFromAccountName
+    );
 
     await db.runTransaction(async (t) => {
       const pendingUserOrder = await t.get(userPendingTransactionRef);
@@ -173,7 +188,7 @@ export const createDepositTransaction = async (
       t.set(transactionsRef, {
         transactionId,
         userId,
-        amount: nairaAmount,
+        amount,
         status: "pending",
         type: "deriv_deposit",
         assignedBank: {
@@ -183,25 +198,140 @@ export const createDepositTransaction = async (
         },
         extra: {
           currency,
-          derivLoginId: accountId,
-          paidFromBankName: bankName,
-          paidFromBankCode: bankCode,
-          paidFromAccountNumber: accountNumber,
-          paidFromAccountName: accountName,
+          derivLoginId,
+          paidFromBankName,
+          paidFromBankCode,
+          paidFromAccountNumber,
+          paidFromAccountName,
         },
         createdAt: new Date(),
         updatedAt: new Date("2025-10-01T10:30:00Z"),
         fulfillment: {
           fulfilled: false,
-          // actorId: "admin_01",
-          // referenceId: "ref_1001",
-          // note: "Deposit confirmed via bank transfer.",
         },
-      } satisfies Transaction);
+      } satisfies DerivDeposit);
     });
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
 
   return { success: true, data: { transactionId } };
+};
+
+export const createDerivWithdrawalTransaction = async (
+  derivWithdrawalParams: DerivWithdrawalParams
+): Promise<ActionResponse<{ transactionId: string }>> => {
+  const result = await action({
+    params: derivWithdrawalParams,
+    schema: DerivWithdrawalSchema,
+    authorise: true,
+  });
+
+  if (result instanceof Error) {
+    return handleError(result) as ErrorResponse;
+  }
+
+  const {
+    session,
+
+    params: {
+      amount,
+      currency,
+      derivLoginId,
+      receivingBankAccountNumber,
+      receivingBankCode,
+      receivingBankName,
+      recievingBankAccountName,
+    },
+  } = result;
+
+  let transactionId: string = "";
+
+  try {
+    const userId = session?.user.id;
+
+    if (!userId) throw new UnauthorizedError("Not Authorized");
+
+    transactionId = uuidv4();
+
+    await setById("transactions", transactionId, {
+      transactionId,
+      userId,
+      amount,
+      status: "pending",
+      type: "deriv_withdrawal",
+
+      extra: {
+        currency,
+        derivLoginId,
+        receivingBankAccountNumber,
+        receivingBankCode,
+        receivingBankName,
+        recievingBankAccountName,
+      },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      fulfillment: {
+        fulfilled: false,
+      },
+    } satisfies DerivWithdrawal);
+
+    await verifyWithdrawEmail();
+
+    return { success: true, data: { transactionId } };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+};
+
+export const processDerivWithdrawal = async (paymentData: {
+  transactionId: string;
+  pin: string;
+}): Promise<ActionResponse> => {
+  const result = await action({
+    params: paymentData,
+    schema: DerivWithdrawalOTPSchema,
+    authorise: true,
+  });
+
+  if (result instanceof Error) {
+    return handleError(result) as ErrorResponse;
+  }
+
+  const { session, params } = result;
+
+  try {
+    if (!session?.user?.id) {
+      throw new UnauthorizedError("Not Authorized");
+    }
+
+    const transaction =
+      ((await getTransactionById(
+        paymentData.transactionId
+      )) as DerivWithdrawal) || null;
+
+    if (!transaction) throw new Error("Transaction not found");
+
+    const paymentAgentWithdrawResponse = await paymentAgentWithdraw({
+      amount: transaction.amount,
+      currency: transaction.extra.currency,
+      paymentagent_loginid: "CR2091245", // Todo: get the id from database
+      verification_code: paymentData.pin,
+      token: process.env.DERIV_CLIENT_TEST_TOKEN!, // Todo: get the token from database
+    });
+
+    if (paymentAgentWithdrawResponse?.paymentagent_withdraw === 1) {
+      const { transactionId } = params;
+
+      const { success } = await updatePaymentTransaction(transactionId, {
+        status: "processing",
+      });
+
+      return { success };
+    }
+
+    throw new Error("Payment agent withdrawal failed");
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
 };

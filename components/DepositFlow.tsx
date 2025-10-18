@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 
-import { createDepositTransaction } from "@/lib/actions/deriv.action";
+import { createDerivDepositTransaction } from "@/lib/actions/deriv.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { RequestError } from "@/lib/http-errors";
 
@@ -43,11 +43,14 @@ const DepositFlow = ({
     setIsLoading(true);
 
     try {
-      const response = await createDepositTransaction({
-        depositBankAccount: selectedBankAccount,
-        depositDerivAccount: selectedDerivAccount,
-        nairaAmount: Number(depositAmount),
-        convertedAmount,
+      const response = await createDerivDepositTransaction({
+        currency: selectedDerivAccount.currency,
+        derivLoginId: selectedDerivAccount.accountId,
+        paidFromAccountName: selectedBankAccount.accountName,
+        paidFromAccountNumber: selectedBankAccount.accountNumber,
+        paidFromBankCode: selectedBankAccount.bankCode,
+        paidFromBankName: selectedBankAccount.bankName,
+        amount: Number(depositAmount),
       });
 
       if (response.success) {

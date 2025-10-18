@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@deriv-com/api-client": "^1.0.1",
+    "@deriv/api-types": "^1.0.3588",
     "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -24,6 +26,7 @@
     "clsx": "^2.1.1",
     "eslint-config-prettier": "^10.1.8",
     "firebase-admin": "^13.4.0",
+    "input-otp": "^1.4.2",
     "lucide-react": "^0.539.0",
     "next": "15.4.6",
     "next-auth": "^5.0.0-beta.29",

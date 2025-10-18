@@ -79,24 +79,43 @@ export const OnboardingStepSchema = z.object({
 });
 
 export const DerivDepositSchema = z.object({
-  depositBankAccount: z.object({
-    accountNumber: z
-      .string()
-      .min(10, { error: "Bank account number is required" }),
-    accountName: z.string().min(3, { error: "Bank account Name required" }),
-    bankName: z.string().min(3, { error: "Please select your bank" }),
-    bankCode: z.string().min(2, { error: "Invalid bank code" }),
-  }),
-  depositDerivAccount: z.object({
-    currency: z.enum(
-      supportedDerivAccountsType.map((account) => account.currency)
-    ),
-    accountId: z
-      .string()
-      .min(3, { error: "Please provide your the currency account number" }),
-  }),
-  nairaAmount: z.number().min(500, { error: "Invalid naira Amount" }),
-  convertedAmount: z.number().min(1, { error: "Invalid equivalent Amount" }),
+  currency: z.string().min(3, { error: "Currency is required" }),
+  derivLoginId: z.string().min(3, { error: "Deriv login ID is required" }),
+  paidFromBankName: z
+    .string()
+    .min(2, { error: "Paid from bank name is required" }),
+  paidFromBankCode: z
+    .string()
+    .min(2, { error: "Paid from bank code is required" }),
+  paidFromAccountNumber: z
+    .string()
+    .min(10, { error: "Paid from account number is required" }),
+  paidFromAccountName: z
+    .string()
+    .min(2, { error: "Paid from account name is required" }),
+  amount: z
+    .number({ error: "Amount is required" })
+    .positive({ error: "Amount must be greater than 0" }),
+});
+
+export const DerivWithdrawalSchema = z.object({
+  currency: z.string().min(3, { error: "Currency is required" }),
+  derivLoginId: z.string().min(1, { error: "Deriv login ID is required" }),
+  receivingBankAccountNumber: z
+    .string()
+    .min(5, { error: "Receiving bank account number is required" }),
+  recievingBankAccountName: z
+    .string()
+    .min(1, { error: "Receiving bank account name is required" }),
+  receivingBankCode: z
+    .string()
+    .min(1, { error: "Receiving bank code is required" }),
+  receivingBankName: z
+    .string()
+    .min(1, { error: "Receiving bank name is required" }),
+  amount: z
+    .number({ error: "Amount is required" })
+    .positive({ error: "Amount must be greater than 0" }),
 });
 
 const allowedMimeTypes = ["image/jpeg", "image/png", "application/pdf"];
@@ -106,13 +125,20 @@ export const UploadPaymentRecieptSchema = z.object({
   file: z
     .any()
     .refine((file) => file instanceof File, {
-      message: "A valid file is required",
+      error: "A valid file is required",
     })
     .refine((file) => allowedMimeTypes.includes(file.type), {
-      message: "Only JPG, PNG, or PDF files are allowed",
+      error: "Only JPG, PNG, or PDF files are allowed",
     })
     .refine((file) => file.size <= maxFileSize, {
-      message: "File size must not exceed 5MB",
+      error: "File size must not exceed 5MB",
     }),
-  paymentId: z.string().min(5, { message: "Payment ID is required" }),
+  paymentId: z.string().min(5, { error: "Payment ID is required" }),
+});
+
+export const DerivWithdrawalOTPSchema = z.object({
+  transactionId: z.string().min(6, { error: "Transaction ID is required" }),
+  pin: z.string().min(8, {
+    error: "Your one-time code must be 6 characters.",
+  }),
 });

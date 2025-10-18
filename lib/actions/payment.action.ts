@@ -35,7 +35,7 @@ export const getPaymentTransaction = async (
   }
 };
 
-const updatePaymentTransaction = async (
+export const updatePaymentTransaction = async (
   paymentId: string,
   data: UpdatePaymentTransactionParams
 ): Promise<ActionResponse> => {
