@@ -8,7 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatCustomDate, getTransactionDetailsByType } from "@/lib/utils";
+import {
+  formatCustomDate,
+  formatNairaAmount,
+  getTransactionDetailsByType,
+} from "@/lib/utils";
 
 import StatusBadge from "../StatusBadge";
 
@@ -42,10 +46,12 @@ const RecentTransactionsTable = ({
 
               <TableCell className="p-4">{transactionType}</TableCell>
 
-              <TableCell className="p-4">{transaction.amount}</TableCell>
+              <TableCell className="p-4">
+                {formatNairaAmount(transaction.amount)}
+              </TableCell>
 
               <TableCell className="p-4">
-                {formatCustomDate(transaction.updatedAt)}
+                {formatCustomDate(transaction.createdAt)}
               </TableCell>
 
               <TableCell className="p-4 text-right">

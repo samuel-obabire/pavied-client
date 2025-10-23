@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lato, Federo } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ReactNode } from "react";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -41,7 +42,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <NuqsAdapter>{children}</NuqsAdapter>
           </ThemeProvider>
         </SessionProvider>
       </body>

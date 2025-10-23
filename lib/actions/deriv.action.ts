@@ -12,7 +12,7 @@ import {
   getDerivAccounts,
   removeDerivAccountFromCollection,
 } from "../firebase/deriv";
-import { getTransactionById } from "../firebase/payment";
+import { getTransactionById } from "../firebase/transactions";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";

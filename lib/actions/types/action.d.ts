@@ -35,3 +35,12 @@ export type PaymentAgentWithdrawParams = {
   verification_code: string;
   token: string;
 };
+
+export type TransactionQueryParams = {
+  page?: number;
+  perPage?: number;
+  startDate?: Date | null;
+  endDate?: Date | null;
+  type?: string | null;
+  status?: string | null;
+};

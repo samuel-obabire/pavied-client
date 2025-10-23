@@ -8,7 +8,7 @@ export const ROUTES = {
   ONBOARD_BIO: "/onboarding/bio",
   ONBOARD_DERIV: "/onboarding/deriv",
   ONBOARD_BANK: "/onboarding/bank",
-  ORDERS: "/orders",
+  TRANSACTIONS: "/transactions",
   CONNECT_DERIV: "/connect-deriv",
   DERIV: {
     DEPOSIT: "/deriv/deposit",

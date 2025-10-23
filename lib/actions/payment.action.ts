@@ -7,13 +7,17 @@ import { revalidatePath } from "next/cache";
 
 import { bucket, db } from "@/firebase.config";
 
-import { getTransactionById } from "../firebase/payment";
+import { getTransactionById } from "../firebase/transactions";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
 import { verifySession } from "../server";
 import { UploadPaymentRecieptSchema } from "../validation";
-import { UpdatePaymentTransactionParams } from "./types/action";
+import {
+  TransactionQueryParams,
+  UpdatePaymentTransactionParams,
+} from "./types/action";
 import { ROUTES } from "../constants/routes";
+import { dateConverter } from "../utils/firebase";
 
 export const getPaymentTransaction = async (
   paymentId: string
@@ -30,6 +34,58 @@ export const getPaymentTransaction = async (
     if (!transaction) throw new NotFoundError("Transaction");
 
     return { success: true, data: transaction };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+};
+
+export const getUserTransactions = async (
+  userId: string,
+  query: TransactionQueryParams = {}
+): Promise<ActionResponse<Transaction[]>> => {
+  const user = await verifySession();
+
+  if (!user?.id || user?.id !== userId) {
+    return handleError(
+      new UnauthorizedError("Not authorized")
+    ) as ErrorResponse;
+  }
+
+  try {
+    const { page = 1, perPage = 10, endDate, startDate, status, type } = query;
+
+    let tRef = db
+      .collection("transactions")
+      .limit(perPage)
+      .where("userId", "==", userId)
+      .orderBy("createdAt", "desc")
+      .withConverter(dateConverter);
+
+    if (page > 1) {
+      tRef = tRef.offset((page - 1) * perPage);
+    }
+
+    if (startDate) {
+      tRef = tRef.where("createdAt", ">=", new Date(startDate));
+    }
+
+    if (endDate) {
+      tRef = tRef.where("createdAt", "<=", new Date(endDate));
+    }
+
+    if (status) {
+      tRef = tRef.where("status", "==", status);
+    }
+
+    if (type) {
+      tRef = tRef.where("type", "==", type);
+    }
+
+    const snap = await tRef.get();
+
+    const transactions = snap.docs.map((doc) => doc.data() as Transaction);
+
+    return { success: true, data: transactions };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

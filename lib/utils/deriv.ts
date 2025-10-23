@@ -6,7 +6,19 @@ import { supportedDerivAccountsType } from "@/lib/constants/supportedDerivAccoun
 
 import { PaymentAgentWithdrawParams } from "../actions/types/action";
 
-import { isDerivError } from ".";
+type DerivError = {
+  code: string;
+  message: string;
+};
+
+export const isDerivError = (error: unknown): error is DerivError => {
+  return (
+    error !== null &&
+    typeof error === "object" &&
+    "code" in error &&
+    "message" in error
+  );
+};
 
 export const getDerivAccount = (currency: string) => {
   return supportedDerivAccountsType.find(
