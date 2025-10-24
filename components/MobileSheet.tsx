@@ -1,17 +1,22 @@
 "use client";
 
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import { LogOut, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
 import React from "react";
 
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import { sideLinks } from "@/lib/constants/sideLinks";
 import { cn } from "@/lib/utils";
 
 import BrandName from "./BrandName";
+import ProfileLogout from "./ProfileLogout";
 import { DialogTitle } from "./ui/dialog";
 import {
   SheetTrigger,
@@ -31,24 +36,82 @@ const MobileSheet = () => {
           <Menu />
         </SheetTrigger>
         <SheetContent
-          className="no-ring  bg-white_dark-black-1  md:hidden"
+          className="no-ring  bg-white_dark-black-1 max-w-[230px] p-2  md:hidden"
           side="left"
         >
           <DialogTitle className="sr-only" />
 
-          <div className="bg-white_dark-black-1 w-full md:w-[208px]">
+          <div className="bg-white_dark-black-1 w-full p-2 md:w-[208px] ">
             <div className="my-2 scale-85">
               <BrandName />
             </div>
 
             <nav aria-label="Main">
-              <ul className="flex flex-col gap-1 p-4">
+              <ul className="flex flex-col gap-1">
                 {sideLinks.map((link) => {
+                  if (link.deposit && link.withdrawal) {
+                    return (
+                      <React.Fragment key={link.deposit.href}>
+                        <Separator className="border-accent/10 mb-2 border-1" />
+
+                        <Accordion
+                          type="single"
+                          defaultValue="deriv-item"
+                          collapsible
+                        >
+                          <AccordionItem value="deriv-item">
+                            <AccordionTrigger className="no-ring">
+                              Deriv Transaction
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <SheetClose asChild>
+                                <Link href={link.deposit.href}>
+                                  <li
+                                    className={cn(
+                                      "mb-2 flex h-10  cursor-pointer items-center gap-2 space-x-2 rounded-sm p-2",
+                                      {
+                                        "bg-primary":
+                                          pathname === link.deposit.href,
+                                        "text-white":
+                                          pathname === link.deposit.href,
+                                      }
+                                    )}
+                                  >
+                                    <link.deposit.Icon size={15} />{" "}
+                                    {link.deposit.label}
+                                  </li>
+                                </Link>
+                              </SheetClose>
+
+                              <SheetClose asChild>
+                                <Link href={link.withdrawal.href}>
+                                  <li
+                                    className={cn(
+                                      "mb-2 flex h-10  cursor-pointer items-center gap-2 space-x-2 rounded-sm p-2",
+                                      {
+                                        "bg-primary":
+                                          pathname === link.withdrawal.href,
+                                        "text-white":
+                                          pathname === link.withdrawal.href,
+                                      }
+                                    )}
+                                  >
+                                    <link.withdrawal.Icon size={15} />{" "}
+                                    {link.withdrawal.label}
+                                  </li>
+                                </Link>
+                              </SheetClose>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      </React.Fragment>
+                    );
+                  }
                   const { Icon, href, label } = link;
 
                   return (
                     <React.Fragment key={href}>
-                      <Separator className="border-accent mb-2 border-1" />
+                      <Separator className="border-accent/10 mb-2 border-1" />
                       <SheetClose asChild>
                         <Link href={href}>
                           <li
@@ -72,25 +135,7 @@ const MobileSheet = () => {
           </div>
 
           <SheetFooter className="flex cursor-pointer flex-row items-center  gap-4  shadow-2xl">
-            <Avatar className="size-10">
-              <AvatarImage
-                className="rounded-full"
-                src="https://github.com/shadcn.png"
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-
-            <div
-              onClick={() => signOut()}
-              className="flex w-full items-center justify-between"
-            >
-              <div className="flex   max-w-[60%] flex-col">
-                <h2 className="text-18-medium  truncate">Samuel Obabire</h2>
-                <span>email@gmail.com</span>
-              </div>
-
-              <LogOut className="" size={20} />
-            </div>
+            <ProfileLogout />
           </SheetFooter>
         </SheetContent>
       </Sheet>

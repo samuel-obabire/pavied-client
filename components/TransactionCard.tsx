@@ -1,7 +1,11 @@
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
 
-import { formatCustomDate, getTransactionDetailsByType } from "@/lib/utils";
+import {
+  formatCustomDate,
+  formatNairaAmount,
+  getTransactionDetailsByType,
+} from "@/lib/utils";
 
 const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
   const { icon, label } = getTransactionDetailsByType(transaction);
@@ -30,11 +34,13 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
 
         <div className="flex flex-col items-end gap-2">
           {/* <span className="text-12-semibold">*****122</span> */}
-          <span className="text-16-regular">{transaction.amount}</span>
+          <span className="text-16-regular">
+            {formatNairaAmount(transaction.amount)}
+          </span>
         </div>
       </div>
 
-      <Separator className="my-4 border border-gray-200 opacity-50" />
+      <Separator className="border-accent/10 my-4 border opacity-50" />
     </>
   );
 };

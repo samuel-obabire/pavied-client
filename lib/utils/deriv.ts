@@ -1,6 +1,23 @@
-import { supportedDerivAccountsType } from "@/lib/constants/supportedDerivAccountsType";
+import { DerivAccountLink } from "@/components/DerivAccountSelectionList";
 
-export const getDerivAccount = (currency: Currency) => {
+import { encryptToken } from "./encryption";
+import { supportedDerivAccountsType } from "../constants/supportedDerivAccountsType";
+
+type DerivError = {
+  code: string;
+  message: string;
+};
+
+export const isDerivError = (error: unknown): error is DerivError => {
+  return (
+    error !== null &&
+    typeof error === "object" &&
+    "code" in error &&
+    "message" in error
+  );
+};
+
+export const getDerivAccount = (currency: string) => {
   return supportedDerivAccountsType.find(
     (derivAccount) => currency === derivAccount.currency
   )!;
@@ -57,4 +74,11 @@ export const parseSelectedDerivAccounts = (query: string) => {
   }
 
   return accounts;
+};
+
+export const encryptDerivAccounts = (accounts: DerivAccountLink[]) => {
+  return accounts.map((acc) => ({
+    ...acc,
+    token: encryptToken(acc.token),
+  }));
 };

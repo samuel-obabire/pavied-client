@@ -16,7 +16,7 @@ const OnboardDerivPage = async () => {
 
   return (
     <main className="flex-center container mt-8 max-w-lg flex-col  space-y-14">
-      <ConnectDeriv existingDerivAccounts={derivAccounts} />
+      <ConnectDeriv />
 
       <section className="flex w-full justify-end">
         <SaveOnboardingStep

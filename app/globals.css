@@ -22,6 +22,7 @@
   --color-black-1: #1c1c1c;
   --color-black-2: #101010;
   --color-white: #ffffff;
+  --color-success: #34a851;
 }
 
 @theme inline {
@@ -36,8 +37,8 @@
 
   input::selection,
   textarea::selection {
-    background: Highlight !important; /* system default */
-    color: HighlightText !important;
+    background: Highlight; /* system default */
+    color: HighlightText;
   }
 }
 
@@ -89,6 +90,10 @@
   @apply text-[16px] leading-[20px] font-semibold;
 }
 
+@utility text-16-medium {
+  @apply text-[16px] leading-[20px] font-medium;
+}
+
 @utility text-16-regular {
   @apply text-[16px] leading-[20px] font-normal;
 }
@@ -105,12 +110,16 @@
   @apply text-[12px] leading-[16px] font-normal;
 }
 
+@utility text-12-medium {
+  @apply text-[12px] leading-[16px] font-medium;
+}
+
 @utility text-12-semibold {
   @apply text-[12px] leading-[16px] font-semibold;
 }
 
 @utility btn {
-  @apply cursor-pointer   !rounded-lg  !text-16-bold !p-5 transition-transform duration-200 hover:scale-105 active:scale-95;
+  @apply cursor-pointer   !rounded-lg  !text-16-bold !p-5 transition-transform duration-200 active:scale-[97%];
 }
 
 @utility text-black-1_dark-white {
@@ -170,6 +179,74 @@
     @apply bg-[#F5F6F8] w-24 h-2 rounded-full;
   }
 
+  /* === React DateTimePicker & Calendar Styling === */
+
+  .react-datetime-picker {
+    @apply w-full h-11 flex items-center rounded-md 
+          !bg-white_dark-black-1 !no-ring shadow-black   ring-1 ring-accent dark:ring-0 text-sm font-medium
+         transition-all duration-150;
+  }
+
+  .react-datetime-picker:focus-within {
+    @apply border-primary ring-2 ring-primary/20;
+  }
+
+  .react-datetime-picker__clear-button__icon,
+  .react-datetime-picker__button__icon {
+    @apply stroke-black-1 dark:stroke-accent;
+  }
+
+  /* --- Calendar popup container --- */
+  .react-calendar {
+    @apply rounded-lg border !bg-white_dark-black-1  
+         shadow-lg overflow-hidden;
+  }
+
+  /* --- Calendar navigation (month/year controls) --- */
+  .react-calendar__navigation button {
+    @apply rounded-md transition-colors duration-150;
+  }
+
+  .react-datetime-picker__wrapper {
+    @apply !no-ring;
+  }
+
+  /* --- Day tiles --- */
+  .react-calendar__tile {
+    @apply rounded-md py-2 px-1 transition-colors duration-150;
+  }
+
+  .react-calendar__tile--active {
+    @apply !bg-primary !text-white;
+  }
+
+  /* --- Today's date highlight --- */
+  .react-calendar__tile--now {
+    @apply border border-primary/50 !bg-gray-400;
+  }
+
+  /* === React DateTimePicker Clock Styling === */
+
+  .react-datetime-picker__clock {
+    @apply absolute z-50 mt-2 flex justify-center items-center 
+         rounded-lg border  !bg-white_dark-black-1 shadow-lg p-4 
+         transition-all duration-200 ease-in-out;
+  }
+
+  .react-datetime-picker__clock--open {
+    @apply scale-100 opacity-100 visible;
+  }
+
+  /* Hidden/closed state (for smooth transition) */
+  .react-datetime-picker__clock:not(.react-datetime-picker__clock--open) {
+    @apply scale-95 opacity-0 invisible pointer-events-none;
+  }
+
+  /* --- Clock face --- */
+  .react-clock {
+    @apply w-48 h-48 rounded-full border  relative;
+  }
+
   .inputClass {
     @apply !border-0 !h-[44px] !py-5 !bg-white_dark-black-1 !text-16-regular rounded-sm focus-visible:!ring-0;
   }
@@ -199,6 +276,18 @@
   }
 
   .select {
-    @apply !bg-white_dark-black-1 !rounded-lg  cursor-pointer focus:bg-gray-50 data-[state=checked]:bg-accent data-[state=checked]:font-medium;
+    @apply !bg-white_dark-black-1 !rounded-lg  cursor-pointer  data-[state=checked]:bg-gray-400 data-[state=checked]:font-medium;
+  }
+
+  .select-item {
+    @apply hover:!bg-gray-300 data-[state=checked]:!bg-gray-400 focus:!bg-gray-300;
+  }
+
+  .no-spinners {
+    @apply appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none;
+  }
+
+  .card-border {
+    @apply border border-gray-200  shadow-xs dark:border-none;
   }
 }

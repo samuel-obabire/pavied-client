@@ -1,5 +1,7 @@
 "use server";
 
+import "server-only";
+
 import { updateUserById } from "../firebase/user";
 import action from "../handlers/action";
 import handleError from "../handlers/error";

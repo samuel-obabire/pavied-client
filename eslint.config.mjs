@@ -38,6 +38,7 @@ const eslintConfig = [
       "@stylistic/quotes": "off",
       "@stylistic/semi": "off",
       "@stylistic/jsx-quotes": "off",
+      "@stylistic/indent": "off",
       "@stylistic/space-before-function-paren": "off",
       "@stylistic/multiline-ternary": "off",
       "tailwindcss/no-custom-classname": "off",

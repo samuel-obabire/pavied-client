@@ -70,7 +70,7 @@ const ActionState = ({
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogContent className="bg-white_dark-black-1 !max-w-[432px] border-0 shadow-sm outline-0">
+      <AlertDialogContent className="bg-white_dark-black-1 w-[90%] !max-w-[432px] border-0 shadow-sm outline-0">
         <RenderActionState />
       </AlertDialogContent>
     </AlertDialog>

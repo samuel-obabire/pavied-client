@@ -1,13 +1,17 @@
 import { AvatarImage, AvatarFallback, Avatar } from "@radix-ui/react-avatar";
+import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 import MobileHeader from "@/components/MobileHeader";
 import Sidebar from "@/components/Sidebar";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 
 const MainLayout = async ({ children }: { children: ReactNode }) => {
   const user = await verifySession();
+
+  if (!user) redirect(ROUTES.SIGN_IN);
 
   return (
     <div className="flex h-screen flex-1 overflow-hidden max-md:block">
@@ -34,8 +38,8 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
           <ThemeSwitcher />
         </header>
 
-        <main className="container flex h-[calc(100vh-40px)] flex-col space-y-4 pt-6 md:h-[calc(100vh-56px)]">
-          {children}
+        <main className="flex h-[calc(100vh-40px)] flex-col space-y-4 px-4 pt-6 md:h-[calc(100vh-56px)]">
+          <div className="overflow-y-auto pb-32">{children}</div>
         </main>
       </div>
     </div>

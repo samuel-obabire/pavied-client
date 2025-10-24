@@ -1,17 +1,27 @@
 "use client";
 
-import { useRef, useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
 
 import { removeUserBankAccount } from "@/lib/actions/bank.action";
+import { cn } from "@/lib/utils";
 
 import ActionState, { ActionStateType } from "./ActionState";
 import BankIcon from "./BankIcon";
 
-const BankAccountCard = ({ bankAccounts }: { bankAccounts: BankAccount[] }) => {
+const BankAccountCard = ({
+  bankAccount,
+  selected,
+  removeable = true,
+}: {
+  bankAccount: BankAccount;
+  selected?: boolean;
+  removeable?: boolean;
+}) => {
   const [actionState, setActionState] = useState<ActionStateType>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const bankAccountRef = useRef<null | BankAccount>(null);
+  const { accountName, accountNumber, bankCode, bankName } = bankAccount;
 
   const removeAccount = async (bankAccount: BankAccount) => {
     try {
@@ -33,57 +43,60 @@ const BankAccountCard = ({ bankAccounts }: { bankAccounts: BankAccount[] }) => {
 
   const AccountCard = () => {
     return (
-      <>
-        {bankAccounts.map((bankAccount) => {
-          const { bankCode, accountName, accountNumber, bankName } =
-            bankAccount;
+      <div
+        key={`${accountNumber}_${bankCode}`}
+        className={cn(
+          "bg-accent dark:bg-white_dark-black-1 space-y-3  rounded-2xl px-2 py-4",
+          {
+            "text-secondary": selected,
+            "bg-secondary/5": selected,
+          }
+        )}
+      >
+        <div className="flex justify-between">
+          <div className="flex space-x-3">
+            <BankIcon bankCode={bankCode} />
+            <span className="">{bankName}</span>
+          </div>
 
-          bankAccountRef.current = bankAccount;
-
-          return (
-            <div
-              key={`${accountNumber}_${bankCode}`}
-              className="bg-accent dark:bg-black-2 mx-2  space-y-3 rounded-lg p-3"
+          {removeable && (
+            <span
+              className="form-error text-12-regular cursor-default p-1"
+              onClick={() => removeAccount(bankAccount)}
             >
-              <div className="flex justify-between">
-                <div className="flex space-x-3">
-                  <BankIcon bankCode={bankCode} />
-                  <span className="">{bankName}</span>
-                </div>
+              Remove
+            </span>
+          )}
 
-                <span
-                  className="form-error text-12-regular cursor-default p-1"
-                  onClick={() => removeAccount(bankAccount)}
-                >
-                  Remove
-                </span>
-              </div>
+          {selected && (
+            <Image
+              src="/assets/check-circle.svg"
+              alt=""
+              width={20}
+              height={20}
+            />
+          )}
+        </div>
 
-              <div className="flex items-center justify-between">
-                <span className="text-18-medium">{accountName}</span>
-                <span className="text-12-regular">{accountNumber}</span>
-              </div>
-            </div>
-          );
-        })}
-      </>
+        <div className="flex items-center justify-between">
+          <span className="text-18-medium">{accountName}</span>
+          <span className="text-12-regular">{accountNumber}</span>
+        </div>
+      </div>
     );
   };
 
   return (
-    <div className="max-h-[300px] space-y-2 overflow-y-auto  max-sm:px-4 max-sm:pb-12">
+    <div className="">
       <ActionState
         pendingTitle="Removing Account"
         state={actionState}
         errorMessage={errorMessage}
-        retryAction={() => removeAccount(bankAccountRef.current!)}
+        retryAction={() => removeAccount(bankAccount)}
         successTitle="Account Successfully removed"
       />
-      {bankAccounts.length ? (
-        <AccountCard />
-      ) : (
-        <i className="block w-full text-center">No account added!</i>
-      )}
+
+      <AccountCard />
     </div>
   );
 };
