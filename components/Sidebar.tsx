@@ -1,10 +1,7 @@
 "use client";
 
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
 import React from "react";
 
 import {
@@ -18,12 +15,13 @@ import { sideLinks } from "@/lib/constants/sideLinks";
 import { cn } from "@/lib/utils";
 
 import BrandName from "./BrandName";
+import ProfileLogout from "./ProfileLogout";
 
 const Sidebar = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="bg-white_dark-black-1 sticky top-0 left-0 hidden w-full flex-col p-4 md:flex md:w-[190px] lg:w-[270px]">
+    <aside className="bg-white_dark-black-1 sticky top-0 left-0 hidden w-full flex-col p-4 md:flex md:w-[190px] lg:w-[210px]">
       <div className="my-2 scale-85">
         <BrandName />
       </div>
@@ -35,7 +33,7 @@ const Sidebar = () => {
               if (link.deposit && link.withdrawal) {
                 return (
                   <React.Fragment key={link.deposit.href}>
-                    <Separator className="border-accent mb-2 border-1" />
+                    <Separator className="border-accent/10 mb-2 border-1" />
 
                     <Accordion
                       type="single"
@@ -87,7 +85,7 @@ const Sidebar = () => {
 
               return (
                 <React.Fragment key={href}>
-                  <Separator className="border-accent mb-2 border-1" />
+                  <Separator className="border-accent/10 mb-2 border-1" />
 
                   <Link href={href}>
                     <li
@@ -108,25 +106,7 @@ const Sidebar = () => {
           </ul>
         </nav>
 
-        <div
-          onClick={() => signOut()}
-          className="flex cursor-pointer flex-row items-center justify-between gap-2  shadow-2xl"
-        >
-          <Avatar className="hidden size-10 lg:block">
-            <AvatarImage
-              className="rounded-full"
-              src="https://github.com/shadcn.png"
-            />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-
-          <div className="flex  max-w-[60%] flex-col">
-            <h2 className="text-16-regular  truncate">Samuel Obabire</h2>
-            <span>email@gmail.com</span>
-          </div>
-
-          <LogOut className="ml-2" size={20} />
-        </div>
+        <ProfileLogout />
       </div>
     </aside>
   );

@@ -31,6 +31,11 @@ export default function DatePicker() {
       <div className="relative">
         {/* Start Date */}
         <DateTimePicker
+          dayPlaceholder="dd"
+          hourPlaceholder="hh"
+          yearPlaceholder="yyyy"
+          secondPlaceholder="ss"
+          minutePlaceholder="mm"
           className="px-2"
           onChange={handleStartChange}
           value={startDate}
@@ -52,6 +57,11 @@ export default function DatePicker() {
       <div className="relative">
         {/* Start Date */}
         <DateTimePicker
+          dayPlaceholder="dd"
+          hourPlaceholder="hh"
+          yearPlaceholder="yyyy"
+          secondPlaceholder="ss"
+          minutePlaceholder="mm"
           className="px-2"
           onChange={handleEndChange}
           value={endDate}

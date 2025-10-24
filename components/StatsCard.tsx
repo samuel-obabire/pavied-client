@@ -27,8 +27,8 @@ const StatsCard = ({ title, subText, count, description }: StatsCardProps) => {
             <Info className="text-secondary size-4" />
           </TooltipTrigger>
           {description && (
-            <TooltipContent className="bg-white shadow-sm">
-              <p className="bg-white text-wrap">{description}</p>
+            <TooltipContent className="bg-white_dark-black-1 shadow-sm">
+              <p className="text-wrap">{description}</p>
             </TooltipContent>
           )}
         </Tooltip>

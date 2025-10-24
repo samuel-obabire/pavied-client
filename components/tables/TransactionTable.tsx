@@ -89,7 +89,7 @@ const TransactionTable = <TData, TValue>({
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row, i) => (
                 <TableRow
-                  className={`${i % 2 === 0 ? "" : "bg-accent dark:bg-black-2"}   border-0`}
+                  className={`${i % 2 === 0 ? "" : "bg-accent dark:bg-black-2"} hover:bg-secondary/5 dark:hover:bg-black-3 cursor-pointer border-0  transition-colors`}
                   key={row.id}
                   data-state={row.getIsSelected() ? "selected" : undefined}
                 >

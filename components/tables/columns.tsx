@@ -2,12 +2,14 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 
+import { ROUTES } from "@/lib/constants/routes";
 import {
   formatCustomDate,
   formatNairaAmount,
   getTransactionDetailsByType,
 } from "@/lib/utils";
 
+import ExternalLink from "../ExternalLink";
 import StatusBadge from "../StatusBadge";
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -58,6 +60,15 @@ export const columns: ColumnDef<Transaction>[] = [
           <StatusBadge variant={status}>{status}</StatusBadge>
         </div>
       );
+    },
+  },
+  {
+    id: "link",
+
+    cell: ({ row }) => {
+      const paymentId = row.original.transactionId;
+
+      return <ExternalLink link={`${ROUTES.TRANSACTIONS}/${paymentId}`} />;
     },
   },
 ];

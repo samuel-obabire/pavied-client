@@ -4,9 +4,12 @@ import { OnboardingStep } from "./constants/onboarding";
 import { supportedDerivAccountsType } from "./constants/supportedDerivAccountsType";
 
 export const AccountRegistrationSchema = z.object({
-  fullName: z.string().min(5, {
-    error: "Name is required and must have a minimum of 5 characters",
-  }),
+  fullName: z
+    .string()
+    .min(5, {
+      error: "Name is required and must have a minimum of 5 characters",
+    })
+    .max(30, { error: "Name must have a maximum character of 30 characters" }),
   countryOfResidence: z
     .string()
     .min(2, { error: "Please select your nationality" }),

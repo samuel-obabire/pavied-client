@@ -40,7 +40,7 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
         </div>
       </div>
 
-      <Separator className="my-4 border border-gray-200 opacity-50" />
+      <Separator className="border-accent/10 my-4 border opacity-50" />
     </>
   );
 };

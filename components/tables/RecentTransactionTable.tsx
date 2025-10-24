@@ -22,16 +22,27 @@ const RecentTransactionsTable = ({
   transactions: Transaction[];
 }) => {
   return (
-    <Table className="border-separate border-spacing-x-4 max-sm:w-auto max-sm:table-auto">
-      <TableHeader className="bg-accent text-16-bold  dark:bg-black-2">
-        <TableRow>
-          <TableHead className="px-4">S/N</TableHead>
-          <TableHead className="px-4">Transaction Type</TableHead>
-          <TableHead className="px-4">Amount</TableHead>
-          <TableHead className="px-4">Transaction Date</TableHead>
-          <TableHead className="px-4 text-right">Status</TableHead>
+    <Table className="border-black-1  w-full overflow-hidden rounded-2xl">
+      <TableHeader className="bg-secondary/20 dark:bg-black-2">
+        <TableRow className="overflow-hidden border-none">
+          <TableHead className="border-black-1  rounded-l-2xl border-r px-4 py-3">
+            S/N
+          </TableHead>
+          <TableHead className="border-black-1  border-r px-4 py-3">
+            Transaction Type
+          </TableHead>
+          <TableHead className="border-black-1  border-r px-4 py-3">
+            Amount
+          </TableHead>
+          <TableHead className="border-black-1  border-r px-4 py-3">
+            Transaction Date
+          </TableHead>
+          <TableHead className="rounded-r-2xl px-4 py-3 text-right">
+            Status
+          </TableHead>
         </TableRow>
       </TableHeader>
+
       <TableBody>
         {transactions.map((transaction, index) => {
           const { label: transactionType } =
@@ -40,21 +51,17 @@ const RecentTransactionsTable = ({
           return (
             <TableRow
               key={transaction.transactionId}
-              onClick={() => console.log(transaction.amount)}
+              className="border-accent/10 hover:bg-secondary/10 dark:hover:bg-black-3 cursor-pointer border-b transition-colors"
             >
-              <TableCell className="p-4">{index + 1}</TableCell>
-
-              <TableCell className="p-4">{transactionType}</TableCell>
-
-              <TableCell className="p-4">
+              <TableCell className="px-4 py-3">{index + 1}</TableCell>
+              <TableCell className="px-4 py-3">{transactionType}</TableCell>
+              <TableCell className="px-4 py-3">
                 {formatNairaAmount(transaction.amount)}
               </TableCell>
-
-              <TableCell className="p-4">
+              <TableCell className="px-4 py-3">
                 {formatCustomDate(transaction.createdAt)}
               </TableCell>
-
-              <TableCell className="p-4 text-right">
+              <TableCell className="px-4 py-3 text-right">
                 <StatusBadge variant={transaction.status}>
                   {transaction.status}
                 </StatusBadge>

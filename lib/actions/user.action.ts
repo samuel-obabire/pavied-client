@@ -1,9 +1,12 @@
 "use server";
 
-import { updateUserById } from "../firebase/user";
+import "server-only";
+
+import { getUserById, updateUserById } from "../firebase/user";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { UnauthorizedError } from "../http-errors";
+import { NotFoundError, UnauthorizedError } from "../http-errors";
+import { verifySession } from "../server";
 import { AccountRegistrationSchema } from "../validation";
 
 export const updateUser = async (
@@ -34,4 +37,24 @@ export const updateUser = async (
   }
 
   return { success: true };
+};
+
+export const getUser = async (
+  userId: string
+): Promise<ActionResponse<User>> => {
+  const loggedInUser = await verifySession();
+
+  try {
+    if (!loggedInUser?.id || userId !== loggedInUser.id) {
+      throw new UnauthorizedError("Not Authorized");
+    }
+
+    const userData = await getUserById(userId);
+
+    if (!userData) throw new NotFoundError("User");
+
+    return { success: true, data: userData };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
 };

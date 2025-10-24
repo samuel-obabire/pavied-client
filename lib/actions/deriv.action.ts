@@ -1,5 +1,7 @@
 "use server";
 
+import "server-only";
+
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
 
@@ -27,7 +29,7 @@ import {
 import { updatePaymentTransaction } from "./payment.action";
 import { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
 import { setById } from "../firebase/firestore";
-import { paymentAgentWithdraw, verifyWithdrawEmail } from "../utils/deriv";
+import { verifyWithdrawEmail, paymentAgentWithdraw } from "../handlers/deriv";
 
 export const getUserDerivAccounts = async (
   userId: string
@@ -257,11 +259,12 @@ export const createDerivWithdrawalTransaction = async (
     await setById("transactions", transactionId, {
       transactionId,
       userId,
-      amount,
+      amount: 1500 * amount,
       status: "pending",
       type: "deriv_withdrawal",
 
       extra: {
+        amount,
         currency,
         derivLoginId,
         receivingBankAccountNumber,

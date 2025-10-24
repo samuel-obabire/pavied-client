@@ -26,8 +26,11 @@ type User = {
   referredBy?: string;
   referralEarnings?: number;
   referralCount?: number;
-  totalDeposits?: number;
-  totalWithdrawals?: number;
+  totalTransactions: number;
+  totalDeposits: number;
+  totalWithdrawals: number;
+  totalSuccessfulTransactions: number;
+  totalFailedTransactions: number;
   provider: string;
   providerAccountId: string;
   createdAt: Date;
@@ -83,6 +86,7 @@ type DerivWithdrawal = BaseTransaction & {
   type: "deriv_withdrawal";
   extra: {
     currency: string;
+    amount: number;
     derivLoginId: string;
     receivingBankAccountNumber: string;
     recievingBankAccountName: string;
