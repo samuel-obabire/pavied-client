@@ -29,7 +29,13 @@ import {
 import { updatePaymentTransaction } from "./payment.action";
 import { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
 import { setById } from "../firebase/firestore";
-import { verifyWithdrawEmail, paymentAgentWithdraw } from "../handlers/deriv";
+import {
+  verifyWithdrawEmail,
+  paymentAgentWithdraw,
+  getDerivAccountToken,
+} from "../handlers/deriv";
+import { encryptDerivAccounts } from "../utils/deriv";
+import { decryptToken } from "../utils/encryption";
 
 export const getUserDerivAccounts = async (
   userId: string
@@ -69,12 +75,14 @@ export const addDerivAccounts = async (
 
   const { session, params: parsedDerivAccounts } = result;
 
+  const encryptedAccounts = encryptDerivAccounts(parsedDerivAccounts);
+
   try {
     const userId = session?.user.id;
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await addDerivAccountsToCollection(parsedDerivAccounts, userId);
+    await addDerivAccountsToCollection(encryptedAccounts, userId);
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -279,7 +287,13 @@ export const createDerivWithdrawalTransaction = async (
       },
     } satisfies DerivWithdrawal);
 
-    await verifyWithdrawEmail();
+    const accountToken = await getDerivAccountToken(userId, derivLoginId);
+    if (!accountToken) throw new Error("Account not found");
+
+    await verifyWithdrawEmail({
+      accountId: derivLoginId,
+      userToken: decryptToken(accountToken),
+    });
 
     return { success: true, data: { transactionId } };
   } catch (error) {
@@ -303,8 +317,10 @@ export const processDerivWithdrawal = async (paymentData: {
 
   const { session, params } = result;
 
+  const userId = session?.user.id;
+
   try {
-    if (!session?.user?.id) {
+    if (!userId) {
       throw new UnauthorizedError("Not Authorized");
     }
 
@@ -315,12 +331,18 @@ export const processDerivWithdrawal = async (paymentData: {
 
     if (!transaction) throw new Error("Transaction not found");
 
+    const accountToken = await getDerivAccountToken(
+      userId,
+      transaction.extra.derivLoginId
+    );
+    if (!accountToken) throw new Error("Account not found");
+
     const paymentAgentWithdrawResponse = await paymentAgentWithdraw({
       amount: transaction.amount,
       currency: transaction.extra.currency,
       paymentagent_loginid: "CR2091245", // Todo: get the id from database
       verification_code: paymentData.pin,
-      token: process.env.DERIV_CLIENT_TEST_TOKEN!, // Todo: get the token from database
+      token: decryptToken(accountToken),
     });
 
     if (paymentAgentWithdrawResponse?.paymentagent_withdraw === 1) {

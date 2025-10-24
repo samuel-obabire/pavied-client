@@ -3,9 +3,12 @@ import "server-only";
 
 import { DerivAPIClient } from "@deriv-com/api-client";
 
+import handleError from "./error";
 import { PaymentAgentWithdrawParams } from "../actions/types/action";
+import { getDerivAccounts } from "../firebase/deriv";
 import { isDerivError } from "../utils/deriv";
-const APP_ID = process.env.NEXT_PUBLIC_ADMIN_APP_ID || 107466;
+
+const APP_ID = process.env.DERIV_APP_ID;
 
 const createDerivApiConnection = () => {
   if (!APP_ID) throw new Error("APP_ID is missing");
@@ -55,12 +58,10 @@ export const paymentAgentWithdraw = async (
   }
 };
 
-export const verifyWithdrawEmail = async (
-  data: { userToken: string; accountId: string } = {
-    userToken: process.env.DERIV_CLIENT_TEST_TOKEN!,
-    accountId: "CR9223580",
-  }
-) => {
+export const verifyWithdrawEmail = async (data: {
+  userToken: string;
+  accountId: string;
+}) => {
   const derivAPI = createDerivApiConnection();
 
   try {
@@ -88,4 +89,29 @@ export const verifyWithdrawEmail = async (
   } finally {
     derivAPI.disconnect();
   }
+};
+
+export const getUserDerivAccountWithTokens = async (
+  userId: string
+): Promise<ActionResponse<DerivAccount[]>> => {
+  try {
+    const derivAccounts = await getDerivAccounts(userId);
+
+    return { success: true, data: derivAccounts };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+};
+
+export const getDerivAccountToken = async (
+  userId: string,
+  derivLoginId: string
+) => {
+  const res = await getUserDerivAccountWithTokens(userId);
+  if (!res.success) return null;
+
+  const account = res.data!.find((acc) => acc.accountId === derivLoginId);
+  if (!account || !account.token) return null;
+
+  return account.token;
 };
