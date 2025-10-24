@@ -39,7 +39,15 @@ const SaveOnboardingStep = ({
       if (onboardingRes?.success) {
         await update({ trigger: "update" });
 
-        router.push(ROUTES[nextRoute]);
+        const route = ROUTES[nextRoute];
+        if (typeof route === "string") {
+          router.push(route);
+        } else {
+          console.error(
+            "Selected route requires parameters or is not a string route:",
+            nextRoute
+          );
+        }
       }
     } finally {
       setLoading(false);

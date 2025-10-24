@@ -3,6 +3,8 @@
 import "server-only";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 
 import { DerivAccountLink } from "@/components/DerivAccountSelectionList";
@@ -34,8 +36,7 @@ import {
   paymentAgentWithdraw,
   getDerivAccountToken,
 } from "../handlers/deriv";
-import { encryptDerivAccounts } from "../utils/deriv";
-import { decryptToken } from "../utils/encryption";
+import { decryptToken, encryptDerivAccounts } from "../utils/server/encryption";
 
 export const getUserDerivAccounts = async (
   userId: string
@@ -359,4 +360,26 @@ export const processDerivWithdrawal = async (paymentData: {
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
+};
+
+export const setDerivCookie = async (
+  searchParams: string
+): Promise<ActionResponse> => {
+  const user = await verifySession();
+  console.log(searchParams);
+
+  if (!user?.id || !searchParams || typeof searchParams !== "string") {
+    return redirect(ROUTES.SIGN_IN);
+  }
+
+  const cookieStore = await cookies();
+
+  cookieStore.set("deriv-accounts", searchParams, {
+    maxAge: 900, // valid for 15mins
+    secure: true,
+    httpOnly: true,
+    sameSite: "strict",
+  });
+
+  return { success: true };
 };
