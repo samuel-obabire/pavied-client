@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     maxAge: 900, // valid for 15mins
     secure: true,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
   });
 
   return NextResponse.redirect(new URL(ROUTES.CONNECT_DERIV, request.url));
