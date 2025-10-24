@@ -7,12 +7,11 @@ import {
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage, getDownloadURL } from "firebase-admin/storage";
 
-import serviceAccountJson from "./serviceAccountKey.json";
-
 let serviceAccount: ServiceAccount;
 
 if (process.env.NODE_ENV === "development") {
-  serviceAccount = serviceAccountJson as ServiceAccount;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  serviceAccount = require("./serviceAccountKey.json") as ServiceAccount;
 } else {
   serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT!);
 }
