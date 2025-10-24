@@ -16,10 +16,5 @@ export async function GET(request: NextRequest) {
     sameSite: "strict",
   });
 
-  const requestUrl =
-    process.env.NODE_ENV === "development"
-      ? "localhost:3000/"
-      : process.env.NEXT_PUBLIC_URL!;
-
-  return NextResponse.redirect(new URL(ROUTES.CONNECT_DERIV, requestUrl));
+  return NextResponse.redirect(new URL(ROUTES.CONNECT_DERIV, request.url));
 }
