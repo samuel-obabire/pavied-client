@@ -34,8 +34,7 @@ import {
   paymentAgentWithdraw,
   getDerivAccountToken,
 } from "../handlers/deriv";
-import { encryptDerivAccounts } from "../utils/deriv";
-import { decryptToken } from "../utils/encryption";
+import { decryptToken, encryptDerivAccounts } from "../utils/server/encryption";
 
 export const getUserDerivAccounts = async (
   userId: string

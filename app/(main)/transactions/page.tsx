@@ -17,7 +17,7 @@ import { getUserTransactions } from "@/lib/actions/payment.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 
-export const transactionsSearchParams = {
+const transactionsSearchParams = {
   page: parseAsInteger.withDefault(1),
   perPage: parseAsInteger.withDefault(10),
   startDate: parseAsTimestamp,
