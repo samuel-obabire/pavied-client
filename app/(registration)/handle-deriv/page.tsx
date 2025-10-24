@@ -1,16 +1,20 @@
-import { redirect } from "next/navigation";
+import { Loader } from "lucide-react";
+import { Suspense } from "react";
 
-import { ROUTES } from "@/lib/constants/routes";
-import { verifySession } from "@/lib/server";
+import HandleDerivConn from "@/components/HandleDerivConn";
 
-const HandleDerivRedirectPage = async () => {
-  const user = await verifySession();
-
-  if (!user?.id) redirect(ROUTES.SIGN_IN);
-
-  redirect(ROUTES.CONNECT_DERIV);
-
-  return null;
+const HandleDerivRedirectPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex-center mt-8 flex">
+          <Loader className="animate-spin" />
+        </div>
+      }
+    >
+      <HandleDerivConn />
+    </Suspense>
+  );
 };
 
 export default HandleDerivRedirectPage;
