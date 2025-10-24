@@ -9,6 +9,7 @@ export const ROUTES = {
   ONBOARD_DERIV: "/onboarding/deriv",
   ONBOARD_BANK: "/onboarding/bank",
   TRANSACTIONS: "/transactions",
+  HANDLE_DERIV: "/handle-deriv",
   CONNECT_DERIV: "/connect-deriv",
   DERIV: {
     DEPOSIT: "/deriv/deposit",
