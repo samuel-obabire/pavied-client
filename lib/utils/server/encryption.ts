@@ -1,4 +1,8 @@
+import "server-only";
+
 import crypto from "crypto";
+
+import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
 
 const ALGO = "aes-256-gcm";
 const KEY = Buffer.from(process.env.TOKEN_ENCRYPTION_KEY!, "utf8");
@@ -32,4 +36,11 @@ export const decryptToken = (encryptedToken: string) => {
     decipher.final(),
   ]);
   return decrypted.toString("utf8");
+};
+
+export const encryptDerivAccounts = (accounts: DerivAccountLink[]) => {
+  return accounts.map((acc) => ({
+    ...acc,
+    token: encryptToken(acc.token),
+  }));
 };

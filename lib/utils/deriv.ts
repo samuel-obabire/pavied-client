@@ -1,6 +1,3 @@
-import { DerivAccountLink } from "@/components/DerivAccountSelectionList";
-
-import { encryptToken } from "./encryption";
 import { supportedDerivAccountsType } from "../constants/supportedDerivAccountsType";
 
 type DerivError = {
@@ -74,11 +71,4 @@ export const parseSelectedDerivAccounts = (query: string) => {
   }
 
   return accounts;
-};
-
-export const encryptDerivAccounts = (accounts: DerivAccountLink[]) => {
-  return accounts.map((acc) => ({
-    ...acc,
-    token: encryptToken(acc.token),
-  }));
 };

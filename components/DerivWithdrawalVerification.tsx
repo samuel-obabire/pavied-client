@@ -59,7 +59,7 @@ const DerivWithdrawalVerification = ({
               </p>
               <Link
                 className="btn btn-secondary flex-center  flex h-4 text-center"
-                href={ROUTES.ORDERS}
+                href={ROUTES.TRANSACTIONS}
               >
                 View Transaction
               </Link>
