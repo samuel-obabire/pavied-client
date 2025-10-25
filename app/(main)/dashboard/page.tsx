@@ -29,7 +29,7 @@ const DashboardPage = async () => {
 
   return (
     <>
-      <section className="grid  flex-none grid-cols-2 gap-4 xl:flex">
+      <section className="grid flex-none grid-cols-2 gap-1 sm:gap-2 xl:flex">
         <StatsCard
           title="Total Transactions"
           subText="Total  transactions"
@@ -43,9 +43,9 @@ const DashboardPage = async () => {
           count={totalDeposits}
         />
         <StatsCard
-          title="Succesful Transactions"
-          subText="Total succesful transactions"
-          description="Total succesful transactions made so far. Transactions that were success"
+          title="Successful Transactions"
+          subText="Total successful transactions"
+          description="Total successful transactions made so far. Transactions that were success"
           count={totalSuccessfulTransactions}
         />
         <StatsCard

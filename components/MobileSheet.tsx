@@ -134,7 +134,7 @@ const MobileSheet = () => {
             </nav>
           </div>
 
-          <SheetFooter className="flex cursor-pointer flex-row items-center  gap-4  shadow-2xl">
+          <SheetFooter className="flex flex-row items-center  gap-4 ">
             <ProfileLogout />
           </SheetFooter>
         </SheetContent>

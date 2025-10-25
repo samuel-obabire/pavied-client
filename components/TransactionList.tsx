@@ -8,7 +8,7 @@ const TransactionList = ({
   transactionRes: ActionResponse<Transaction[]>;
 }) => {
   return (
-    <div className="bg-white_dark-black-1 min-h-[300px] flex-col space-y-4 p-2">
+    <div className="bg-white_dark-black-1 min-h-[100px] flex-col space-y-4 p-2">
       <DataRenderer
         data={transactionRes.data}
         success={transactionRes.success}
