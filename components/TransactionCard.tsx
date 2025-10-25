@@ -7,6 +7,8 @@ import {
   getTransactionDetailsByType,
 } from "@/lib/utils";
 
+import StatusBadge from "./StatusBadge";
+
 const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
   const { icon, label } = getTransactionDetailsByType(transaction);
 
@@ -33,10 +35,12 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
         </div>
 
         <div className="flex flex-col items-end gap-2">
-          {/* <span className="text-12-semibold">*****122</span> */}
           <span className="text-16-regular">
             {formatNairaAmount(transaction.amount)}
           </span>
+          <StatusBadge variant={transaction.status}>
+            {transaction.status}
+          </StatusBadge>
         </div>
       </div>
 

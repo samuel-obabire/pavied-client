@@ -14,7 +14,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
   if (!user) redirect(ROUTES.SIGN_IN);
 
   return (
-    <div className="flex h-screen flex-1 overflow-hidden max-md:block">
+    <div className="flex h-[100dvh] flex-1 overflow-hidden max-md:block">
       <MobileHeader />
 
       <Sidebar />
@@ -38,7 +38,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
           <ThemeSwitcher />
         </header>
 
-        <main className="flex h-[calc(100vh-40px)] flex-col space-y-4 px-4 pt-6 md:h-[calc(100vh-56px)]">
+        <main className="flex h-[calc(100dvh-40px)] flex-col space-y-4 px-2 pt-6 md:h-[calc(100dvh-56px)]">
           <div className="overflow-y-auto pb-32">{children}</div>
         </main>
       </div>

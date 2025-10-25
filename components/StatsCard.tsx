@@ -18,9 +18,9 @@ type StatsCardProps = {
 
 const StatsCard = ({ title, subText, count, description }: StatsCardProps) => {
   return (
-    <div className="bg-white_dark-black-1 card-border  flex flex-1 flex-col gap-3 rounded-lg  p-4 ">
+    <div className="bg-white_dark-black-1 card-border  flex flex-1 flex-col gap-3 rounded-lg  px-2 py-4 ">
       <div className="flex  items-center justify-between">
-        <span className="md:text-16-regular">{title}</span>
+        <span className="text-14-regular md:text-16-regular">{title}</span>
 
         <Tooltip>
           <TooltipTrigger>
