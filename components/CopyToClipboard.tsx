@@ -4,7 +4,7 @@ import { Copy, CopyCheck } from "lucide-react";
 import { useState } from "react";
 import { useCopyToClipboard } from "react-use";
 
-const CopyToClipboard = ({ text, className }: { text: string, className: string }) => {
+const CopyToClipboard = ({ text, className }: { text: string, className?: string }) => {
   const [copied, setCopied] = useState(false);
   const [state, copyToClipboard] = useCopyToClipboard();
 
