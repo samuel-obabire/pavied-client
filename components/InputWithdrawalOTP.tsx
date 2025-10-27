@@ -68,8 +68,10 @@ const InputWithdrawalOTP = ({
                   <FormControl>
                     <InputOTP
                       maxLength={8}
+                      type="text"
+                      inputMode="text"
                       {...field}
-                      // pattern="/^[a-zA-Z0-9]*$/"
+
                     >
                       <InputOTPGroup className="flex gap-2 py-2">
                         <InputOTPSlot index={0} />

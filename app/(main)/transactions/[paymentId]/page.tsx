@@ -24,11 +24,11 @@ const DetailRow = ({
   </div>
 )
 
-export default async function TransactionDetailsPage({
+const TransactionDetailsPage = async({
   params,
 }: {
   params: Promise<{ paymentId: string }>
-}) {
+}) => {
   const user = await verifySession()
   if (!user?.id) redirect(ROUTES.SIGN_IN)
 
@@ -151,3 +151,5 @@ export default async function TransactionDetailsPage({
     </div>
   )
 }
+
+export default TransactionDetailsPage
