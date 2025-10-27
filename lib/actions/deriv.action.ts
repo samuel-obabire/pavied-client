@@ -208,6 +208,7 @@ export const createDerivDepositTransaction = async (
           acountName: "Evarest Direct Technologies",
         },
         extra: {
+          amount: amount / 1500, // Todo: get rate from database
           currency,
           derivLoginId,
           paidFromBankName,

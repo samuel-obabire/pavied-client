@@ -47,6 +47,26 @@ export const formatCustomDate = (dateInput: Date | string): string => {
   return `${timePart} • ${dayPart} ${monthPart} ${yearPart}`;
 };
 
+export const formatDateTime = (inputDate: Date) => {
+  const date = new Date(inputDate);
+
+  const dateStr = date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const timeStr = `${hours}:${minutes}`;
+
+  const period = date.getHours() >= 12 ? "PM" : "AM";
+
+  // return { date: dateStr, time: timeStr, period };
+
+  return `${dateStr} at ${timeStr} ${period}`;
+}
+
 export const calculatePaymentExpiry = (createdAt: Date, limitMinutes = 10) => {
   const created = new Date(createdAt);
 
@@ -77,5 +97,13 @@ export const formatNairaAmount = (amount: number) => {
     style: "currency",
     currency: "NGN",
     minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount);
+};
+
+export const formatNumber = (number: number) => {
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(number);
 };

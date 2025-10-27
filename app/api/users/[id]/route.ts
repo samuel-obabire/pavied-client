@@ -1,6 +1,8 @@
+import { Timestamp } from "firebase-admin/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
-import { createUser, getUserById } from "@/lib/firebase/user";
+import { db } from "@/firebase.config";
+import { getUserById } from "@/lib/firebase/user";
 import handleError from "@/lib/handlers/error";
 
 // GET /api/users/:[id]
@@ -21,11 +23,20 @@ export async function GET(
   }
 }
 
+// POST /api/users/:[id]
 export async function POST(request: NextRequest) {
   const user = (await request.json()) as User;
 
   try {
-    await createUser(user.id, user);
+    const userRef = db.collection("users").doc(user.id)
+
+    await db.runTransaction(async (t) => {
+        const res = await t.get(userRef);
+
+        if (res.exists) throw new Error("User already exist in the database");
+
+        t.set(userRef, { ...user, createdAt: Timestamp.now(), updatedAt: Timestamp.now(), });
+      });
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {

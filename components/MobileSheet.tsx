@@ -134,8 +134,10 @@ const MobileSheet = () => {
             </nav>
           </div>
 
-          <SheetFooter className="flex flex-row items-center  gap-4 ">
-            <ProfileLogout />
+          <SheetFooter className="p-0">
+            <div className="w-full min-w-0 items-center  gap-4 overflow-hidden">
+              <ProfileLogout />
+            </div>
           </SheetFooter>
         </SheetContent>
       </Sheet>
