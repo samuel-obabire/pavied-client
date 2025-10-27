@@ -10,11 +10,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Separator } from "@/components/ui/separator";
 import { sideLinks } from "@/lib/constants/sideLinks";
 import { cn } from "@/lib/utils";
 
 import BrandName from "./BrandName";
+import Divider from "./Divider";
 import ProfileLogout from "./ProfileLogout";
 
 const Sidebar = () => {
@@ -33,7 +33,7 @@ const Sidebar = () => {
               if (link.deposit && link.withdrawal) {
                 return (
                   <React.Fragment key={link.deposit.href}>
-                    <Separator className="border-accent/10 mb-2 border-1" />
+                    <Divider />
 
                     <Accordion
                       type="single"
@@ -85,7 +85,7 @@ const Sidebar = () => {
 
               return (
                 <React.Fragment key={href}>
-                  <Separator className="border-accent/10 mb-2 border-1" />
+                  <Divider />
 
                   <Link href={href}>
                     <li

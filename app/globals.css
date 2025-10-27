@@ -23,6 +23,7 @@
   --color-black-2: #101010;
   --color-white: #ffffff;
   --color-success: #34a851;
+  --color-failed: #E20404;
 }
 
 @theme inline {
