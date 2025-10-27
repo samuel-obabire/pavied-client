@@ -133,11 +133,6 @@ const TransactionDetailsPage = async({
           {formatNumber(amount)}
         </div>
 
-        <div className="text-14-medium flex items-center gap-1">
-          Transaction ID: {transactionId}
-          <CopyToClipboard className="size-4" text={transactionId} />
-        </div>
-
         <Divider className="my-2 w-full" />
 
         <DetailRow label="Transaction type">
@@ -145,6 +140,11 @@ const TransactionDetailsPage = async({
         </DetailRow>
 
         {renderTypeDetails()}
+
+        <DetailRow label="Transaction Id">
+          Transaction ID: {transactionId}
+          <CopyToClipboard className="size-4" text={transactionId} />
+        </DetailRow>
 
         <DetailRow label="Date">{formatDateTime(createdAt)}</DetailRow>
       </div>

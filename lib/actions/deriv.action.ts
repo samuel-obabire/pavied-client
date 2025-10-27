@@ -340,7 +340,7 @@ export const processDerivWithdrawal = async (paymentData: {
     if (!accountToken) throw new Error("Account not found");
 
     const paymentAgentWithdrawResponse = await paymentAgentWithdraw({
-      amount: transaction.amount,
+      amount: transaction.extra.amount,
       currency: transaction.extra.currency,
       paymentagent_loginid: "CR2091245", // Todo: get the id from database
       verification_code: paymentData.pin,
