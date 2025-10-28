@@ -18,7 +18,7 @@ const DetailRow = ({
   label: string
   children: React.ReactNode
 }) => (
-  <div className="flex w-full justify-between gap-3">
+  <div className="flex w-full items-baseline justify-between gap-3">
     <span>{label}</span>
     <div className="text-right">{children}</div>
   </div>
@@ -125,17 +125,12 @@ const TransactionDetailsPage = async({
     <div className="space-y-6 px-4">
       <h1 className="text-16-medium">Transaction details</h1>
 
-      <div className="bg-white_dark-black-1 card-border text-14-medium sm:text-16-medium mx-auto flex w-full max-w-[450px] flex-col items-center gap-3 rounded-3xl px-4 py-8">
+      <div className="bg-white_dark-black-1 card-border text-14-medium sm:text-16-medium mx-auto flex w-full max-w-[550px] flex-col items-center gap-3 rounded-3xl px-4 py-8">
         <div>{statusText}</div>
 
         <div className="text-32-normal font-bold">
           <span className="text-16-bold">₦</span>
           {formatNumber(amount)}
-        </div>
-
-        <div className="text-14-medium flex items-center gap-1">
-          Transaction ID: {transactionId}
-          <CopyToClipboard className="size-4" text={transactionId} />
         </div>
 
         <Divider className="my-2 w-full" />
@@ -145,6 +140,11 @@ const TransactionDetailsPage = async({
         </DetailRow>
 
         {renderTypeDetails()}
+
+        <DetailRow label="Txid">
+          {transactionId}
+          <CopyToClipboard className="size-4" text={transactionId} />
+        </DetailRow>
 
         <DetailRow label="Date">{formatDateTime(createdAt)}</DetailRow>
       </div>
