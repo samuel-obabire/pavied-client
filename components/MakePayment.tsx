@@ -14,11 +14,11 @@ import InfoCard from "./InfoCard";
 import PaymentCountdown from "./PaymentCountDown";
 
 type MakePaymentProps = {
-  paymentId: string;
   transaction: Transaction;
+  handleRecieptUploadSuccess: (success: boolean) => void
 };
 
-const MakePayment = ({ paymentId, transaction }: MakePaymentProps) => {
+const MakePayment = ({ transaction, handleRecieptUploadSuccess }: MakePaymentProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,13 +31,13 @@ const MakePayment = ({ paymentId, transaction }: MakePaymentProps) => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("paymentId", paymentId);
+    formData.append("paymentId", transaction.transactionId);
 
     setIsLoading(true);
 
     try {
-      const result = await uploadPaymentReciept(formData);
-      console.log(result);
+      const uploadResult = await uploadPaymentReciept(formData);
+      if (uploadResult.success) handleRecieptUploadSuccess(true)
     } catch (error) {
       if (error instanceof Error) {
         console.error(error.message);
@@ -82,7 +82,7 @@ const MakePayment = ({ paymentId, transaction }: MakePaymentProps) => {
                   <span>{transaction.assignedBank.accountNumber}</span>
                 </div>
 
-                <CopyToClipboard text={paymentId} />
+                <CopyToClipboard text={transaction.transactionId} />
               </div>
             </div>
 

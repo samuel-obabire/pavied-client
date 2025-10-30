@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DerivAccountLink } from "@/components/DerivAccountSelectionList";
 import { db } from "@/firebase.config";
 
+import { api } from "../api";
 import { ROUTES } from "../constants/routes";
 import {
   addDerivAccountsToCollection,
@@ -28,7 +29,6 @@ import {
   DerivWithdrawalOTPSchema,
   DerivWithdrawalSchema,
 } from "../validation";
-import { updatePaymentTransaction } from "./payment.action";
 import { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
 import { setById } from "../firebase/firestore";
 import {
@@ -317,7 +317,7 @@ export const processDerivWithdrawal = async (paymentData: {
     return handleError(result) as ErrorResponse;
   }
 
-  const { session, params } = result;
+  const { session, params: { pin, transactionId } } = result;
 
   const userId = session?.user.id;
 
@@ -328,7 +328,7 @@ export const processDerivWithdrawal = async (paymentData: {
 
     const transaction =
       ((await getTransactionById(
-        paymentData.transactionId
+        transactionId
       )) as DerivWithdrawal) || null;
 
     if (!transaction) throw new Error("Transaction not found");
@@ -343,21 +343,46 @@ export const processDerivWithdrawal = async (paymentData: {
       amount: transaction.extra.amount,
       currency: transaction.extra.currency,
       paymentagent_loginid: "CR2091245", // Todo: get the id from database
-      verification_code: paymentData.pin,
+      verification_code: pin,
       token: decryptToken(accountToken),
     });
 
     if (paymentAgentWithdrawResponse?.paymentagent_withdraw === 1) {
-      const { transactionId } = params;
+      return { success: true };
+    } else {
+      throw new Error("Payment agent withdrawal failed");
+    }
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+};
 
-      const { success } = await updatePaymentTransaction(transactionId, {
-        status: "processing",
-      });
+export const triggerDerivDepositCompletion = async (transactionId: string): Promise<ActionResponse> => {
+  const userId = await verifySession()
 
-      return { success };
+  try {
+    if (!userId) {
+      throw new UnauthorizedError("Not Authorized");
     }
 
-    throw new Error("Payment agent withdrawal failed");
+    if (!transactionId || typeof transactionId !== "string") {
+      throw new Error("Transaction id is required")
+    }
+
+    const transaction =
+      ((await getTransactionById(
+        transactionId
+      )) as Transaction) || null;
+
+    if (!transaction) throw new Error("Transaction not found");
+
+    const res = await api.deriv.triggerCompleteDerivDeposit(transactionId)
+
+    if (res.success) {
+      return { success: true }
+    }
+
+    return { success: false }
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

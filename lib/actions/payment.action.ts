@@ -3,10 +3,11 @@
 import "server-only";
 
 import { Timestamp } from "firebase-admin/firestore";
-import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 
 import { bucket, db } from "@/firebase.config";
 
+import { api } from "../api";
 import { getTransactionById } from "../firebase/transactions";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
@@ -14,9 +15,7 @@ import { verifySession } from "../server";
 import { UploadPaymentRecieptSchema } from "../validation";
 import {
   TransactionQueryParams,
-  UpdatePaymentTransactionParams,
 } from "./types/action";
-import { ROUTES } from "../constants/routes";
 import { dateConverter } from "../utils/firebase";
 
 export const getPaymentTransaction = async (
@@ -91,31 +90,15 @@ export const getUserTransactions = async (
   }
 };
 
-export const updatePaymentTransaction = async (
+ const updateTransactionRecieptPath = async (
   paymentId: string,
-  data: UpdatePaymentTransactionParams
+  recieptPath: string
 ): Promise<ActionResponse> => {
-  const fieldMap: Record<keyof UpdatePaymentTransactionParams, string> = {
-    status: "status",
-    fulfilled: "fulfillment.fulfilled",
-    fulfilledAt: "fulfillment.fulfilledAt",
-    actorId: "fulfillment.actorId",
-    referenceId: "fulfillment.referenceId",
-    recieptPath: "extra.recieptPath",
-    note: "fulfillment.note",
-  };
-
-  const updatedData = Object.entries(data).reduce<Record<string, unknown>>(
-    (acc, [key, value]) => {
-      if (value === undefined) return acc;
-      const mappedField = fieldMap[key as keyof UpdatePaymentTransactionParams];
-      if (mappedField) acc[mappedField] = value;
-      return acc;
-    },
-    {}
-  );
-
   try {
+    if (!paymentId || !recieptPath || typeof recieptPath !== "string") {
+      throw new Error("Reciept path and payment id is required")
+    }
+
     const transactionRef = db.collection("transactions").doc(paymentId);
 
     await db.runTransaction(async (t) => {
@@ -123,7 +106,7 @@ export const updatePaymentTransaction = async (
       if (!snapshot.exists) throw new NotFoundError("Transaction");
 
       t.update(transactionRef, {
-        ...updatedData,
+       "extra.recieptPath": recieptPath,
         updatedAt: Timestamp.now(),
       });
     });
@@ -139,6 +122,14 @@ export const uploadPaymentReciept = async (
 ): Promise<ActionResponse> => {
   const user = await verifySession();
 
+  let transactionId: string | null = null
+
+  after(async () => {
+   if (user?.id && transactionId) {
+   await api.deriv.triggerCompleteDerivDeposit(transactionId)
+   }
+  })
+
   try {
     if (!user?.id) throw new UnauthorizedError();
 
@@ -148,6 +139,8 @@ export const uploadPaymentReciept = async (
     }) as { file: File; paymentId: string };
 
     const { file, paymentId } = result;
+
+    transactionId = paymentId
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -167,17 +160,7 @@ export const uploadPaymentReciept = async (
       contentType: file.type,
     });
 
-    await updatePaymentTransaction(paymentId, {
-      recieptPath: fileName,
-      status: "processing",
-      // fulfilled: true,
-      // fulfilledAt: new Date(),
-      // actorId: "admin_123",
-      // referenceId: "txn_ref_789",
-      // note: "Transaction verified and completed successfully.",
-    });
-
-    revalidatePath(ROUTES.PAYMENT(paymentId));
+    await updateTransactionRecieptPath(paymentId, fileName);
 
     // return { success: true, filePath: destination, signedUrl: url };
     return { success: true };
