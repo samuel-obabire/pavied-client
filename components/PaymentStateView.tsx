@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 
-import { triggerDerivDepositCompletion } from "@/lib/actions/deriv.action";
 import { getPaymentTransaction } from "@/lib/actions/payment.action";
 
 import FailedPayment from "./FailedPayment";
@@ -45,8 +44,6 @@ const PaymentStateView = ({ transaction }: Props) => {
       console.log("Polling payment status...");
 
       try {
-        await triggerDerivDepositCompletion(transaction.transactionId);
-
         const response = await getPaymentTransaction(transaction.transactionId);
 
         if (response.success && response.data) {
@@ -64,7 +61,7 @@ const PaymentStateView = ({ transaction }: Props) => {
       } catch (error) {
         console.error(error);
       }
-    }, 12000);
+    }, 7000);
 
     return () => clearInterval(intervalRef.current!);
   }, [transaction.transactionId, transaction.status]);
