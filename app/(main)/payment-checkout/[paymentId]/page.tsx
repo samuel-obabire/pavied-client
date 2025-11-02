@@ -17,7 +17,7 @@ const PaymentCheckOut = async ({
   const { paymentId } = await params;
 
   const { success, data } = await getPaymentTransaction(paymentId);
-  if (!success || data?.userId !== user.id) return <NotFoundPayment />;
+  if (!success || data?.userId !== user.id || data.type !== "deriv_deposit") return <NotFoundPayment />;
 
   return (
     <PaymentStateView
