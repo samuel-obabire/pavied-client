@@ -49,6 +49,7 @@ type Referral = {
 type Fullfillment = {
   fulfilled: boolean;
   fulfilledAt?: Date;
+  actor?: string;
   actorId?: string;
   referenceId?: string;
   note?: string;
@@ -80,6 +81,8 @@ type DerivDeposit = BaseTransaction & {
     paidFromAccountNumber: string;
     paidFromAccountName: string;
     recieptPath?: string;
+    isPaymentConfirmed?: boolean;
+    fundingInProgress?: boolean;
   };
 };
 
@@ -140,6 +143,8 @@ type Transaction =
   | DataPurchaseTransaction
   | AirtimeToCashTransaction;
 // | BonusCredit;
+
+type TransactionStatus = BaseTransaction["status"]
 
 type AuditLog = {
   id: string;

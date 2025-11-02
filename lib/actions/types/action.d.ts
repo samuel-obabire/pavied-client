@@ -18,16 +18,6 @@ export type DerivDepositParams = {
   amount: number;
 };
 
-export type UpdatePaymentTransactionParams = {
-  status?: Exclude<BaseTransaction["status"], "pending">;
-  fulfilled?: boolean;
-  recieptPath?: string;
-  fulfilledAt?: Date;
-  actorId?: string;
-  referenceId?: string;
-  note?: string;
-};
-
 export type PaymentAgentWithdrawParams = {
   amount: number;
   currency: string;
@@ -43,4 +33,14 @@ export type TransactionQueryParams = {
   endDate?: Date | null;
   type?: string | null;
   status?: string | null;
+};
+
+export type FundDerivSuccess = {
+  clientAccount: string | undefined;
+  clientName: string | undefined;
+  transactionId: number | undefined;
+  paymentAgentTransfer: PaymentagentTransfer | undefined;
+  amount: number;
+  agentAccount: string;
+  currency: string;
 };

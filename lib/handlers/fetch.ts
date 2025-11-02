@@ -6,29 +6,39 @@ export const fetchHandler = async <T>(
   url: string,
   options?: RequestInit
 ): Promise<ActionResponse<T>> => {
-  const defaultHeaders = {
+  const config: RequestInit = {
+    ...options,
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
+      ...(options?.headers || {}),
     },
   };
 
-  const config = {
-    ...defaultHeaders,
-    ...options,
-  };
   try {
     const response = await fetch(url, config);
 
-    if (!response.ok) {
-      throw new RequestError(
-        response.status,
-        `Request failed with status ${response.status}`
-      );
+    let body = null;
+    try {
+      body = await response.json();
+    } catch {
+      // Response had no JSON
     }
-    return await response.json();
+
+    if (!response.ok) {
+      const message =
+        body?.error?.message ||
+        body?.message ||
+        `Request failed with status ${response.status}`;
+
+      throw new RequestError(response.status, message);
+    }
+
+    return body as SuccessResponse<T>;
   } catch (error) {
     logger.error(error);
+
+    // Ensure consistent typed error return
     return handleError(error) as ErrorResponse;
   }
 };
