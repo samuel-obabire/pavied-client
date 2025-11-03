@@ -1,12 +1,11 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: ignore noStatic */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: ignore useKeyWithClickEvents */
 "use client";
-
+import { type ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useState } from "react";
-
 import { createDerivDepositTransaction } from "@/lib/actions/deriv.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { RequestError } from "@/lib/http-errors";
-
 import BankAccountCard from "./BankAccountCard";
 import CustomButton from "./CustomButton";
 import DataRenderer from "./DataRenderer";
@@ -69,7 +68,7 @@ const DepositFlow = ({
         setErrorMessage(
           error instanceof Error && error.message
             ? error.message
-            : "An error occured"
+            : "An error occured",
         );
       }
     } finally {
@@ -118,10 +117,10 @@ const DepositFlow = ({
     setDepositAmount(value);
 
     const s = exchangeRates.find(
-      (ex) => ex.currency === selectedDerivAccount?.currency
-    )!;
+      (ex) => ex.currency === selectedDerivAccount?.currency,
+    );
 
-    const convertedAmount = Number(value) / s.deposit;
+    const convertedAmount = s ? Number(value) / s.deposit : 0;
 
     setConvertedAmount(convertedAmount);
   };
@@ -205,7 +204,7 @@ const DepositFlow = ({
         <p>From</p>
 
         <BankAccountCard
-          bankAccount={selectedBankAccount!}
+          bankAccount={selectedBankAccount as BankAccount}
           removeable={false}
         />
       </div>
@@ -213,7 +212,7 @@ const DepositFlow = ({
       <div>
         <p>To</p>
 
-        <DerivAccountCard derivAccount={selectedDerivAccount!} />
+        <DerivAccountCard derivAccount={selectedDerivAccount as DerivAccount} />
       </div>
 
       <div className="space-y-3">
@@ -239,7 +238,7 @@ const DepositFlow = ({
               // cleans up pasted value
               e.currentTarget.value = e.currentTarget.value.replace(
                 /[eE+-]/g,
-                ""
+                "",
               );
             }}
           />

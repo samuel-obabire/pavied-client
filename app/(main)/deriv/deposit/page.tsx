@@ -1,7 +1,5 @@
 import { redirect } from "next/navigation";
-
 import DepositFlow from "@/components/DepositFlow";
-// import ExchangeRateList from "@/components/ExchangeRateList";
 import { getUserBankAccounts } from "@/lib/actions/bank.action";
 import { getUserDerivAccounts } from "@/lib/actions/deriv.action";
 import { ROUTES } from "@/lib/constants/routes";
