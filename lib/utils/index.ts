@@ -107,3 +107,26 @@ export const formatNumber = (number: number) => {
     maximumFractionDigits: 2,
   }).format(number);
 };
+
+export const sanitizeTwoDecimals = (value: string) => {
+  // keep only digits + one decimal
+  value = value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+
+  // limit decimal to 2 places if present
+  const parts = value.split(".");
+  if (parts.length === 2) {
+    parts[1] = parts[1].slice(0, 2);
+    return parts.join(".");
+  }
+
+  return value;
+}
+
+export const truncateTo2 = (value: string | number): string => {
+  if (value === "" || value === null || value === undefined) return "";
+
+  const num = Number(value);
+  if (isNaN(num)) return "";
+
+  return (Math.floor(num * 100) / 100).toString();
+};

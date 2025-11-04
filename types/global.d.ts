@@ -144,7 +144,7 @@ type Transaction =
   | AirtimeToCashTransaction;
 // | BonusCredit;
 
-type TransactionStatus = BaseTransaction["status"]
+type TransactionStatus = BaseTransaction["status"];
 
 type AuditLog = {
   id: string;
@@ -158,6 +158,20 @@ type AuditLog = {
     source: string; // MacroDroid, email
     autoConfirmed: boolean;
   };
+};
+
+type CurrencyConfig = {
+  active: boolean;
+  code: string;
+  depositMax: number;
+  depositMin: number;
+  depositRate: number;
+  lastUpdated: Date;
+  name: string;
+  smallAmountCharge: number;
+  withdrawalMax: number;
+  withdrawalMin: number;
+  withdrawalRate: number;
 };
 
 type ActionResponse<T = null> = {
