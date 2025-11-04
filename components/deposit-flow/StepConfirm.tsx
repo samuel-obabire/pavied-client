@@ -25,8 +25,6 @@ const StepConfirm = ({
     errorMessage,
   } = state;
 
-  console.log(convertedAmount, depositAmount);
-
   return (
     <div className="mt-4 space-y-3">
       <div>

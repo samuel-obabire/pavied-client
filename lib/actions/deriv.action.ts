@@ -6,10 +6,8 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-
-import { DerivAccountLink } from "@/components/DerivAccountSelectionList";
+import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
 import { db } from "@/firebase.config";
-
 import { api } from "../api";
 import { ROUTES } from "../constants/routes";
 import {
@@ -17,11 +15,19 @@ import {
   getDerivAccounts,
   removeDerivAccountFromCollection,
 } from "../firebase/deriv";
+import { setById } from "../firebase/firestore";
 import { getTransactionById } from "../firebase/transactions";
 import action from "../handlers/action";
+import {
+  getDerivAccountToken,
+  paymentAgentWithdraw,
+  verifyWithdrawEmail,
+} from "../handlers/deriv";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
 import { verifySession } from "../server";
+import { truncateTo2 } from "../utils";
+import { decryptToken, encryptDerivAccounts } from "../utils/server/encryption";
 import {
   DerivAccountLinkSchema,
   DerivAccountSchema,
@@ -29,17 +35,11 @@ import {
   DerivWithdrawalOTPSchema,
   DerivWithdrawalSchema,
 } from "../validation";
-import { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
-import { setById } from "../firebase/firestore";
-import {
-  verifyWithdrawEmail,
-  paymentAgentWithdraw,
-  getDerivAccountToken,
-} from "../handlers/deriv";
-import { decryptToken, encryptDerivAccounts } from "../utils/server/encryption";
+import { fetchRate } from "./rate.action";
+import type { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
 
 export const getUserDerivAccounts = async (
-  userId: string
+  userId: string,
 ): Promise<ActionResponse<DerivAccount[]>> => {
   const user = await verifySession();
 
@@ -62,7 +62,7 @@ export const getUserDerivAccounts = async (
 };
 
 export const addDerivAccounts = async (
-  derivAccounts: DerivAccountLink[]
+  derivAccounts: DerivAccountLink[],
 ): Promise<ActionResponse> => {
   const result = await action({
     params: derivAccounts,
@@ -94,7 +94,7 @@ export const addDerivAccounts = async (
 };
 
 export const removeDerivAccount = async (
-  derivAccount: DerivAccount
+  derivAccount: DerivAccount,
 ): Promise<ActionResponse> => {
   const result = await action({
     params: derivAccount,
@@ -127,7 +127,7 @@ export const removeDerivAccount = async (
 };
 
 export const createDerivDepositTransaction = async (
-  derivDepositParams: DerivDepositParams
+  derivDepositParams: DerivDepositParams,
 ): Promise<ActionResponse<{ transactionId: string }>> => {
   const result = await action({
     params: derivDepositParams,
@@ -149,12 +149,21 @@ export const createDerivDepositTransaction = async (
       paidFromAccountNumber,
       paidFromBankCode,
       paidFromBankName,
+      usedRate,
     },
   } = result;
 
-  let transactionId: string = "";
+  let transactionId = "";
 
   try {
+    const { success, data, error } = await fetchRate(currency);
+
+    if (!success || !data)
+      throw new Error(error?.message || "Unable to fetch rate data");
+
+    if (usedRate !== data.depositRate)
+      throw new Error("Rate changed. Please refresh and try again.");
+
     const userId = session?.user.id;
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
@@ -167,14 +176,14 @@ export const createDerivDepositTransaction = async (
     const userPendingTransactionRef = transactionRef.where(
       "userId",
       "==",
-      userId
+      userId,
     );
 
     // Check to prevent users with similar name to have deposit transactions at the same time
     const duplicateUserPendingTransactionRef = transactionRef.where(
       "extra.paidFromAccountName",
       "==",
-      paidFromAccountName
+      paidFromAccountName,
     );
 
     await db.runTransaction(async (t) => {
@@ -183,12 +192,12 @@ export const createDerivDepositTransaction = async (
 
       if (!pendingUserOrder.empty) {
         throw new Error(
-          "You have a pending order. Please create a new order when your pending order has expired or completed"
+          "You have a pending order. Please create a new order when your pending order has expired or completed",
         );
       }
       if (!similarOrder.empty) {
         throw new Error(
-          "Similar order exist already. Please try again in few minutes"
+          "Similar order exist already. Please try again in few minutes",
         );
       }
 
@@ -208,7 +217,7 @@ export const createDerivDepositTransaction = async (
           acountName: "Evarest Direct Technologies",
         },
         extra: {
-          amount: amount / 1500, // Todo: get rate from database
+          amount: Number(truncateTo2(amount / data.depositRate)),
           currency,
           derivLoginId,
           paidFromBankName,
@@ -231,7 +240,7 @@ export const createDerivDepositTransaction = async (
 };
 
 export const createDerivWithdrawalTransaction = async (
-  derivWithdrawalParams: DerivWithdrawalParams
+  derivWithdrawalParams: DerivWithdrawalParams,
 ): Promise<ActionResponse<{ transactionId: string }>> => {
   const result = await action({
     params: derivWithdrawalParams,
@@ -257,7 +266,7 @@ export const createDerivWithdrawalTransaction = async (
     },
   } = result;
 
-  let transactionId: string = "";
+  let transactionId = "";
 
   try {
     const userId = session?.user.id;
@@ -317,7 +326,10 @@ export const processDerivWithdrawal = async (paymentData: {
     return handleError(result) as ErrorResponse;
   }
 
-  const { session, params: { pin, transactionId } } = result;
+  const {
+    session,
+    params: { pin, transactionId },
+  } = result;
 
   const userId = session?.user.id;
 
@@ -327,15 +339,13 @@ export const processDerivWithdrawal = async (paymentData: {
     }
 
     const transaction =
-      ((await getTransactionById(
-        transactionId
-      )) as DerivWithdrawal) || null;
+      ((await getTransactionById(transactionId)) as DerivWithdrawal) || null;
 
     if (!transaction) throw new Error("Transaction not found");
 
     const accountToken = await getDerivAccountToken(
       userId,
-      transaction.extra.derivLoginId
+      transaction.extra.derivLoginId,
     );
     if (!accountToken) throw new Error("Account not found");
 
@@ -349,16 +359,17 @@ export const processDerivWithdrawal = async (paymentData: {
 
     if (paymentAgentWithdrawResponse?.paymentagent_withdraw === 1) {
       return { success: true };
-    } else {
-      throw new Error("Payment agent withdrawal failed");
     }
+    throw new Error("Payment agent withdrawal failed");
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
 };
 
-export const triggerDerivDepositCompletion = async (transactionId: string): Promise<ActionResponse> => {
-  const userId = await verifySession()
+export const triggerDerivDepositCompletion = async (
+  transactionId: string,
+): Promise<ActionResponse> => {
+  const userId = await verifySession();
 
   try {
     if (!userId) {
@@ -366,30 +377,28 @@ export const triggerDerivDepositCompletion = async (transactionId: string): Prom
     }
 
     if (!transactionId || typeof transactionId !== "string") {
-      throw new Error("Transaction id is required")
+      throw new Error("Transaction id is required");
     }
 
     const transaction =
-      ((await getTransactionById(
-        transactionId
-      )) as Transaction) || null;
+      ((await getTransactionById(transactionId)) as Transaction) || null;
 
     if (!transaction) throw new Error("Transaction not found");
 
-    const res = await api.deriv.triggerCompleteDerivDeposit(transactionId)
+    const res = await api.deriv.triggerCompleteDerivDeposit(transactionId);
 
     if (res.success) {
-      return { success: true }
+      return { success: true };
     }
 
-    return { success: false }
+    return { success: false };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
 };
 
 export const setDerivCookie = async (
-  searchParams: string
+  searchParams: string,
 ): Promise<ActionResponse> => {
   const user = await verifySession();
   console.log(searchParams);

@@ -18,11 +18,12 @@ const DepositFlow = ({
   rateRes: ActionResponse<CurrencyConfig[]>;
 }) => {
   const {
-    dispatch,
     handleConvertedAmountChange,
     handleDepositAmountChange,
     selectBankAccount,
     selectDerivAccount,
+    setError,
+    setLoading,
     state,
     setStep,
   } = useDepositFlow(rateRes);
@@ -34,8 +35,14 @@ const DepositFlow = ({
   const onSubmit = async () => {
     if (!selectedBankAccount || !selectedDerivAccount) return;
 
-    dispatch({ type: "SET_ERROR", payload: "" });
-    dispatch({ type: "SET_LOADING", payload: true });
+    setError("");
+    setLoading(true);
+
+    const usedRate = rateRes.data?.find(
+      (config) => config.code === selectedDerivAccount.currency,
+    )?.depositRate;
+
+    if (!usedRate) return setError("Unable to find payment config");
 
     try {
       const response = await createDerivDepositTransaction({
@@ -46,32 +53,28 @@ const DepositFlow = ({
         paidFromBankCode: selectedBankAccount.bankCode,
         paidFromBankName: selectedBankAccount.bankName,
         amount: Number(depositAmount),
+        usedRate,
       });
 
       if (response.success) {
         if (response.data?.transactionId) {
           router.push(ROUTES.PAYMENT(response.data.transactionId));
         } else {
-          dispatch({
-            type: "SET_ERROR",
-            payload: "Transaction ID is missing.",
-          });
+          setError("Transaction ID is missing");
         }
       } else if (response.error) {
         throw new Error(response.error.message);
       }
     } catch (error) {
-      dispatch({
-        type: "SET_ERROR",
-        payload:
-          error instanceof RequestError
+      setError(
+        error instanceof RequestError
+          ? error.message
+          : error instanceof Error
             ? error.message
-            : error instanceof Error
-              ? error.message
-              : "An error occurred",
-      });
+            : "An error occurred",
+      );
     } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
+      setLoading(false);
     }
   };
 

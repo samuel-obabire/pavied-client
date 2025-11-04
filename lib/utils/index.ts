@@ -1,6 +1,5 @@
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-
 import { getDerivTransactionDetails } from "./deriv";
 
 export function cn(...inputs: ClassValue[]) {
@@ -65,7 +64,7 @@ export const formatDateTime = (inputDate: Date) => {
   // return { date: dateStr, time: timeStr, period };
 
   return `${dateStr} at ${timeStr} ${period}`;
-}
+};
 
 export const calculatePaymentExpiry = (createdAt: Date, limitMinutes = 10) => {
   const created = new Date(createdAt);
@@ -110,7 +109,7 @@ export const formatNumber = (number: number) => {
 
 export const sanitizeTwoDecimals = (value: string) => {
   // keep only digits + one decimal
-  value = value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+  const newValue = value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
 
   // limit decimal to 2 places if present
   const parts = value.split(".");
@@ -119,8 +118,8 @@ export const sanitizeTwoDecimals = (value: string) => {
     return parts.join(".");
   }
 
-  return value;
-}
+  return newValue;
+};
 
 export const truncateTo2 = (value: string | number): string => {
   if (value === "" || value === null || value === undefined) return "";

@@ -1,8 +1,6 @@
 import Image from "next/image";
-
 import { cn } from "@/lib/utils";
 import { getDerivAccount } from "@/lib/utils/deriv";
-
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
 
 const DerivAccountCard = ({
@@ -24,7 +22,7 @@ const DerivAccountCard = ({
         {
           "text-secondary": selected,
           "bg-secondary/5": selected,
-        }
+        },
       )}
     >
       <div className="flex justify-between">
