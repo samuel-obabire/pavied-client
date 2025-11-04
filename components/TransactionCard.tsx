@@ -1,12 +1,10 @@
-import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
-
 import {
   formatCustomDate,
   formatNairaAmount,
   getTransactionDetailsByType,
 } from "@/lib/utils";
-
+import Divider from "./Divider";
 import StatusBadge from "./StatusBadge";
 
 const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
@@ -15,7 +13,7 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
   return (
     <>
       <div className="bg-white_dark-black-1 flex justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <div>
             <Image
               src={icon}
@@ -26,7 +24,7 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <div className="text-16-regular">{label}</div>
             <p className="text-12-regular">
               {formatCustomDate(transaction.createdAt)}
@@ -35,7 +33,7 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
         </div>
 
         <div className="flex flex-col items-end gap-2">
-          <span className="text-16-regular">
+          <span className="text-16-medium">
             {formatNairaAmount(transaction.amount)}
           </span>
           <StatusBadge variant={transaction.status}>
@@ -44,7 +42,7 @@ const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
         </div>
       </div>
 
-      <Separator className="border-accent/10 my-4 border opacity-50" />
+      <Divider className="mt-4" />
     </>
   );
 };

@@ -1,24 +1,23 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
-
+import { type ChangeEvent, useState } from "react";
 import { createDerivWithdrawalTransaction } from "@/lib/actions/deriv.action";
-
 import BankAccountCard from "./BankAccountCard";
 import CustomButton from "./CustomButton";
 import DataRenderer from "./DataRenderer";
 import DerivAccountCard from "./DerivAccountCard";
 import DerivWithdrawalVerification from "./DerivWithdrawalVerification";
-import { exchangeRates } from "./ExchangeRateList";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 const DerivWithdrawalFlow = ({
   derivAccountsRes,
   bankAccountsRes,
+  rateRes,
 }: {
   derivAccountsRes: ActionResponse<DerivAccount[]>;
   bankAccountsRes: ActionResponse<BankAccount[]>;
+  rateRes: ActionResponse<CurrencyConfig[]>;
 }) => {
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +62,7 @@ const DerivWithdrawalFlow = ({
       setErrorMessage(
         error instanceof Error && error.message
           ? error.message
-          : "An error occured"
+          : "An error occured",
       );
     } finally {
       setIsLoading(false);
@@ -110,11 +109,11 @@ const DerivWithdrawalFlow = ({
 
     setDepositAmount(value);
 
-    const s = exchangeRates.find(
-      (ex) => ex.currency === selectedDerivAccount?.currency
-    )!;
+    const usedRate = rateRes.data?.find(
+      (config) => config.code === selectedDerivAccount?.currency,
+    )?.withdrawalRate;
 
-    const convertedAmount = Number(value) * s.withdrawal;
+    const convertedAmount = Number(value) * (usedRate as number);
 
     setConvertedAmount(convertedAmount);
   };
@@ -128,7 +127,7 @@ const DerivWithdrawalFlow = ({
       {step === 1 ? (
         <div className="mt-4 space-y-3">
           <p className="text-12-medium opacity-75">
-            Please select the deriv account you want to withdrawal from
+            Please select the deriv account you want to make the withdrawal from
           </p>
 
           <DataRenderer
@@ -205,14 +204,16 @@ const DerivWithdrawalFlow = ({
           <div>
             <p>Withdrawal from</p>
 
-            <DerivAccountCard derivAccount={selectedDerivAccount!} />
+            <DerivAccountCard
+              derivAccount={selectedDerivAccount as DerivAccount}
+            />
           </div>
 
           <div>
             <p>To naira account</p>
 
             <BankAccountCard
-              bankAccount={selectedBankAccount!}
+              bankAccount={selectedBankAccount as BankAccount}
               removeable={false}
             />
           </div>
@@ -240,7 +241,7 @@ const DerivWithdrawalFlow = ({
                   // cleans up pasted value
                   e.currentTarget.value = e.currentTarget.value.replace(
                     /[eE+-]/g,
-                    ""
+                    "",
                   );
                 }}
               />

@@ -38,9 +38,7 @@ export const formatCustomDate = (dateInput: Date | string): string => {
 
   const timePart = `${hours}:${minutes} ${ampm}`;
   const dayPart = date.getDate();
-  const monthPart = date
-    .toLocaleString("en-US", { month: "short" })
-    .toLowerCase();
+  const monthPart = date.toLocaleString("en-US", { month: "short" });
   const yearPart = date.getFullYear();
 
   return `${timePart} • ${dayPart} ${monthPart} ${yearPart}`;

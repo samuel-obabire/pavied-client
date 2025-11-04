@@ -1,18 +1,16 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import {
-  parseAsInteger,
-  SearchParams,
-  parseAsTimestamp,
   createLoader,
+  parseAsInteger,
   parseAsString,
+  parseAsTimestamp,
+  type SearchParams,
 } from "nuqs/server";
-import { Suspense } from "react";
-
+import TransactionList from "@/components/TransactionList";
 import { columns } from "@/components/tables/columns";
 import DataTableSkeleton from "@/components/tables/DataTableSkeleton";
-import TransactionFilter from "@/components/tables/TransactionFilter";
 import TransactionTable from "@/components/tables/TransactionTable";
-import TransactionList from "@/components/TransactionList";
 import { getUserTransactions } from "@/lib/actions/payment.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
@@ -42,8 +40,11 @@ const TransactionPage = async ({ searchParams }: PageProps) => {
   const transactionsPromise = getUserTransactions(user.id, query);
 
   return (
-    <div className="">
-      <TransactionFilter />
+    <div className="space-y-2">
+      <header className="h-[20px]">
+        <h1 className="text-14-medium">Transaction history</h1>
+      </header>
+      {/* <TransactionFilter /> */}
 
       <div className="max-md:hidden">
         <Suspense fallback={<DataTableSkeleton columns={6} rows={8} />}>
@@ -51,7 +52,7 @@ const TransactionPage = async ({ searchParams }: PageProps) => {
         </Suspense>
       </div>
 
-      <div className="md:hidden">
+      <div className="md:hidden h-[calc(100dvh-116px)] overflow-y-scroll">
         <TransactionList transactionRes={await transactionsPromise} />
       </div>
     </div>
