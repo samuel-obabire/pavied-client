@@ -26,7 +26,12 @@ import {
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
 import { verifySession } from "../server";
-import { truncateTo2 } from "../utils";
+import {
+  divideNumbers,
+  isSameRate,
+  isWithinLimit,
+  multiplyNumbers,
+} from "../utils";
 import { decryptToken, encryptDerivAccounts } from "../utils/server/encryption";
 import {
   DerivAccountLinkSchema,
@@ -35,7 +40,8 @@ import {
   DerivWithdrawalOTPSchema,
   DerivWithdrawalSchema,
 } from "../validation";
-import { fetchRate } from "./rate.action";
+import { fetchAgentAccount } from "./derivAgent.action";
+import { fetchCachedRate } from "./rate.action";
 import type { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
 
 export const getUserDerivAccounts = async (
@@ -156,7 +162,7 @@ export const createDerivDepositTransaction = async (
   let transactionId = "";
 
   try {
-    const { success, data, error } = await fetchRate(currency);
+    const { success, data, error } = await fetchCachedRate(currency);
 
     if (!success || !data)
       throw new Error(error?.message || "Unable to fetch rate data");
@@ -164,9 +170,13 @@ export const createDerivDepositTransaction = async (
     if (usedRate !== data.depositRate)
       throw new Error("Rate changed. Please refresh and try again.");
 
-    const userId = session?.user.id;
+    if (amount < data.depositMin || amount > data.depositMax) {
+      throw new Error(
+        `Minimum deposit: ${data.depositMin}, Maximum ${data.depositMax}`,
+      );
+    }
 
-    if (!userId) throw new UnauthorizedError("Not Authorized");
+    const userId = session?.user.id as string;
 
     const transactionRef = db
       .collection("transactions")
@@ -217,7 +227,7 @@ export const createDerivDepositTransaction = async (
           acountName: "Evarest Direct Technologies",
         },
         extra: {
-          amount: Number(truncateTo2(amount / data.depositRate)),
+          amount: divideNumbers(amount, data.depositRate),
           currency,
           derivLoginId,
           paidFromBankName,
@@ -263,22 +273,38 @@ export const createDerivWithdrawalTransaction = async (
       receivingBankCode,
       receivingBankName,
       recievingBankAccountName,
+      usedRate,
     },
   } = result;
 
   let transactionId = "";
 
   try {
-    const userId = session?.user.id;
+    const userId = session?.user.id as string;
 
-    if (!userId) throw new UnauthorizedError("Not Authorized");
+    const { success, data, error } = await fetchCachedRate(currency);
+
+    if (!success || !data)
+      throw new Error(error?.message || "Unable to fetch rate data");
+
+    const { withdrawalMax, withdrawalMin, withdrawalRate } = data;
+
+    if (!isSameRate(usedRate, withdrawalRate)) {
+      throw new Error("Rate changed. Please refresh.");
+    }
+
+    if (!isWithinLimit(amount, withdrawalMin, withdrawalMax)) {
+      throw new Error(
+        `Minimum withdrawal: ${withdrawalMin}, Maximum ${withdrawalMax}`,
+      );
+    }
 
     transactionId = uuidv4();
 
     await setById("transactions", transactionId, {
       transactionId,
       userId,
-      amount: 1500 * amount,
+      amount: multiplyNumbers(data.withdrawalRate, amount),
       status: "pending",
       type: "deriv_withdrawal",
 
@@ -297,14 +323,6 @@ export const createDerivWithdrawalTransaction = async (
         fulfilled: false,
       },
     } satisfies DerivWithdrawal);
-
-    const accountToken = await getDerivAccountToken(userId, derivLoginId);
-    if (!accountToken) throw new Error("Account not found");
-
-    await verifyWithdrawEmail({
-      accountId: derivLoginId,
-      userToken: decryptToken(accountToken),
-    });
 
     return { success: true, data: { transactionId } };
   } catch (error) {
@@ -349,16 +367,26 @@ export const processDerivWithdrawal = async (paymentData: {
     );
     if (!accountToken) throw new Error("Account not found");
 
+    const agentRes = await fetchAgentAccount(transaction.extra.currency);
+
+    if (!agentRes.success || !agentRes.data) {
+      throw new Error(
+        agentRes.error?.message || "Unable to fetch agent account",
+      );
+    }
+
     const paymentAgentWithdrawResponse = await paymentAgentWithdraw({
       amount: transaction.extra.amount,
       currency: transaction.extra.currency,
-      paymentagent_loginid: "CR2091245", // Todo: get the id from database
+      paymentagent_loginid: agentRes.data?.accountId as string,
       verification_code: pin,
       token: decryptToken(accountToken),
     });
 
     if (paymentAgentWithdrawResponse?.paymentagent_withdraw === 1) {
       return { success: true };
+
+      // Todo: update payment status
     }
     throw new Error("Payment agent withdrawal failed");
   } catch (error) {
@@ -417,4 +445,30 @@ export const setDerivCookie = async (
   });
 
   return { success: true };
+};
+
+export const sendWithdrawEmail = async ({
+  userId,
+  accountId,
+}: {
+  userId: string;
+  accountId: string;
+}): Promise<ActionResponse<{ email: string }>> => {
+  try {
+    const accountToken = await getDerivAccountToken(userId, accountId);
+    if (!accountToken) throw new Error("Account not found");
+
+    const result = await verifyWithdrawEmail({
+      accountId: accountId,
+      userToken: decryptToken(accountToken),
+    });
+
+    if (result?.isEmailSent) {
+      return { success: true, data: { email: result.email as string } };
+    }
+
+    return { success: false };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
 };

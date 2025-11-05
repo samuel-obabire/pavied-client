@@ -6,6 +6,7 @@ export type DerivWithdrawalParams = {
   receivingBankCode: string;
   receivingBankName: string;
   amount: number;
+  usedRate: number;
 };
 
 export type DerivDepositParams = {

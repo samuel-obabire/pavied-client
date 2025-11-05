@@ -1,14 +1,14 @@
 "use client";
-
 import { useRouter } from "next/navigation";
-import { createDerivWithdrawalTransaction } from "@/lib/actions/deriv.action";
+import { createDerivDepositTransaction } from "@/lib/actions/deriv.action";
 import { ROUTES } from "@/lib/constants/routes";
-import StepConfirm from "./deriv-withdrawal-flow/StepConfirm";
-import StepSelectBankAccount from "./deriv-withdrawal-flow/StepSelectBankAccount";
-import StepSelectDerivAccount from "./deriv-withdrawal-flow/StepSelectDerivAccount";
-import { useWithdrawalFlow } from "./hooks/useWithdrawalFlow";
+import { RequestError } from "@/lib/http-errors";
+import { useWithdrawalFlow } from "../hooks/useWithdrawalFlow";
+import StepConfirm from "./StepConfirm";
+import StepSelectBankAccount from "./StepSelectBankAccount";
+import StepSelectDerivAccount from "./StepSelectDerivAccount";
 
-const DerivWithdrawalFlow = ({
+const WithdrawalFlow = ({
   derivAccountsRes,
   bankAccountsRes,
   rateRes,
@@ -18,19 +18,18 @@ const DerivWithdrawalFlow = ({
   rateRes: ActionResponse<CurrencyConfig[]>;
 }) => {
   const {
-    state,
-    setError,
-    setLoading,
-    selectBankAccount,
-    selectDerivAccount,
-    setStep,
     handleConvertedAmountChange,
     handleWithdrawalAmountChange,
+    selectBankAccount,
+    selectDerivAccount,
+    setError,
+    setLoading,
+    state,
+    setStep,
   } = useWithdrawalFlow(rateRes);
-
   const router = useRouter();
 
-  const { selectedBankAccount, selectedDerivAccount, step, convertedAmount } =
+  const { step, selectedDerivAccount, selectedBankAccount, withdrawalAmount } =
     state;
 
   const onSubmit = async () => {
@@ -41,40 +40,38 @@ const DerivWithdrawalFlow = ({
 
     const usedRate = rateRes.data?.find(
       (config) => config.code === selectedDerivAccount.currency,
-    )?.withdrawalRate;
+    )?.depositRate;
 
     if (!usedRate) return setError("Unable to find payment config");
 
     try {
-      const response = await createDerivWithdrawalTransaction({
-        amount: Number(convertedAmount),
+      const response = await createDerivDepositTransaction({
         currency: selectedDerivAccount.currency,
         derivLoginId: selectedDerivAccount.accountId,
-        receivingBankAccountNumber: selectedBankAccount.accountNumber,
-        receivingBankName: selectedBankAccount.bankName,
-        recievingBankAccountName: selectedBankAccount.accountName,
-        receivingBankCode: selectedBankAccount.bankCode,
+        paidFromAccountName: selectedBankAccount.accountName,
+        paidFromAccountNumber: selectedBankAccount.accountNumber,
+        paidFromBankCode: selectedBankAccount.bankCode,
+        paidFromBankName: selectedBankAccount.bankName,
+        amount: Number(withdrawalAmount),
         usedRate,
       });
 
       if (response.success) {
         if (response.data?.transactionId) {
-          router.push(
-            ROUTES.VERIFY_DERIV_WITHDRAW(response.data.transactionId),
-          );
+          router.push(ROUTES.PAYMENT(response.data.transactionId));
         } else {
-          setError("Transaction ID is missing.");
+          setError("Transaction ID is missing");
         }
-
-        setStep(4);
       } else if (response.error) {
         throw new Error(response.error.message);
       }
     } catch (error) {
       setError(
-        error instanceof Error && error.message
+        error instanceof RequestError
           ? error.message
-          : "An error occured",
+          : error instanceof Error
+            ? error.message
+            : "An error occurred",
       );
     } finally {
       setLoading(false);
@@ -105,4 +102,4 @@ const DerivWithdrawalFlow = ({
   );
 };
 
-export default DerivWithdrawalFlow;
+export default WithdrawalFlow;

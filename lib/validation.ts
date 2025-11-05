@@ -121,6 +121,9 @@ export const DerivWithdrawalSchema = z.object({
   amount: z
     .number({ error: "Amount is required" })
     .positive({ error: "Amount must be greater than 0" }),
+  usedRate: z
+    .number({ error: "usedRate is required" })
+    .positive({ error: "usedRate must be greater than 0" }),
 });
 
 const allowedMimeTypes = ["image/jpeg", "image/png", "application/pdf"];

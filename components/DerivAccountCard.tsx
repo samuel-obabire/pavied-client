@@ -12,7 +12,7 @@ const DerivAccountCard = ({
 }) => {
   const { accountId, currency, dateAdded } = derivAccount;
 
-  const currencyName = getDerivAccount(currency).name;
+  const currencyName = getDerivAccount(currency)?.name;
 
   return (
     <div

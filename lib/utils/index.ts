@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import Decimal from "decimal.js";
 import { twMerge } from "tailwind-merge";
 import { getDerivTransactionDetails } from "./deriv";
 
@@ -126,4 +127,28 @@ export const truncateTo2 = (value: string | number): string => {
   if (isNaN(num)) return "";
 
   return (Math.floor(num * 100) / 100).toString();
+};
+
+export const multiplyNumbers = (a: number, b: number) => {
+  return new Decimal(a).times(b).toDecimalPlaces(2).toNumber();
+};
+
+export const divideNumbers = (a: number, b: number) => {
+  return new Decimal(a)
+    .div(b)
+    .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+    .toNumber();
+};
+
+export const isSameRate = (
+  a: number,
+  b: number,
+  tolerance = 0.0001,
+): boolean => {
+  return Math.abs(a - b) <= tolerance;
+};
+
+export const isWithinLimit = (value: number, min: number, max: number) => {
+  if (value < min || value > max) return false;
+  return true;
 };

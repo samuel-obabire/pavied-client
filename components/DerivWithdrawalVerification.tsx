@@ -1,21 +1,38 @@
+"use client";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import React, { useCallback, useState } from "react";
-
-import { processDerivWithdrawal } from "@/lib/actions/deriv.action";
+import {
+  processDerivWithdrawal,
+  sendWithdrawEmail,
+} from "@/lib/actions/deriv.action";
 import { ROUTES } from "@/lib/constants/routes";
-
-import ActionState, { ActionStateType } from "./ActionState";
+import ActionState, { type ActionStateType } from "./ActionState";
 import InputWithdrawalOTP from "./InputWithdrawalOTP";
 import PaymentSuccess from "./PaymentSuccess";
 
 const DerivWithdrawalVerification = ({
   transactionId,
+  userId,
+  accountId,
 }: {
   transactionId: string;
+  userId: string;
+  accountId: string;
 }) => {
   const [isWithdrawalSuccess, setIsWithdrawalSuccess] = useState(false);
   const [actionState, setActionState] = useState<ActionStateType>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+
+  const hasSent = useRef(false);
+
+  useEffect(() => {
+    if (hasSent.current) return;
+
+    hasSent.current = true;
+    (async () => {
+      await sendWithdrawEmail({ userId, accountId });
+    })();
+  }, [userId, accountId]);
 
   const onSubmit = useCallback(
     async (data: { pin: string }) => {
@@ -40,7 +57,7 @@ const DerivWithdrawalVerification = ({
         setActionState("error");
       }
     },
-    [transactionId]
+    [transactionId],
   );
 
   return (
@@ -71,7 +88,7 @@ const DerivWithdrawalVerification = ({
       {isWithdrawalSuccess ? (
         <PaymentSuccess />
       ) : (
-        <InputWithdrawalOTP onInput={onSubmit} transactionId="" />
+        <InputWithdrawalOTP onInput={onSubmit} />
       )}
     </div>
   );
