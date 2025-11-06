@@ -1,25 +1,22 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
+import type { z } from "zod";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { DerivWithdrawalOTPSchema } from "@/lib/validation";
-
-import { Form, FormField, FormItem, FormControl, FormMessage } from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 
 const FormSchema = DerivWithdrawalOTPSchema.omit({ transactionId: true });
 
 const InputWithdrawalOTP = ({
   onInput,
 }: {
-  transactionId: string;
   onInput: (data: z.infer<typeof FormSchema>) => Promise<void>;
 }) => {
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -35,7 +32,7 @@ const InputWithdrawalOTP = ({
     async (data: z.infer<typeof FormSchema>) => {
       await onInput(data);
     },
-    [onInput]
+    [onInput],
   );
 
   useEffect(() => {
@@ -54,7 +51,7 @@ const InputWithdrawalOTP = ({
       </header>
 
       <div className="text-16-bold md:text-20-medium text-center">
-        A verification code have been sent to email@gmail.com
+        A verification code have been sent to your email
       </div>
 
       <div>
@@ -71,7 +68,6 @@ const InputWithdrawalOTP = ({
                       type="text"
                       inputMode="text"
                       {...field}
-
                     >
                       <InputOTPGroup className="flex gap-2 py-2">
                         <InputOTPSlot index={0} />

@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { OnboardingStep } from "./constants/onboarding";
 import { supportedDerivAccountsType } from "./constants/supportedDerivAccountsType";
 
@@ -32,7 +31,7 @@ export const DerivAccountSchema = {
   // }),
   server: z.object({
     currency: z.enum(
-      supportedDerivAccountsType.map((account) => account.currency)
+      supportedDerivAccountsType.map((account) => account.currency),
     ),
     accountId: z
       .string()
@@ -49,18 +48,20 @@ export const DerivAccountLinkSchema = z.array(
       .string()
       .min(3, { error: "Please provide your the currency account number" }),
     token: z.string().min(5, { error: "Token is required" }),
-  })
+  }),
 );
 
 export const bankAccountSchema = {
   client: z.object({
-    bankName: z.string().min(3, { error: "Please select your bank" }),
+    bankName: z.string().min(3, { error: "Please select your bank" }).trim(),
     accountName: z
       .string()
-      .min(5, { error: "Please select your bank account name" }),
+      .min(5, { error: "Please select your bank account name" })
+      .trim(),
     accountNumber: z
       .string()
-      .min(10, { error: "Please provide a valid bank account number" }),
+      .min(10, { error: "Please provide a valid bank account number" })
+      .trim(),
   }),
 
   server: z.object({
@@ -99,6 +100,9 @@ export const DerivDepositSchema = z.object({
   amount: z
     .number({ error: "Amount is required" })
     .positive({ error: "Amount must be greater than 0" }),
+  usedRate: z
+    .number({ error: "usedRate is required" })
+    .positive({ error: "usedRate must be greater than 0" }),
 });
 
 export const DerivWithdrawalSchema = z.object({
@@ -119,6 +123,9 @@ export const DerivWithdrawalSchema = z.object({
   amount: z
     .number({ error: "Amount is required" })
     .positive({ error: "Amount must be greater than 0" }),
+  usedRate: z
+    .number({ error: "usedRate is required" })
+    .positive({ error: "usedRate must be greater than 0" }),
 });
 
 const allowedMimeTypes = ["image/jpeg", "image/png", "application/pdf"];

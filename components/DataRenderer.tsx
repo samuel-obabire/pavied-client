@@ -28,7 +28,12 @@ const DataRenderer = <T,>({
   }
 
   if (!data || !data.length) {
-    return <div className="flex-center flex w-full">Empty state</div>;
+    return (
+      <div className="flex-center flex-col rounded-lg flex w-full 2xl:max-w-[404px] h-[203px] bg-white_dark-black-1">
+        <p className="font-medium">{empty?.title || " No record yet!"}</p>
+        {empty?.mesage && <em className="text-12-medium">{empty.mesage}</em>}
+      </div>
+    );
   }
 
   return <>{render(data)}</>;

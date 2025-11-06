@@ -13,7 +13,6 @@ import {
   formatNairaAmount,
   getTransactionDetailsByType,
 } from "@/lib/utils";
-
 import StatusBadge from "../StatusBadge";
 
 const RecentTransactionsTable = ({
@@ -22,7 +21,7 @@ const RecentTransactionsTable = ({
   transactions: Transaction[];
 }) => {
   return (
-    <Table className="border-black-1  w-full overflow-hidden rounded-2xl">
+    <Table className="border-black-1 max-md:hidden  w-full overflow-hidden rounded-2xl">
       <TableHeader className="bg-secondary/20 dark:bg-black-2">
         <TableRow className="overflow-hidden border-none">
           <TableHead className="border-black-1  rounded-l-2xl border-r px-4 py-3">

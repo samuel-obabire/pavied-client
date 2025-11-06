@@ -4,22 +4,18 @@ import "server-only";
 
 import { Timestamp } from "firebase-admin/firestore";
 import { after } from "next/server";
-
 import { bucket, db } from "@/firebase.config";
-
 import { api } from "../api";
 import { getTransactionById } from "../firebase/transactions";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
 import { verifySession } from "../server";
-import { UploadPaymentRecieptSchema } from "../validation";
-import {
-  TransactionQueryParams,
-} from "./types/action";
 import { dateConverter } from "../utils/firebase";
+import { UploadPaymentRecieptSchema } from "../validation";
+import type { TransactionQueryParams } from "./types/action";
 
 export const getPaymentTransaction = async (
-  paymentId: string
+  paymentId: string,
 ): Promise<ActionResponse<Transaction>> => {
   const user = await verifySession();
 
@@ -40,13 +36,13 @@ export const getPaymentTransaction = async (
 
 export const getUserTransactions = async (
   userId: string,
-  query: TransactionQueryParams = {}
+  query: TransactionQueryParams = {},
 ): Promise<ActionResponse<Transaction[]>> => {
   const user = await verifySession();
 
   if (!user?.id || user?.id !== userId) {
     return handleError(
-      new UnauthorizedError("Not authorized")
+      new UnauthorizedError("Not authorized"),
     ) as ErrorResponse;
   }
 
@@ -90,13 +86,13 @@ export const getUserTransactions = async (
   }
 };
 
- const updateTransactionRecieptPath = async (
+const updateTransactionRecieptPath = async (
   paymentId: string,
-  recieptPath: string
+  recieptPath: string,
 ): Promise<ActionResponse> => {
   try {
     if (!paymentId || !recieptPath || typeof recieptPath !== "string") {
-      throw new Error("Reciept path and payment id is required")
+      throw new Error("Reciept path and payment id is required");
     }
 
     const transactionRef = db.collection("transactions").doc(paymentId);
@@ -106,7 +102,7 @@ export const getUserTransactions = async (
       if (!snapshot.exists) throw new NotFoundError("Transaction");
 
       t.update(transactionRef, {
-       "extra.recieptPath": recieptPath,
+        "extra.recieptPath": recieptPath,
         updatedAt: Timestamp.now(),
       });
     });
@@ -118,17 +114,17 @@ export const getUserTransactions = async (
 };
 
 export const uploadPaymentReciept = async (
-  formData: FormData
+  formData: FormData,
 ): Promise<ActionResponse> => {
   const user = await verifySession();
 
-  let transactionId: string | null = null
+  let transactionId: string | null = null;
 
   after(async () => {
-   if (user?.id && transactionId) {
-   await api.deriv.triggerCompleteDerivDeposit(transactionId)
-   }
-  })
+    if (user?.id && transactionId) {
+      await api.deriv.triggerCompleteDerivDeposit(transactionId);
+    }
+  });
 
   try {
     if (!user?.id) throw new UnauthorizedError();
@@ -140,7 +136,7 @@ export const uploadPaymentReciept = async (
 
     const { file, paymentId } = result;
 
-    transactionId = paymentId
+    transactionId = paymentId;
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);

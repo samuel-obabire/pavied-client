@@ -16,8 +16,8 @@ export const isDerivError = (error: unknown): error is DerivError => {
 
 export const getDerivAccount = (currency: string) => {
   return supportedDerivAccountsType.find(
-    (derivAccount) => currency === derivAccount.currency
-  )!;
+    (derivAccount) => currency === derivAccount.currency,
+  );
 };
 
 export const getDerivTransactionDetails = (transaction: Transaction) => {
@@ -26,7 +26,7 @@ export const getDerivTransactionDetails = (transaction: Transaction) => {
       transaction.type === "deriv_deposit"
         ? "Deriv deposit"
         : "Deriv withdrawal",
-    icon: "/assets/bank-logos/palmpay.jpg",
+    icon: "/assets/deriv.png",
   };
 };
 
@@ -36,7 +36,7 @@ export const parseSelectedDerivAccounts = (query: string) => {
 
   // Allowed currencies (case-sensitive output)
   const allowedCurrencies = supportedDerivAccountsType.map(
-    (account) => account.currency
+    (account) => account.currency,
   );
 
   for (let i = 1; i <= 50; i++) {
@@ -53,7 +53,7 @@ export const parseSelectedDerivAccounts = (query: string) => {
       .map((c) => {
         const upper = c.toUpperCase();
         return allowedCurrencies.find(
-          (allowed) => allowed.toUpperCase() === upper
+          (allowed) => allowed.toUpperCase() === upper,
         );
       })
       .filter((c): c is string => Boolean(c));

@@ -1,6 +1,6 @@
 import DataRenderer from "./DataRenderer";
+import MobileTransactionList from "./MobileTransactionList";
 import RecentTransactionsTable from "./tables/RecentTransactionTable";
-import TransactionCard from "./TransactionCard";
 
 const TransactionList = ({
   transactionRes,
@@ -8,7 +8,7 @@ const TransactionList = ({
   transactionRes: ActionResponse<Transaction[]>;
 }) => {
   return (
-    <div className="bg-white_dark-black-1 min-h-[100px] flex-col space-y-4 p-2">
+    <div className="bg-white_dark-black-1 min-h-[100px] flex-col space-y-4 p-2 rounded-lg">
       <DataRenderer
         data={transactionRes.data}
         success={transactionRes.success}
@@ -16,20 +16,8 @@ const TransactionList = ({
         render={(transactions) => {
           return (
             <>
-              <div className="md:hidden">
-                {transactions.map((transaction) => {
-                  return (
-                    <TransactionCard
-                      key={transaction.transactionId}
-                      transaction={transaction}
-                    />
-                  );
-                })}
-              </div>
-
-              <div className="max-md:hidden">
-                <RecentTransactionsTable transactions={transactions} />
-              </div>
+              <MobileTransactionList transactions={transactions} />
+              <RecentTransactionsTable transactions={transactions} />
             </>
           );
         }}

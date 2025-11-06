@@ -1,6 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
+import { type ClassValue, clsx } from "clsx";
+import Decimal from "decimal.js";
 import { twMerge } from "tailwind-merge";
-
 import { getDerivTransactionDetails } from "./deriv";
 
 export function cn(...inputs: ClassValue[]) {
@@ -39,9 +39,7 @@ export const formatCustomDate = (dateInput: Date | string): string => {
 
   const timePart = `${hours}:${minutes} ${ampm}`;
   const dayPart = date.getDate();
-  const monthPart = date
-    .toLocaleString("en-US", { month: "short" })
-    .toLowerCase();
+  const monthPart = date.toLocaleString("en-US", { month: "short" });
   const yearPart = date.getFullYear();
 
   return `${timePart} • ${dayPart} ${monthPart} ${yearPart}`;
@@ -65,7 +63,7 @@ export const formatDateTime = (inputDate: Date) => {
   // return { date: dateStr, time: timeStr, period };
 
   return `${dateStr} at ${timeStr} ${period}`;
-}
+};
 
 export const calculatePaymentExpiry = (createdAt: Date, limitMinutes = 10) => {
   const created = new Date(createdAt);
@@ -106,4 +104,51 @@ export const formatNumber = (number: number) => {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(number);
+};
+
+export const sanitizeTwoDecimals = (value: string) => {
+  // keep only digits + one decimal
+  const newValue = value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+
+  // limit decimal to 2 places if present
+  const parts = value.split(".");
+  if (parts.length === 2) {
+    parts[1] = parts[1].slice(0, 2);
+    return parts.join(".");
+  }
+
+  return newValue;
+};
+
+export const truncateTo2 = (value: string | number): string => {
+  if (value === "" || value === null || value === undefined) return "";
+
+  const num = Number(value);
+  if (isNaN(num)) return "";
+
+  return (Math.floor(num * 100) / 100).toString();
+};
+
+export const multiplyNumbers = (a: number, b: number) => {
+  return new Decimal(a).times(b).toDecimalPlaces(2).toNumber();
+};
+
+export const divideNumbers = (a: number, b: number) => {
+  return new Decimal(a)
+    .div(b)
+    .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+    .toNumber();
+};
+
+export const isSameRate = (
+  a: number,
+  b: number,
+  tolerance = 0.0001,
+): boolean => {
+  return Math.abs(a - b) <= tolerance;
+};
+
+export const isWithinLimit = (value: number, min: number, max: number) => {
+  if (value < min || value > max) return false;
+  return true;
 };

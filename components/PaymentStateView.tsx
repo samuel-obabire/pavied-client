@@ -10,7 +10,7 @@ import PaymentSuccess from "./PaymentSuccess";
 import PendingPayment from "./PendingPayment";
 import ProcessingPayment from "./ProcessingPayment";
 
-type Props = { transaction: Transaction };
+type Props = { transaction: DerivDeposit };
 
 function getPaymentStateView(tx: Transaction) {
   switch (tx.status) {
@@ -38,7 +38,7 @@ const PaymentStateView = ({ transaction }: Props) => {
 
   useEffect(() => {
     // If already done, don't start polling
-    if (["success", "failed"].includes(transaction.status)) return;
+    if (["success", "failed"].includes(transaction.status) || !updatedTransaction.extra.recieptPath) return;
 
     intervalRef.current = setInterval(async () => {
       console.log("Polling payment status...");
@@ -47,7 +47,7 @@ const PaymentStateView = ({ transaction }: Props) => {
         const response = await getPaymentTransaction(transaction.transactionId);
 
         if (response.success && response.data) {
-          const newTx = response.data;
+          const newTx = response.data as DerivDeposit;
 
          setUpdatedTransaction((prevTx) => {
           if (prevTx.status === newTx.status) return prevTx; //  no re-render
@@ -64,7 +64,7 @@ const PaymentStateView = ({ transaction }: Props) => {
     }, 7000);
 
     return () => clearInterval(intervalRef.current!);
-  }, [transaction.transactionId, transaction.status]);
+  }, [transaction.transactionId, transaction.status, updatedTransaction.extra.recieptPath]);
 
   const handleRecieptUploadSuccess = useCallback((isSuccess:boolean) => {
     setRecieptUploadSucess(isSuccess)

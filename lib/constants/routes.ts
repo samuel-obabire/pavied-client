@@ -16,4 +16,6 @@ export const ROUTES = {
     WITHDRAWAL: "/deriv/withdrawal",
   },
   PAYMENT: (paymentId: string) => `/payment-checkout/${paymentId}`,
+  VERIFY_DERIV_WITHDRAW: (transactionId: string) =>
+    `/verify-deriv-withdrawal?tx=${transactionId}`,
 };

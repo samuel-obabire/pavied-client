@@ -1,7 +1,6 @@
-import { AvatarImage, AvatarFallback, Avatar } from "@radix-ui/react-avatar";
+import type { ReactNode } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { redirect } from "next/navigation";
-import { ReactNode } from "react";
-
 import MobileHeader from "@/components/MobileHeader";
 import Sidebar from "@/components/Sidebar";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
@@ -39,7 +38,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
         </header>
 
         <main className="flex h-[calc(100dvh-40px)] flex-col space-y-4 px-2 pt-6 md:h-[calc(100dvh-56px)]">
-          <div className="overflow-y-auto pb-32">{children}</div>
+          <div className="overflow-y-auto">{children}</div>
         </main>
       </div>
     </div>
