@@ -1,7 +1,9 @@
 import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
+import { db } from "@/firebase.config";
 import { DbCollections } from "../constants/dbCollections";
+import { dateConverter } from "../utils/firebase";
 import { addDerivAccountTransaction } from "./dbTransactions";
-import { deleteById, getById, queryWhere } from "./firestore";
+import { deleteById, getById } from "./firestore";
 
 export const addDerivAccountsToCollection = async (
   derivAccounts: DerivAccountLink[],
@@ -17,20 +19,34 @@ export const removeDerivAccountFromCollection = async (
   await deleteById(DbCollections.DERIV_ACCOUNTS, `${currency}_${accountId}`);
 };
 
-export const getDerivAccounts = async (userId: string) => {
-  const derivAccounts = await queryWhere<DerivAccount, "==">(
-    DbCollections.DERIV_ACCOUNTS,
-    "userId",
-    "==",
-    userId,
-  );
+export const getDerivAccounts = async (userId: string, onlyActive: boolean) => {
+  let queryRef = db
+    .collection(DbCollections.DERIV_ACCOUNTS)
+    .where("userId", "==", userId)
+    .withConverter(dateConverter);
+
+  if (onlyActive) {
+    queryRef = queryRef.where("active", "==", true);
+  }
+  const snap = await queryRef.get();
+
+  if (snap.empty) return [];
+
+  const derivAccounts = snap.docs
+    .map((doc) => doc.data() as DerivAccount)
+    .map((acc: DerivAccount) => {
+      const modifiedAccount = acc;
+
+      delete modifiedAccount.token;
+      return modifiedAccount;
+    });
 
   return derivAccounts;
 };
 
 export const getAgentAccount = async (currency: string) => {
   const derivAccount = await getById<DerivAccount>(
-    "agent-deriv-accounts",
+    DbCollections.AGENT_ACCOUNTS,
     currency,
   );
 

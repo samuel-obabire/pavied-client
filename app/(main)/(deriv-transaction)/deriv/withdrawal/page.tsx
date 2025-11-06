@@ -12,8 +12,8 @@ const DerivDepositPage = async () => {
   if (!user?.id) redirect(ROUTES.SIGN_IN);
 
   const [derivAccountsRes, bankAccountRes, rateRes] = await Promise.all([
-    getUserDerivAccounts(user.id),
-    getUserBankAccounts(user.id),
+    getUserDerivAccounts(user.id, { onlyActive: true }),
+    getUserBankAccounts(user.id, { onlyActive: true }),
     fetchCachedRates(),
   ]);
 

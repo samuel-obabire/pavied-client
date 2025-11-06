@@ -25,6 +25,10 @@ const StepSelectDerivAccount = ({
       <DataRenderer
         data={derivAccountsRes.data}
         success={derivAccountsRes.success}
+        empty={{
+          title: "No active accounts",
+          mesage: "You can only withdraw from an activated account",
+        }}
         error={derivAccountsRes.error}
         render={(derivAccounts) =>
           derivAccounts.map((account) => (

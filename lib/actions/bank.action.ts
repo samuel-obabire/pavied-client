@@ -3,7 +3,6 @@
 import "server-only";
 
 import { revalidatePath } from "next/cache";
-
 import { ROUTES } from "../constants/routes";
 import {
   addBankAcccountToCollection,
@@ -17,7 +16,8 @@ import { verifySession } from "../server";
 import { bankAccountSchema } from "../validation";
 
 export const getUserBankAccounts = async (
-  userId: string
+  userId: string,
+  { onlyActive }: { onlyActive: boolean } = { onlyActive: false },
 ): Promise<ActionResponse<BankAccount[]>> => {
   const user = await verifySession();
 
@@ -26,7 +26,7 @@ export const getUserBankAccounts = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const bankAccounts = await getBankAccounts(userId);
+    const bankAccounts = await getBankAccounts(userId, onlyActive);
 
     return { success: true, data: bankAccounts };
   } catch (error) {
@@ -35,7 +35,7 @@ export const getUserBankAccounts = async (
 };
 
 export const addUserBankAccount = async (
-  bankAccount: BankAccount
+  bankAccount: BankAccount,
 ): Promise<ActionResponse> => {
   const result = await action({
     params: bankAccount,
@@ -65,7 +65,7 @@ export const addUserBankAccount = async (
 };
 
 export const removeUserBankAccount = async (
-  bankAccount: BankAccount
+  bankAccount: BankAccount,
 ): Promise<ActionResponse> => {
   const result = await action({
     params: bankAccount,

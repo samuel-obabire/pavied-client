@@ -25,6 +25,11 @@ const StepSelectBankAccount = ({
         data={bankAccountsRes.data}
         success={bankAccountsRes.success}
         error={bankAccountsRes.error}
+        empty={{
+          title: "No active bank account!",
+          mesage:
+            "You can only send funds from a bank account we have verified.",
+        }}
         render={(bankAccounts) =>
           bankAccounts.map((account) => (
             <div

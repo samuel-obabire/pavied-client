@@ -1,5 +1,6 @@
 import { unstable_cache as nextCache } from "next/cache";
 import { db } from "@/firebase.config";
+import { DbCollections } from "../constants/dbCollections";
 import handleError from "../handlers/error";
 import { dateConverter } from "../utils/firebase";
 
@@ -8,7 +9,7 @@ export const fetchCachedRates = nextCache(async (): Promise<
 > => {
   try {
     const snap = await db
-      .collection("rates")
+      .collection(DbCollections.RATES)
       .withConverter(dateConverter)
       .get();
     const rates = snap.docs.map((doc) => doc.data() as CurrencyConfig);
@@ -23,7 +24,7 @@ export const fetchCachedRate = nextCache(
   async (currency: string): Promise<ActionResponse<CurrencyConfig>> => {
     try {
       const snap = await db
-        .collection("rates")
+        .collection(DbCollections.RATES)
         .where("code", "==", currency)
         .withConverter(dateConverter)
         .get();

@@ -1,21 +1,21 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
-
+import Image from "next/image";
 import { removeUserBankAccount } from "@/lib/actions/bank.action";
 import { cn } from "@/lib/utils";
-
-import ActionState, { ActionStateType } from "./ActionState";
+import ActionState, { type ActionStateType } from "./ActionState";
 import BankIcon from "./BankIcon";
 
 const BankAccountCard = ({
   bankAccount,
   selected,
   removeable = true,
+  showActive,
 }: {
   bankAccount: BankAccount;
   selected?: boolean;
+  showActive?: boolean;
   removeable?: boolean;
 }) => {
   const [actionState, setActionState] = useState<ActionStateType>("idle");
@@ -50,7 +50,7 @@ const BankAccountCard = ({
           {
             "text-secondary": selected,
             "bg-secondary/5": selected,
-          }
+          },
         )}
       >
         <div className="flex justify-between">
@@ -59,7 +59,13 @@ const BankAccountCard = ({
             <span className="">{bankName}</span>
           </div>
 
-          {removeable && (
+          {showActive && !bankAccount.active ? (
+            <span className="text-secondary bg-secondary/10 p-1 rounded-lg text-12-medium">
+              Under review
+            </span>
+          ) : null}
+
+          {removeable && bankAccount.active && (
             <span
               className="form-error text-12-regular cursor-default p-1"
               onClick={() => removeAccount(bankAccount)}

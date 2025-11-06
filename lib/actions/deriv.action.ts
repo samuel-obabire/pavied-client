@@ -46,6 +46,7 @@ import type { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
 
 export const getUserDerivAccounts = async (
   userId: string,
+  { onlyActive }: { onlyActive: boolean } = { onlyActive: false },
 ): Promise<ActionResponse<DerivAccount[]>> => {
   const user = await verifySession();
 
@@ -54,12 +55,7 @@ export const getUserDerivAccounts = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const derivAccounts = (await getDerivAccounts(userId)).map((acc) => {
-      const modifiedAccount = acc;
-
-      delete modifiedAccount.token;
-      return modifiedAccount;
-    });
+    const derivAccounts = await getDerivAccounts(userId, onlyActive);
 
     return { success: true, data: derivAccounts };
   } catch (error) {
@@ -160,23 +156,33 @@ export const createDerivDepositTransaction = async (
   } = result;
 
   let transactionId = "";
+  const userId = session?.user.id as string;
 
   try {
-    const { success, data, error } = await fetchCachedRate(currency);
+    const [rateRes, activeAccountRes] = await Promise.all([
+      fetchCachedRate(currency),
+      getUserDerivAccounts(userId, {
+        onlyActive: true,
+      }),
+    ]);
 
-    if (!success || !data)
-      throw new Error(error?.message || "Unable to fetch rate data");
+    const acc = activeAccountRes.data?.find(
+      (acc) => acc.accountId === derivLoginId,
+    );
 
-    if (usedRate !== data.depositRate)
+    if (!acc || !acc.active) throw new Error("You cannot fund this account");
+
+    if (!rateRes.success || !rateRes.data)
+      throw new Error(rateRes.error?.message || "Unable to fetch rate data");
+
+    if (usedRate !== rateRes.data.depositRate)
       throw new Error("Rate changed. Please refresh and try again.");
 
-    if (amount < data.depositMin || amount > data.depositMax) {
+    if (amount < rateRes.data.depositMin || amount > rateRes.data.depositMax) {
       throw new Error(
-        `Minimum deposit: ${data.depositMin}, Maximum ${data.depositMax}`,
+        `Minimum deposit: ${rateRes.data.depositMin}, Maximum ${rateRes.data.depositMax}`,
       );
     }
-
-    const userId = session?.user.id as string;
 
     const transactionRef = db
       .collection("transactions")
@@ -227,7 +233,7 @@ export const createDerivDepositTransaction = async (
           acountName: "Evarest Direct Technologies",
         },
         extra: {
-          amount: divideNumbers(amount, data.depositRate),
+          amount: divideNumbers(amount, rateRes.data?.depositRate as number),
           currency,
           derivLoginId,
           paidFromBankName,

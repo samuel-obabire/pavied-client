@@ -53,13 +53,15 @@ export const DerivAccountLinkSchema = z.array(
 
 export const bankAccountSchema = {
   client: z.object({
-    bankName: z.string().min(3, { error: "Please select your bank" }),
+    bankName: z.string().min(3, { error: "Please select your bank" }).trim(),
     accountName: z
       .string()
-      .min(5, { error: "Please select your bank account name" }),
+      .min(5, { error: "Please select your bank account name" })
+      .trim(),
     accountNumber: z
       .string()
-      .min(10, { error: "Please provide a valid bank account number" }),
+      .min(10, { error: "Please provide a valid bank account number" })
+      .trim(),
   }),
 
   server: z.object({

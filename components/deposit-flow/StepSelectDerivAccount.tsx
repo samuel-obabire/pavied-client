@@ -26,6 +26,10 @@ const StepSelectDerivAccount = ({
         data={derivAccountsRes.data}
         success={derivAccountsRes.success}
         error={derivAccountsRes.error}
+        empty={{
+          title: "No active accounts",
+          mesage: "You can only deposit into an activated account",
+        }}
         render={(derivAccounts) =>
           derivAccounts.map((account) => (
             <div

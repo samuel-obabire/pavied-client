@@ -1,4 +1,14 @@
+"use client";
+
 import Image from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { removeDerivAccount } from "@/lib/actions/deriv.action";
 import { cn } from "@/lib/utils";
 import { getDerivAccount } from "@/lib/utils/deriv";
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
@@ -6,13 +16,34 @@ import DerivCurrencyIcon from "./DerivCurrencyIcon";
 const DerivAccountCard = ({
   derivAccount,
   selected,
+  showContext,
+  showActive,
 }: {
   derivAccount: DerivAccount;
   selected?: boolean;
+  showContext?: boolean;
+  showActive?: boolean;
 }) => {
-  const { accountId, currency, dateAdded } = derivAccount;
+  const { accountId, currency, dateAdded, active } = derivAccount;
 
   const currencyName = getDerivAccount(currency)?.name;
+
+  const renderMenu = (derivAccount: DerivAccount) => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger>···</DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" className="bg-white_dark-black-1">
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => removeDerivAccount(derivAccount)}
+            className="text-failed cursor-pointer"
+          >
+            Remove
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
 
   return (
     <div
@@ -34,6 +65,13 @@ const DerivAccountCard = ({
         {selected && (
           <Image src="/assets/check-circle.svg" alt="" width={20} height={20} />
         )}
+
+        {showActive && !active ? (
+          <span className="text-secondary bg-secondary/10 p-1 rounded-lg text-12-medium">
+            Under review
+          </span>
+        ) : null}
+        {showContext && renderMenu(derivAccount)}
       </div>
 
       <div className="flex items-center justify-between">

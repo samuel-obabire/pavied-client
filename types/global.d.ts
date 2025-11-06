@@ -3,6 +3,7 @@ type BankAccount = {
   accountName: string;
   bankName: string;
   bankCode: string;
+  active?: boolean;
   userId?: string;
   dateAdded?: Date;
 };
@@ -10,6 +11,7 @@ type BankAccount = {
 type DerivAccount = {
   accountId: string;
   currency: string;
+  active?: boolean;
   userId?: string;
   token?: string;
   dateAdded?: Date;
