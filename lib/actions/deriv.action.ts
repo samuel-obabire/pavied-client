@@ -390,9 +390,9 @@ export const processDerivWithdrawal = async (paymentData: {
     });
 
     if (paymentAgentWithdrawResponse?.paymentagent_withdraw === 1) {
-      return { success: true };
+      await api.deriv.confirmClientWithdraw(transaction.transactionId);
 
-      // Todo: update payment status
+      return { success: true };
     }
     throw new Error("Payment agent withdrawal failed");
   } catch (error) {
