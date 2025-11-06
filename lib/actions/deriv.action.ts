@@ -178,7 +178,13 @@ export const createDerivDepositTransaction = async (
     if (usedRate !== rateRes.data.depositRate)
       throw new Error("Rate changed. Please refresh and try again.");
 
-    if (amount < rateRes.data.depositMin || amount > rateRes.data.depositMax) {
+    const convertedAmount = divideNumbers(amount, rateRes.data.depositRate);
+    console.log(convertedAmount);
+
+    if (
+      convertedAmount < rateRes.data.depositMin ||
+      convertedAmount > rateRes.data.depositMax
+    ) {
       throw new Error(
         `Minimum deposit: ${rateRes.data.depositMin}, Maximum ${rateRes.data.depositMax}`,
       );
@@ -233,7 +239,7 @@ export const createDerivDepositTransaction = async (
           acountName: "Evarest Direct Technologies",
         },
         extra: {
-          amount: divideNumbers(amount, rateRes.data?.depositRate as number),
+          amount: convertedAmount,
           currency,
           derivLoginId,
           paidFromBankName,
