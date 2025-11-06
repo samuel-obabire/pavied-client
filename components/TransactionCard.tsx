@@ -1,4 +1,8 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/lib/constants/routes";
 import {
   formatCustomDate,
   formatNairaAmount,
@@ -9,10 +13,18 @@ import StatusBadge from "./StatusBadge";
 
 const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
   const { icon, label } = getTransactionDetailsByType(transaction);
+  const router = useRouter();
+
+  const handleClick = (txid: string) => {
+    router.push(`${ROUTES.TRANSACTIONS}/${txid}`);
+  };
 
   return (
     <>
-      <div className="bg-white_dark-black-1 flex justify-between">
+      <div
+        className="bg-white_dark-black-1 flex justify-between"
+        onClick={() => handleClick(transaction.transactionId)}
+      >
         <div className="flex items-center gap-4">
           <div>
             <Image
