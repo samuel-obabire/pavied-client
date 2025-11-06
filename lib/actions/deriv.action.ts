@@ -55,7 +55,7 @@ export const getUserDerivAccounts = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const derivAccounts = await getDerivAccounts(userId, onlyActive);
+    const derivAccounts = await getDerivAccounts(userId, { onlyActive });
 
     return { success: true, data: derivAccounts };
   } catch (error) {
@@ -468,6 +468,7 @@ export const sendWithdrawEmail = async ({
 }): Promise<ActionResponse<{ email: string }>> => {
   try {
     const accountToken = await getDerivAccountToken(userId, accountId);
+    console.log(accountToken, 3434);
     if (!accountToken) throw new Error("Account not found");
 
     const result = await verifyWithdrawEmail({
