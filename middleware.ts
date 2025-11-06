@@ -1,5 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
-
+import { type NextRequest, NextResponse } from "next/server";
 import { api } from "./lib/api";
 import {
   onBoardingRoutes,
@@ -10,7 +9,7 @@ import { ROUTES } from "./lib/constants/routes";
 import logger from "./lib/logger";
 import { verifySession } from "./lib/server";
 
-const publicRoutes = [ROUTES.HOME];
+const publicRoutes = [ROUTES.HOME, ROUTES.HANDLE_DERIV];
 
 export async function middleware(request: NextRequest) {
   const user = await verifySession();

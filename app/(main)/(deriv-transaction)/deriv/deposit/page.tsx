@@ -13,7 +13,7 @@ const DerivDepositPage = async () => {
 
   const [derivAccountsRes, bankAccountRes, rateRes] = await Promise.all([
     getUserDerivAccounts(user.id, { onlyActive: true }),
-    getUserBankAccounts(user.id),
+    getUserBankAccounts(user.id, { onlyActive: true }),
     fetchCachedRates(),
   ]);
 
