@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-
 import AddAccountHeader from "@/components/AddAccountHeader";
 import BankAccountCard from "@/components/BankAccountCard";
 import DataRenderer from "@/components/DataRenderer";
@@ -35,6 +34,7 @@ const BankAccountOnboardingPage = async () => {
                       <BankAccountCard
                         key={bankAcccount.bankCode + bankAcccount.accountNumber}
                         bankAccount={bankAcccount}
+                        removeable
                       />
                     );
                   });
