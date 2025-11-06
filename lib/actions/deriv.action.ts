@@ -55,7 +55,7 @@ export const getUserDerivAccounts = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const derivAccounts = await getDerivAccounts(userId, onlyActive);
+    const derivAccounts = await getDerivAccounts(userId, { onlyActive });
 
     return { success: true, data: derivAccounts };
   } catch (error) {
@@ -178,7 +178,13 @@ export const createDerivDepositTransaction = async (
     if (usedRate !== rateRes.data.depositRate)
       throw new Error("Rate changed. Please refresh and try again.");
 
-    if (amount < rateRes.data.depositMin || amount > rateRes.data.depositMax) {
+    const convertedAmount = divideNumbers(amount, rateRes.data.depositRate);
+    console.log(convertedAmount);
+
+    if (
+      convertedAmount < rateRes.data.depositMin ||
+      convertedAmount > rateRes.data.depositMax
+    ) {
       throw new Error(
         `Minimum deposit: ${rateRes.data.depositMin}, Maximum ${rateRes.data.depositMax}`,
       );
@@ -233,7 +239,7 @@ export const createDerivDepositTransaction = async (
           acountName: "Evarest Direct Technologies",
         },
         extra: {
-          amount: divideNumbers(amount, rateRes.data?.depositRate as number),
+          amount: convertedAmount,
           currency,
           derivLoginId,
           paidFromBankName,
@@ -390,9 +396,9 @@ export const processDerivWithdrawal = async (paymentData: {
     });
 
     if (paymentAgentWithdrawResponse?.paymentagent_withdraw === 1) {
-      return { success: true };
+      await api.deriv.confirmClientWithdraw(transaction.transactionId);
 
-      // Todo: update payment status
+      return { success: true };
     }
     throw new Error("Payment agent withdrawal failed");
   } catch (error) {
@@ -462,6 +468,7 @@ export const sendWithdrawEmail = async ({
 }): Promise<ActionResponse<{ email: string }>> => {
   try {
     const accountToken = await getDerivAccountToken(userId, accountId);
+    console.log(accountToken, 3434);
     if (!accountToken) throw new Error("Account not found");
 
     const result = await verifyWithdrawEmail({

@@ -19,7 +19,12 @@ export const removeDerivAccountFromCollection = async (
   await deleteById(DbCollections.DERIV_ACCOUNTS, `${currency}_${accountId}`);
 };
 
-export const getDerivAccounts = async (userId: string, onlyActive: boolean) => {
+export const getDerivAccounts = async (
+  userId: string,
+  options: { onlyActive?: boolean; withToken?: boolean } = {},
+) => {
+  const { onlyActive = false, withToken = false } = options;
+
   let queryRef = db
     .collection(DbCollections.DERIV_ACCOUNTS)
     .where("userId", "==", userId)
@@ -28,20 +33,15 @@ export const getDerivAccounts = async (userId: string, onlyActive: boolean) => {
   if (onlyActive) {
     queryRef = queryRef.where("active", "==", true);
   }
-  const snap = await queryRef.get();
 
+  const snap = await queryRef.get();
   if (snap.empty) return [];
 
-  const derivAccounts = snap.docs
-    .map((doc) => doc.data() as DerivAccount)
-    .map((acc: DerivAccount) => {
-      const modifiedAccount = acc;
+  const accounts = snap.docs.map((doc) => doc.data() as DerivAccount);
 
-      delete modifiedAccount.token;
-      return modifiedAccount;
-    });
+  if (withToken) return accounts;
 
-  return derivAccounts;
+  return accounts.map(({ token, ...rest }) => rest);
 };
 
 export const getAgentAccount = async (currency: string) => {

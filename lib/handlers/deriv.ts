@@ -103,7 +103,10 @@ export const getUserDerivAccountWithTokens = async (
   userId: string,
 ): Promise<ActionResponse<DerivAccount[]>> => {
   try {
-    const derivAccounts = await getDerivAccounts(userId, true);
+    const derivAccounts = await getDerivAccounts(userId, {
+      onlyActive: true,
+      withToken: true,
+    });
 
     return { success: true, data: derivAccounts };
   } catch (error) {
