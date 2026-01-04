@@ -1,14 +1,12 @@
 import { Timestamp } from "firebase-admin/firestore";
-
-import { DerivAccountLink } from "@/components/DerivAccountSelectionList";
+import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
 import { db } from "@/firebase.config";
-
 import { DbCollections } from "../constants/dbCollections";
 
 export const addBankAccountTransaction = async (
   accountNumber: string,
   bankCode: string,
-  bankAccount: BankAccount
+  bankAccount: BankAccount,
 ) => {
   const bankAccountRef = db
     .collection("bank-accounts")
@@ -25,7 +23,7 @@ export const addBankAccountTransaction = async (
 
 export const addDerivAccountTransaction = async (
   derivAccounts: DerivAccountLink[],
-  userId: string
+  userId: string,
 ) => {
   await db.runTransaction(async (t) => {
     for (const account of derivAccounts) {
@@ -40,7 +38,7 @@ export const addDerivAccountTransaction = async (
 
         if (data.userId !== userId) {
           throw new Error(
-            `Account ${account.accountId} already exist in database with another user`
+            `Account ${account.accountId} already exist in database with another user`,
           );
         }
       }
