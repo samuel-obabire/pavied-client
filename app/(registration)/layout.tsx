@@ -8,12 +8,14 @@ export default function OnboardingLayout({
   children: ReactNode;
 }>) {
   return (
-    <div className="mt-8">
-      <header className="text-center">
+    <div className="flex flex-col min-h-screen py-10">
+      <header className="flex-none text-center">
         <BrandName />
       </header>
 
-      {children}
+      <main className="flex-1 flex flex-col items-center justify-center">
+        {children}
+      </main>
     </div>
   );
 }
