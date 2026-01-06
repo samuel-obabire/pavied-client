@@ -10,6 +10,18 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "5mb",
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "randomuser.me",
+      },
+      {
+        protocol: "https",
+        hostname: "github.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
