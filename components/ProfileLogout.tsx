@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Separator } from "@radix-ui/react-separator";
 import { LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
