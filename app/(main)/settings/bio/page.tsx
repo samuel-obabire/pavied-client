@@ -1,16 +1,15 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
-
+import { redirect } from "next/navigation";
 import ProfileSettingsForm from "@/components/forms/ProfileSettingsForm";
+import { getUser } from "@/lib/actions/user.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
-import { getUserById } from "@/lib/firebase/user";
 
 const SettingsBioPage = async () => {
   const sessionUser = await verifySession();
   if (!sessionUser || !sessionUser.id) redirect(ROUTES.SIGN_IN);
 
-  const user = await getUserById(sessionUser.id);
+  const { data: user } = await getUser(sessionUser.id);
   if (!user) redirect(ROUTES.SIGN_IN);
 
   return (
