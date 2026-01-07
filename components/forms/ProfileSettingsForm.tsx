@@ -13,11 +13,11 @@ import { z } from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel, FormMessage
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel, FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { updateUser } from "@/lib/actions/user.action";
@@ -40,6 +40,7 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
       fullName: user.fullName || "",
       countryOfResidence: user.countryOfResidence || "",
       phone: user.phone || "",
+      whatsApp: user.whatsApp || "",
     },
   });
 
@@ -157,6 +158,27 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
                 <FormControl className="w-full">
                   <PhoneInput
                     placeholder="Enter phone number"
+                    defaultCountry="NG"
+                    {...field}
+                    className="PhoneInput w-full border border-gray-200/30"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="whatsApp"
+            render={({ field }) => (
+              <FormItem className="flex flex-col items-start gap-2">
+                <FormLabel className="text-16-medium text-black-1_dark-white">
+                  Whatsapp number (Optional)
+                </FormLabel>
+                <FormControl className="w-full">
+                  <PhoneInput
+                    placeholder="Enter whatsapp number"
                     defaultCountry="NG"
                     {...field}
                     className="PhoneInput w-full border border-gray-200/30"
