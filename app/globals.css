@@ -23,7 +23,7 @@
   --color-black-2: #101010;
   --color-white: #ffffff;
   --color-success: #34a851;
-  --color-failed: #E20404;
+  --color-failed: #e20404;
 }
 
 @theme inline {
@@ -168,7 +168,7 @@
   /* Phone Input */
   /* ============================= */
   .PhoneInput {
-    @apply !border-0 !bg-white_dark-black-1 !rounded-sm !shadow-none px-2 !h-[44px];
+    @apply !bg-white_dark-black-1 !rounded-sm !shadow-none px-2 !h-[44px];
   }
 
   .PhoneInputInput {
@@ -249,7 +249,7 @@
   }
 
   .inputClass {
-    @apply !border-0 !h-[44px] !py-5 !bg-white_dark-black-1 !text-16-regular rounded-sm focus-visible:!ring-0;
+    @apply !h-[44px] !py-5 !bg-white_dark-black-1 !text-16-regular rounded-sm focus-visible:!ring-0 border border-gray-200/30;
   }
 
   .btn-primary {
@@ -293,14 +293,13 @@
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
-}
-
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

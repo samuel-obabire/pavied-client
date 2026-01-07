@@ -30,18 +30,18 @@ const MobileSheet = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="md:hidden">
+    <aside className="lg:hidden">
       <Sheet>
         <SheetTrigger asChild>
           <Menu />
         </SheetTrigger>
         <SheetContent
-          className="no-ring  bg-white_dark-black-1 max-w-[230px] p-2  md:hidden"
+          className="no-ring  bg-white_dark-black-1 max-w-[280px] p-2  lg:hidden"
           side="left"
         >
           <DialogTitle className="sr-only" />
 
-          <div className="bg-white_dark-black-1 w-full p-2 md:w-[208px] ">
+          <div className="bg-white_dark-black-1 w-full p-2 md:w-[260px] ">
             <div className="my-2 scale-85">
               <BrandName />
             </div>

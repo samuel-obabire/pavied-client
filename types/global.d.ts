@@ -24,6 +24,7 @@ type User = {
   telegramId: string;
   phone: string;
   whatsApp: string;
+  countryOfResidence?: string;
   referralCode?: string;
   referredBy?: string;
   referralEarnings?: number;
