@@ -15,7 +15,7 @@ const SettingsBioPage = async () => {
 
   return (
     <div className="container py-8 max-w-6xl">
-      <div className="flex flex-col gap-10 md:flex-row">
+      <div className="flex flex-col gap-10 lg:flex-row">
         {/* Settings Sidebar */}
         <aside className="w-full md:w-64 space-y-6">
           <h2 className="text-18-bold text-black-1_dark-white px-2">

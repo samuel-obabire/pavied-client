@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
@@ -16,8 +17,7 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
-    FormMessage,
+    FormLabel, FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { updateUser } from "@/lib/actions/user.action";
@@ -29,6 +29,7 @@ interface ProfileSettingsFormProps {
 }
 
 const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
+  const { data } = useSession();
   const [errorMessage, setErrorMessage] = useState("");
   const [actionState, setActionState] = useState<ActionStateType>("idle");
   const options = useMemo(() => countryList().getData(), []);
@@ -71,9 +72,17 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
 
       <div className="flex items-center gap-6">
         <Avatar className="h-24 w-24 border border-border">
-          <AvatarImage src="" alt={user.fullName} />
-          <AvatarFallback className="text-2xl">
-            {user.fullName?.charAt(0) || "U"}
+          <AvatarImage
+            className="h-full w-full object-cover"
+            src={data?.user?.image || "https://github.com/shadcn.png"}
+            alt={data?.user?.name || "User"}
+          />
+          <AvatarFallback className="flex h-full w-full items-center justify-center bg-accent text-2xl font-bold">
+            {data?.user?.name
+              ?.split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
         <div className="flex gap-3">
