@@ -38,15 +38,16 @@ const DerivSettingsPage = async () => {
 
   if (!user?.id) redirect(ROUTES.HOME);
 
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
       <section className="bg-white_dark-black-1 rounded-2xl p-6 md:p-8 shadow-md dark:shadow-gray-200/15 border border-gray-200/30">
         <ConnectDeriv />
       </section>
 
       <section className="bg-white_dark-black-1 rounded-2xl p-6 shadow-md dark:shadow-gray-200/15 border border-gray-200/30 space-y-6">
-        <h2 className="text-20-medium text-black-1_dark-white">Previously linked accounts</h2>
+        <h2 className="text-20-medium text-black-1_dark-white">
+          Previously linked accounts
+        </h2>
 
         <Suspense fallback={<AccountCardFallback />}>
           <AccountList userId={user.id} />
@@ -54,8 +55,6 @@ const DerivSettingsPage = async () => {
       </section>
     </div>
   );
-  
-  
 };
 
 export default DerivSettingsPage;
