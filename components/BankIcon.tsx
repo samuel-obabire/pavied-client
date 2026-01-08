@@ -7,7 +7,7 @@ const BankIcon = ({ bankCode }: { bankCode: string }) => {
   const { icon } = nigeriaBanks.find(({ code }) => bankCode === code)!;
 
   return (
-    <div className="relative size-6">
+    <div className="relative size-6 rounded-md overflow-hidden">
       <Image src={icon} fill alt="bank" />
     </div>
   );

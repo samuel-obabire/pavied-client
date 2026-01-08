@@ -7,11 +7,11 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import "react-phone-number-input/style.css";
 import { SelectItem } from "@/components/ui/select";
@@ -73,11 +73,20 @@ const BankAccountRegister = () => {
   };
 
   return (
-    <div>
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h3 className="text-20-bold text-black-1_dark-white text-center md:text-left">
+          Link Bank Account
+        </h3>
+        <p className="text-14-regular text-gray-500 text-center md:text-left">
+          Add your local bank account details for smooth payouts and withdrawals.
+        </p>
+      </div>
+
       <ActionState
         state={actionState}
         pendingTitle="Adding Bank Account"
-        successTitle="Account  successfully added"
+        successTitle="Account successfully added"
         errorMessage={errorMessage}
         retryAction={retrySubmit}
       />

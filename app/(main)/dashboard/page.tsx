@@ -29,7 +29,7 @@ const DashboardPage = async () => {
 
   return (
     <>
-      <section className="grid flex-none grid-cols-2 gap-1 sm:gap-2 xl:flex">
+      <section className="grid flex-none grid-cols-2 gap-2 sm:gap-4 xl:flex">
         <StatsCard
           title="Total Transactions"
           subText="Total  transactions"
@@ -56,10 +56,15 @@ const DashboardPage = async () => {
         />
       </section>
 
-      <article className="mt-4 flex-1 overflow-y-scroll rounded-2xl  pt-0">
-        <header className="bg-white_dark-black-1 sticky  top-0 left-0 z-3 flex items-center justify-between  rounded-lg px-2  py-4 md:px-6">
-          <h2 className="">Recent Transactions</h2>
-          <Link href={ROUTES.TRANSACTIONS}>View all</Link>
+      <article className="mt-8 flex-1 overflow-visible rounded-2xl pt-0">
+        <header className="sticky top-0 left-0 z-10 mb-4 flex items-center justify-between px-2 py-2">
+          <h2 className="text-20-medium text-black-1 dark:text-white">Recent Transactions</h2>
+          <Link 
+            href={ROUTES.TRANSACTIONS}
+            className="text-14-medium text-secondary transition-opacity hover:opacity-80"
+          >
+            View all
+          </Link>
         </header>
 
         <TransactionList transactionRes={getTransactionResponse} />

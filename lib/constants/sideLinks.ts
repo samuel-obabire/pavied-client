@@ -1,9 +1,7 @@
 import {
     LayoutDashboard,
     Logs,
-    Settings,
-    Wallet,
-    WalletCards,
+    Settings, WalletCards
 } from "lucide-react";
 
 import { ROUTES } from "./routes";
@@ -23,7 +21,5 @@ export const sideLinks = [
       href: ROUTES.DERIV.WITHDRAWAL,
     },
   },
-  { label: "Deriv Account", Icon: Wallet, href: ROUTES.SETUP_DERIV },
-  { label: "Bank Account", Icon: WalletCards, href: ROUTES.SETUP_BANK },
   { label: "Settings", Icon: Settings, href: ROUTES.SETTINGS_BIO },
 ];

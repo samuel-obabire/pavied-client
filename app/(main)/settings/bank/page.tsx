@@ -12,7 +12,7 @@ const AccountList = async ({ userId }: { userId: string }) => {
   const bankAccountRes = await getUserBankAccounts(userId);
 
   return (
-    <div className="flex flex-col gap-2 py-4">
+    <div className="flex flex-col gap-4 py-2">
       <DataRenderer
         data={bankAccountRes.data}
         success={bankAccountRes.success}
@@ -37,21 +37,24 @@ const BankSettiingsPage = async () => {
 
   if (!user?.id) redirect(ROUTES.HOME);
 
+  
+  
   return (
-    <main className="container space-y-8 lg:flex gap-4 justify-around sm:max-md:px-10">
-      <section className="lg:max-w-md">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <section className="bg-white_dark-black-1 rounded-2xl p-6 shadow-md dark:shadow-gray-200/15 border border-gray-200/30">
         <BankAccountRegister />
       </section>
 
-      <section className="flex-1 w-full lg:max-w-sm">
-        <h2 className="text-20-medium">Previously linked accounts</h2>
+      <section className="bg-white_dark-black-1 rounded-2xl p-6 shadow-md dark:shadow-gray-200/15 border border-gray-200/30 space-y-6">
+        <h2 className="text-20-medium text-black-1_dark-white">Previously linked accounts</h2>
 
         <Suspense fallback={<AccountCardFallback />}>
           <AccountList userId={user.id} />
         </Suspense>
       </section>
-    </main>
+    </div>
   );
+  
 };
 
 export default BankSettiingsPage;

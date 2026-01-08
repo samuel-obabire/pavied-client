@@ -90,6 +90,9 @@ const Sidebar = () => {
               }
 
               const { Icon, href, label } = link;
+              const isActive =
+                pathname === href ||
+                (label === "Settings" && pathname.startsWith("/settings"));
 
               return (
                 <React.Fragment key={href}>
@@ -101,13 +104,13 @@ const Sidebar = () => {
                       className={cn(
                         "flex h-12 w-full cursor-pointer items-center gap-3 rounded-lg px-3 text-sm font-medium transition-all duration-200",
                         {
-                          "bg-primary text-white shadow-md shadow-primary/20": pathname === href,
+                          "bg-primary text-white shadow-md shadow-primary/20": isActive,
                           "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-100":
-                            pathname !== href,
+                            !isActive,
                         }
                       )}
                     >
-                      <Icon size={20} className={cn({ "text-white": pathname === href, "text-gray-500 dark:text-gray-400": pathname !== href })} /> 
+                      <Icon size={20} className={cn({ "text-white": isActive, "text-gray-500 dark:text-gray-400": !isActive })} /> 
                       {label}
                     </li>
                   </Link>
