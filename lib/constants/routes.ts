@@ -2,6 +2,7 @@ export const ROUTES = {
   HOME: "/",
   CONTACT: "/contact",
   SIGN_IN: "/signin",
+  SETTINGS: "/settings",
   SETTINGS_BIO: "/settings/bio",
   SETUP_DERIV: "/settings/deriv",
   SETUP_BANK: "/settings/bank",
