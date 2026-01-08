@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Twitter, Facebook, Instagram, Github } from "lucide-react";
 import Image from "next/image";
+import { ROUTES } from "@/lib/constants/routes";
 const Footer = () => {
   return (
     <footer className="bg-secondary pt-[180px] pb-10">
@@ -32,7 +33,7 @@ const Footer = () => {
             <Link href="/" className="text-16-bold text-black-1 transition-colors hover:text-black-1/70">
               Referral
             </Link>
-            <Link href="/" className="text-16-bold text-black-1 transition-colors hover:text-black-1/70">
+            <Link href={ROUTES.CONTACT} className="text-16-bold text-black-1 transition-colors hover:text-black-1/70">
               Contact us
             </Link>
           </nav>

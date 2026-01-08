@@ -2,26 +2,29 @@
 
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import BrandName from "./BrandName";
 import { Button } from "./ui/button";
 import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from "./ui/sheet";
 import { ROUTES } from "@/lib/constants/routes";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Contact us", href: "#contact" },
+  { label: "Home", href: ROUTES.HOME },
+  { label: "Contact us", href: ROUTES.CONTACT },
 ];
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-black-1/5 bg-white/80 backdrop-blur-md dark:border-white/5 dark:bg-black-2/80">
@@ -33,15 +36,23 @@ const Header = () => {
 
         {/* Desktop Navigation (Centered) */}
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="text-16-medium text-black-1/70 transition-colors hover:text-black-1 dark:text-white/70 dark:hover:text-white"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                className={cn(
+                  "text-16-medium transition-colors hover:text-black-1 dark:hover:text-white",
+                  isActive 
+                    ? "font-semibold text-secondary" 
+                    : "text-black-1/70 dark:text-white/70"
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Desktop Actions (Right) */}
@@ -73,16 +84,24 @@ const Header = () => {
             </SheetHeader>
             <div className="flex flex-col gap-6 p-8">
               <nav className="flex flex-col gap-4">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="text-18-medium text-black-1/70 transition-colors hover:text-black-1 dark:text-white/70 dark:hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                        "text-18-medium transition-colors hover:text-black-1 dark:hover:text-white",
+                        isActive 
+                          ? "font-semibold text-secondary" 
+                          : "text-black-1/70 dark:text-white/70"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </nav>
               <div className="mt-4 flex flex-col gap-4">
                 <Button
