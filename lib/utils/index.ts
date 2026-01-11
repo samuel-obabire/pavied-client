@@ -108,7 +108,11 @@ export const formatNumber = (number: number) => {
 
 export const sanitizeTwoDecimals = (value: string) => {
   // keep only digits + one decimal
+<<<<<<< Updated upstream
   const newValue = value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+=======
+  value = value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
+>>>>>>> Stashed changes
 
   // limit decimal to 2 places if present
   const parts = value.split(".");
@@ -117,8 +121,13 @@ export const sanitizeTwoDecimals = (value: string) => {
     return parts.join(".");
   }
 
+<<<<<<< Updated upstream
   return newValue;
 };
+=======
+  return value;
+}
+>>>>>>> Stashed changes
 
 export const truncateTo2 = (value: string | number): string => {
   if (value === "" || value === null || value === undefined) return "";
@@ -128,6 +137,7 @@ export const truncateTo2 = (value: string | number): string => {
 
   return (Math.floor(num * 100) / 100).toString();
 };
+<<<<<<< Updated upstream
 
 export const multiplyNumbers = (a: number, b: number) => {
   return new Decimal(a).times(b).toDecimalPlaces(2).toNumber();
@@ -152,3 +162,5 @@ export const isWithinLimit = (value: number, min: number, max: number) => {
   if (value < min || value > max) return false;
   return true;
 };
+=======
+>>>>>>> Stashed changes

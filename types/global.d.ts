@@ -164,6 +164,7 @@ type AuditLog = {
 };
 
 type CurrencyConfig = {
+<<<<<<< Updated upstream
   active: boolean;
   code: string;
   depositMax: number;
@@ -175,6 +176,19 @@ type CurrencyConfig = {
   withdrawalMax: number;
   withdrawalMin: number;
   withdrawalRate: number;
+=======
+  active: boolean,
+  code: string,
+  depositMax: number,
+  depositMin: number,
+  depositRate: number,
+  lastUpdated: Date,
+  name: string,
+  smallAmountCharge: number,
+  withdrawalMax: number,
+  withdrawalMin: number,
+  withdrawalRate: number,
+>>>>>>> Stashed changes
 };
 
 type ActionResponse<T = null> = {

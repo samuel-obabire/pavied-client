@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { ArrowDownLeft, ArrowDownRight } from "lucide-react";
 import DataRenderer from "./DataRenderer";
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
@@ -7,6 +8,41 @@ const ExchangeRateList = ({
 }: {
   rateRes: ActionResponse<CurrencyConfig[]>;
 }) => {
+=======
+import { ArrowDownRight, ArrowDownLeft } from "lucide-react";
+
+import DataRenderer from "./DataRenderer";
+import DerivCurrencyIcon from "./DerivCurrencyIcon";
+
+export const exchangeRates = [
+  {
+    currency: "USD",
+    deposit: 1500,
+    withdrawal: 1500,
+    name: "US Dollar",
+  },
+  {
+    currency: "tUSDT",
+    deposit: 1500,
+    withdrawal: 1500,
+    name: "Tether TRC20",
+  },
+  {
+    currency: "eUSDT",
+    deposit: 1500,
+    withdrawal: 1500,
+    name: "Tether ER20",
+  },
+  {
+    currency: "USDC",
+    deposit: 1500,
+    withdrawal: 1500,
+    name: "USD Coin",
+  },
+];
+
+const ExchangeRateList = ({ rateRes }: { rateRes: ActionResponse<CurrencyConfig[]> }) => {
+>>>>>>> Stashed changes
   return (
     <article>
       <header className="mb-3">
@@ -20,7 +56,14 @@ const ExchangeRateList = ({
           error={rateRes.error}
           render={(rates) => {
             return rates.map((rate) => (
+<<<<<<< Updated upstream
               <ExchangeRateCard key={rate.code} accountRate={rate} />
+=======
+              <ExchangeRateCard
+                key={rate.code}
+                accountRate={rate}
+              />
+>>>>>>> Stashed changes
             ));
           }}
         />
@@ -29,7 +72,15 @@ const ExchangeRateList = ({
   );
 };
 
+<<<<<<< Updated upstream
 const ExchangeRateCard = ({ accountRate }: { accountRate: CurrencyConfig }) => {
+=======
+const ExchangeRateCard = ({
+  accountRate,
+}: {
+  accountRate: CurrencyConfig
+}) => {
+>>>>>>> Stashed changes
   const { depositRate, withdrawalRate, name, code } = accountRate;
 
   return (
