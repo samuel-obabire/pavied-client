@@ -1,45 +1,45 @@
-import { notFound, redirect } from "next/navigation"
-
-import CopyToClipboard from "@/components/CopyToClipboard"
-import Divider from "@/components/Divider"
-import { ROUTES } from "@/lib/constants/routes"
-import { getTransactionById } from "@/lib/firebase/transactions"
-import { verifySession } from "@/lib/server"
+import { notFound, redirect } from "next/navigation";
+import CopyToClipboard from "@/components/CopyToClipboard";
+import Divider from "@/components/Divider";
+import { ROUTES } from "@/lib/constants/routes";
+import { firestoreAdapter } from "@/lib/firebase/firestore.adapter";
+import { verifySession } from "@/lib/server";
 import {
   formatDateTime,
   formatNumber,
   getTransactionDetailsByType,
-} from "@/lib/utils"
+} from "@/lib/utils";
 
 const DetailRow = ({
   label,
   children,
 }: {
-  label: string
-  children: React.ReactNode
+  label: string;
+  children: React.ReactNode;
 }) => (
   <div className="flex w-full items-baseline justify-between gap-3">
     <span>{label}</span>
     <div className="text-right">{children}</div>
   </div>
-)
+);
 
-const TransactionDetailsPage = async({
+const TransactionDetailsPage = async ({
   params,
 }: {
-  params: Promise<{ paymentId: string }>
+  params: Promise<{ paymentId: string }>;
 }) => {
-  const user = await verifySession()
-  if (!user?.id) redirect(ROUTES.SIGN_IN)
+  const user = await verifySession();
+  if (!user?.id) redirect(ROUTES.SIGN_IN);
 
-  const { paymentId = "" } = await params
-  if (!paymentId || typeof paymentId !== "string") return notFound()
+  const { paymentId = "" } = await params;
+  if (!paymentId || typeof paymentId !== "string") return notFound();
 
-  const transaction = await getTransactionById(paymentId)
-  if (!transaction) return notFound()
+  const transaction =
+    await firestoreAdapter.transactions.getTransactionById(paymentId);
+  if (!transaction) return notFound();
 
   const { status, amount, transactionId, createdAt, type, extra, fulfillment } =
-    transaction
+    transaction;
 
   const renderTypeDetails = () => {
     if (type === "deriv_deposit") {
@@ -73,7 +73,7 @@ const TransactionDetailsPage = async({
             {formatNumber(extra.amount)} {extra.currency}
           </DetailRow>
         </>
-      )
+      );
     }
 
     if (type === "deriv_withdrawal") {
@@ -108,18 +108,20 @@ const TransactionDetailsPage = async({
             </DetailRow>
           )}
         </>
-      )
+      );
     }
 
-    return null
-  }
+    return null;
+  };
 
   const statusText =
-    status === "success"
-      ? <span className="text-success">Transaction successful</span>
-      : status === "failed"
-      ? <span className="text-failed">Failed</span>
-      : <span className="text-secondary capitalize">{status}</span>
+    status === "success" ? (
+      <span className="text-success">Transaction successful</span>
+    ) : status === "failed" ? (
+      <span className="text-failed">Failed</span>
+    ) : (
+      <span className="text-secondary capitalize">{status}</span>
+    );
 
   return (
     <div className="space-y-6 px-4">
@@ -149,7 +151,7 @@ const TransactionDetailsPage = async({
         <DetailRow label="Date">{formatDateTime(createdAt)}</DetailRow>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TransactionDetailsPage
+export default TransactionDetailsPage;

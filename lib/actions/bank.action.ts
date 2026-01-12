@@ -4,11 +4,7 @@ import "server-only";
 
 import { revalidatePath } from "next/cache";
 import { ROUTES } from "../constants/routes";
-import {
-  addBankAcccountToCollection,
-  getBankAccounts,
-  removeBankAccountFromCollection,
-} from "../firebase/bank";
+import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
@@ -26,7 +22,10 @@ export const getUserBankAccounts = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const bankAccounts = await getBankAccounts(userId, onlyActive);
+    const bankAccounts = await firestoreAdapter.bank.getBankAccounts(
+      userId,
+      onlyActive,
+    );
 
     return { success: true, data: bankAccounts };
   } catch (error) {
@@ -54,7 +53,19 @@ export const addUserBankAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await addBankAcccountToCollection({ ...parsedBankAccount, userId });
+    const { bankCode, accountNumber } = parsedBankAccount;
+
+    await firestoreAdapter.runTransaction(async (tx) => {
+      const existingBankAccount = await tx.getBankAccount(
+        bankCode,
+        accountNumber,
+      );
+
+      if (existingBankAccount)
+        throw new Error("Account already exist in the database");
+
+      tx.addBankAccount(bankAccount, userId);
+    });
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -84,7 +95,7 @@ export const removeUserBankAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await removeBankAccountFromCollection({
+    await firestoreAdapter.bank.removeBankAccount({
       ...parsedBankAccount,
       userId,
     });

@@ -2,15 +2,13 @@
 
 import "server-only";
 
-import { Timestamp } from "firebase-admin/firestore";
 import { after } from "next/server";
-import { bucket, db } from "@/firebase.config";
+import { bucket } from "@/firebase.config";
 import { api } from "../api";
-import { getTransactionById } from "../firebase/transactions";
+import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
 import { verifySession } from "../server";
-import { dateConverter } from "../utils/firebase";
 import { UploadPaymentRecieptSchema } from "../validation";
 import type { TransactionQueryParams } from "./types/action";
 
@@ -24,7 +22,8 @@ export const getPaymentTransaction = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const transaction = await getTransactionById(paymentId);
+    const transaction =
+      await firestoreAdapter.transactions.getTransactionById(paymentId);
 
     if (!transaction) throw new NotFoundError("Transaction");
 
@@ -47,38 +46,8 @@ export const getUserTransactions = async (
   }
 
   try {
-    const { page = 1, perPage = 10, endDate, startDate, status, type } = query;
-
-    let tRef = db
-      .collection("transactions")
-      .limit(perPage)
-      .where("userId", "==", userId)
-      .orderBy("createdAt", "desc")
-      .withConverter(dateConverter);
-
-    if (page > 1) {
-      tRef = tRef.offset((page - 1) * perPage);
-    }
-
-    if (startDate) {
-      tRef = tRef.where("createdAt", ">=", new Date(startDate));
-    }
-
-    if (endDate) {
-      tRef = tRef.where("createdAt", "<=", new Date(endDate));
-    }
-
-    if (status) {
-      tRef = tRef.where("status", "==", status);
-    }
-
-    if (type) {
-      tRef = tRef.where("type", "==", type);
-    }
-
-    const snap = await tRef.get();
-
-    const transactions = snap.docs.map((doc) => doc.data() as Transaction);
+    const transactions =
+      await firestoreAdapter.transactions.getUserTransactions(userId, query);
 
     return { success: true, data: transactions };
   } catch (error) {
@@ -95,15 +64,12 @@ const updateTransactionRecieptPath = async (
       throw new Error("Reciept path and payment id is required");
     }
 
-    const transactionRef = db.collection("transactions").doc(paymentId);
+    await firestoreAdapter.runTransaction(async (tx) => {
+      const transaction = await tx.getTransaction(paymentId);
+      if (!transaction) throw new NotFoundError("Transaction");
 
-    await db.runTransaction(async (t) => {
-      const snapshot = await t.get(transactionRef);
-      if (!snapshot.exists) throw new NotFoundError("Transaction");
-
-      t.update(transactionRef, {
+      await tx.updateTransaction(paymentId, {
         "extra.recieptPath": recieptPath,
-        updatedAt: Timestamp.now(),
       });
     });
 
