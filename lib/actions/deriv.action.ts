@@ -10,13 +10,8 @@ import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
 import { db } from "@/firebase.config";
 import { api } from "../api";
 import { ROUTES } from "../constants/routes";
-import {
-  addDerivAccountsToCollection,
-  getDerivAccounts,
-  removeDerivAccountFromCollection,
-} from "../firebase/deriv";
 import { setById } from "../firebase/firestore";
-import { getTransactionById } from "../firebase/transactions";
+import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
 import {
   getDerivAccountToken,
@@ -55,7 +50,12 @@ export const getUserDerivAccounts = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const derivAccounts = await getDerivAccounts(userId, { onlyActive });
+    const derivAccounts = await firestoreAdapter.deriv.getDerivAccounts(
+      userId,
+      {
+        onlyActive,
+      },
+    );
 
     return { success: true, data: derivAccounts };
   } catch (error) {
@@ -85,7 +85,21 @@ export const addDerivAccounts = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await addDerivAccountsToCollection(encryptedAccounts, userId);
+    await firestoreAdapter.runTransaction(async (tx) => {
+      for (const account of encryptedAccounts) {
+        const existingAccount = await tx.getDerivAccount(account);
+
+        if (existingAccount) {
+          if (existingAccount.userId !== userId) {
+            throw new Error(
+              `Account ${account.accountId} already exist in database with another user`,
+            );
+          }
+        }
+
+        await tx.addDerivAccount(account, userId);
+      }
+    });
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -115,7 +129,7 @@ export const removeDerivAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await removeDerivAccountFromCollection({
+    await firestoreAdapter.deriv.removeDerivAccount({
       ...parsedDerivAccount,
       userId,
     });
@@ -179,7 +193,6 @@ export const createDerivDepositTransaction = async (
       throw new Error("Rate changed. Please refresh and try again.");
 
     const convertedAmount = divideNumbers(amount, rateRes.data.depositRate);
-    console.log(convertedAmount);
 
     if (
       convertedAmount < rateRes.data.depositMin ||
@@ -369,7 +382,9 @@ export const processDerivWithdrawal = async (paymentData: {
     }
 
     const transaction =
-      ((await getTransactionById(transactionId)) as DerivWithdrawal) || null;
+      ((await firestoreAdapter.transactions.getTransactionById(
+        transactionId,
+      )) as DerivWithdrawal) || null;
 
     if (!transaction) throw new Error("Transaction not found");
 
@@ -421,7 +436,9 @@ export const triggerDerivDepositCompletion = async (
     }
 
     const transaction =
-      ((await getTransactionById(transactionId)) as Transaction) || null;
+      ((await firestoreAdapter.transactions.getTransactionById(
+        transactionId,
+      )) as Transaction) || null;
 
     if (!transaction) throw new Error("Transaction not found");
 

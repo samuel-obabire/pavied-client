@@ -2,14 +2,14 @@
 
 import "server-only";
 
-import { getAgentAccount } from "../firebase/deriv";
+import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 
 export const fetchAgentAccount = async (
   currency: string,
 ): Promise<ActionResponse<DerivAccount>> => {
   try {
-    const agentAccount = await getAgentAccount(currency);
+    const agentAccount = await firestoreAdapter.deriv.getAgentAccount(currency);
 
     if (!agentAccount) throw new Error("Agent account not found");
 
