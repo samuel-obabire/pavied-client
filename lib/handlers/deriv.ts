@@ -1,9 +1,10 @@
+"use server";
 /* eslint-disable camelcase */
 import "server-only";
 
 import { DerivAPIClient } from "@deriv-com/api-client";
 import type { PaymentAgentWithdrawParams } from "../actions/types/action";
-import { getDerivAccounts } from "../firebase/deriv";
+import { firestoreAdapter } from "../firebase/firestore.adapter";
 import { isDerivError } from "../utils/deriv";
 import handleError from "./error";
 
@@ -103,10 +104,13 @@ export const getUserDerivAccountWithTokens = async (
   userId: string,
 ): Promise<ActionResponse<DerivAccount[]>> => {
   try {
-    const derivAccounts = await getDerivAccounts(userId, {
-      onlyActive: true,
-      withToken: true,
-    });
+    const derivAccounts = await firestoreAdapter.deriv.getDerivAccounts(
+      userId,
+      {
+        onlyActive: true,
+        withToken: true,
+      },
+    );
 
     return { success: true, data: derivAccounts };
   } catch (error) {

@@ -126,17 +126,17 @@ export const truncateTo2 = (value: string | number): string => {
   const num = Number(value);
   if (isNaN(num)) return "";
 
-  return (Math.floor(num * 100) / 100).toString();
+  return new Decimal(num).toDecimalPlaces(2, Decimal.ROUND_DOWN).toString();
 };
 
 export const multiplyNumbers = (a: number, b: number) => {
   return new Decimal(a).times(b).toDecimalPlaces(2).toNumber();
 };
 
-export const divideNumbers = (a: number, b: number) => {
+export const divideNumbers = (a: number, b: number, dp = 2) => {
   return new Decimal(a)
     .div(b)
-    .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+    .toDecimalPlaces(dp, Decimal.ROUND_DOWN)
     .toNumber();
 };
 

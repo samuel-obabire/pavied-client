@@ -1,9 +1,4 @@
-import {
-    LayoutDashboard,
-    Logs,
-    Settings, WalletCards
-} from "lucide-react";
-
+import { LayoutDashboard, Logs, Settings, WalletCards } from "lucide-react";
 import { ROUTES } from "./routes";
 
 export const sideLinks = [
@@ -21,5 +16,5 @@ export const sideLinks = [
       href: ROUTES.DERIV.WITHDRAWAL,
     },
   },
-  { label: "Settings", Icon: Settings, href: ROUTES.SETTINGS_BIO },
+  { label: "Settings", Icon: Settings, href: ROUTES.SETTINGS },
 ];

@@ -2,7 +2,7 @@
 
 import "server-only";
 
-import { getUserById, updateUserById } from "../firebase/user";
+import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
@@ -10,7 +10,7 @@ import { verifySession } from "../server";
 import { AccountRegistrationSchema } from "../validation";
 
 export const updateUser = async (
-  userData: Partial<User>
+  userData: Partial<User>,
 ): Promise<ActionResponse> => {
   const result = await action({
     params: userData,
@@ -29,7 +29,7 @@ export const updateUser = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await updateUserById(userId, {
+    await firestoreAdapter.user.updateUserById(userId, {
       ...user,
     });
   } catch (error) {
@@ -39,8 +39,8 @@ export const updateUser = async (
   return { success: true };
 };
 
-export const getUser = async (
-  userId: string
+export const getUserById = async (
+  userId: string,
 ): Promise<ActionResponse<User>> => {
   const loggedInUser = await verifySession();
 
@@ -49,7 +49,7 @@ export const getUser = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const userData = await getUserById(userId);
+    const userData = await firestoreAdapter.user.getUserById(userId);
 
     if (!userData) throw new NotFoundError("User");
 

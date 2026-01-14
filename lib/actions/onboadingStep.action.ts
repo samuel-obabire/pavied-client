@@ -2,7 +2,7 @@
 
 import "server-only";
 
-import { updateUserById } from "../firebase/user";
+import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
@@ -28,7 +28,9 @@ export const updateOnboardingStep = async (onboardingStep: {
   try {
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await updateUserById(userId, { onboardingStep: step.onboardingStep });
+    await firestoreAdapter.user.updateUserById(userId, {
+      onboardingStep: step.onboardingStep,
+    });
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

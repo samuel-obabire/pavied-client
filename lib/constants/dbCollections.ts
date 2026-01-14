@@ -6,4 +6,5 @@ export enum DbCollections {
   DERIV_ACCOUNTS = "deriv-accounts",
   AGENT_ACCOUNTS = "agent-deriv-accounts",
   RATES = "rates",
+  TRANSACTIONS = "transactions",
 }

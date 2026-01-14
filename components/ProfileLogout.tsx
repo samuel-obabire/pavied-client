@@ -36,10 +36,14 @@ const ProfileLogout = () => {
 
       <Separator className="border-accent/10 mb-2 border-1" />
 
-      <div className="cursor-pointer" onClick={() => signOut()}>
+      <button
+        type="button"
+        className="cursor-pointer text-left"
+        onClick={() => signOut()}
+      >
         <LogOut className="mr-2 inline" size={20} />
         <span className="text-14-medium">Logout</span>
-      </div>
+      </button>
     </div>
   );
 };

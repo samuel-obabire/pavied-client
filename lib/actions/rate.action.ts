@@ -1,20 +1,14 @@
 import { unstable_cache as nextCache } from "next/cache";
-import { db } from "@/firebase.config";
-import { DbCollections } from "../constants/dbCollections";
+import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
-import { dateConverter } from "../utils/firebase";
 
 export const fetchCachedRates = nextCache(async (): Promise<
   ActionResponse<CurrencyConfig[]>
 > => {
   try {
-    const snap = await db
-      .collection(DbCollections.RATES)
-      .withConverter(dateConverter)
-      .get();
-    const rates = snap.docs.map((doc) => doc.data() as CurrencyConfig);
+    const currencyConfigs = await firestoreAdapter.rates.getRates();
 
-    return { success: true, data: rates };
+    return { success: true, data: currencyConfigs };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -23,15 +17,10 @@ export const fetchCachedRates = nextCache(async (): Promise<
 export const fetchCachedRate = nextCache(
   async (currency: string): Promise<ActionResponse<CurrencyConfig>> => {
     try {
-      const snap = await db
-        .collection(DbCollections.RATES)
-        .where("code", "==", currency)
-        .withConverter(dateConverter)
-        .get();
+      const currencyConfig =
+        await firestoreAdapter.rates.getRateByCurrency(currency);
 
-      if (snap.empty) throw new Error("Currency config not found");
-
-      const currencyConfig = snap.docs[0].data() as CurrencyConfig;
+      if (!currencyConfig) throw new Error("Currency config not found");
 
       return { success: true, data: currencyConfig };
     } catch (error) {
