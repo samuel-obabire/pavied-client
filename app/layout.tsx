@@ -65,12 +65,12 @@ export const metadata: Metadata = {
     creator: "@pavied",
   },
   icons: {
-    icon: "/assets/pavied-mark.svg",
-    shortcut: "/assets/pavied-mark.svg",
-    apple: "/assets/pavied-mark.svg",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
     other: {
       rel: "apple-touch-icon-precomposed",
-      url: "/assets/pavied-mark.svg",
+      url: "/favicon.ico",
     },
   },
   robots: {
@@ -113,7 +113,7 @@ export default function RootLayout({
                   "@type": "Organization",
                   name: "Pavied",
                   url: process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com",
-                  logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com"}/assets/pavied-mark.svg`,
+                  logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com"}/favicon.ico`,
                   sameAs: [
                     "https://twitter.com/pavied",
                     "https://facebook.com/pavied",

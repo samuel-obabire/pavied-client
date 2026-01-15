@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Newsletter from "@/components/Newsletter";
 
 export const metadata = {
-  title: "Contact Us | Pavied",
+  title: "Contact Us",
   description: "Get in touch with the Pavied team for any assistance or inquiries.",
 };
 
