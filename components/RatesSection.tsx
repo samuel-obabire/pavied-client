@@ -18,7 +18,7 @@ const RatesSection = () => {
               </div>
               
               <h2 className="text-[36px] font-bold leading-[44px] text-primary dark:text-white md:text-6xl md:leading-[64px] mb-8">
-                At Pavied we have the best rate for our users
+                Best market rates, zero hidden charges.
               </h2>
               
               <ul className="space-y-6 mb-10">

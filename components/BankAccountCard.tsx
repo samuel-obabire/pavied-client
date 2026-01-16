@@ -6,6 +6,17 @@ import { removeUserBankAccount } from "@/lib/actions/bank.action";
 import { cn } from "@/lib/utils";
 import ActionState, { type ActionStateType } from "./ActionState";
 import BankIcon from "./BankIcon";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "./ui/alert-dialog";
+import { Button } from "./ui/button";
 
 const BankAccountCard = ({
   bankAccount,
@@ -20,6 +31,7 @@ const BankAccountCard = ({
 }) => {
   const [actionState, setActionState] = useState<ActionStateType>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const { accountName, accountNumber, bankCode, bankName } = bankAccount;
 
@@ -53,8 +65,6 @@ const BankAccountCard = ({
           }
         )}
       >
-        {/* Decorative focal point */}
-        <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-secondary/5 blur-2xl transition-opacity group-hover:opacity-100 opacity-0" />
 
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-2.5">
@@ -74,15 +84,15 @@ const BankAccountCard = ({
             )}
 
             {removeable && bankAccount.active && (
-              <span
+              <Button
                 className=" transition-all duration-300 text-[11px] font-medium text-red-500 hover:text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded-md cursor-pointer border border-transparent hover:border-red-100 dark:hover:border-red-800"
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeAccount(bankAccount);
+                  setIsConfirmOpen(true);
                 }}
               >
                 Remove
-              </span>
+              </Button>
             )}
 
             {selected && (
@@ -129,6 +139,35 @@ const BankAccountCard = ({
         retryAction={() => removeAccount(bankAccount)}
         successTitle="Account Successfully removed"
       />
+
+      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+        <AlertDialogContent className="bg-white_dark-black-1 w-[90%] !max-w-[400px] border-0 shadow-sm outline-0">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-18-bold text-black-1_dark-white">
+              Remove Account?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-14-medium text-gray-500">
+              Are you sure you want to remove this account? Additional
+              confirmation may be required to link it again.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row justify-end gap-2">
+            <AlertDialogCancel className="mt-0 btn-ghost text-black-1_dark-white">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="btn-danger bg-red-500 hover:bg-red-600 text-white border-none"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsConfirmOpen(false);
+                removeAccount(bankAccount);
+              }}
+            >
+              Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AccountCard />
     </div>

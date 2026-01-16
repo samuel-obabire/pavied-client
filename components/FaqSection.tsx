@@ -5,20 +5,20 @@ import { Plus, Minus } from "lucide-react";
 
 const faqData = [
   {
-    question: "How do i get repaid after a failed transaction?",
-    answer: "Maecenas vitae mattis tellus. Nullam quis imperdiet augue. Vestibulum auctor ornare leo, non suscipit magna interdum eu. Curabitur pellentesque nibh nibh, at maximus ante fermentum sit amet. Pellentesque commodo lacus at sodales sodales.",
+    question: "What happens if my transaction fails?",
+    answer: "In the unlikely event of a failed transaction, our system automatically triggers a review. If funds were debited, they will be refunded to your account instantly or resolved by our support team within minutes.",
   },
   {
-    question: "How do i contact customer care?",
-    answer: "You can reach our customer support team through the live chat on our website or by sending an email to support@pavied.com. We are available 24/7 to assist you with any inquiries.",
+    question: "How do I reach customer support?",
+    answer: "Our support team is available 24/7. You can contact us through the live chat on our website or by sending an email to support@pavied.com for immediate assistance.",
   },
   {
-    question: "Is Pavied safe to use?",
-    answer: "Yes, Pavied is built with security as a priority. we use bank-level encryption and secure protocols to ensure your transactions and data are protected at all times.",
+    question: "How secure is Pavied?",
+    answer: "Your security is our top priority. Pavied is built with bank-grade encryption and secure protocols to ensure your data and funds are protected from end to end.",
   },
   {
-    question: "How long does it take to withdraw asset?",
-    answer: "Withdrawals on Pavied are designed to be lightning-fast. In most cases, assets are credited to your destination account within minutes of the request being processed.",
+    question: "How long until I receive my assets?",
+    answer: "Our processes are fully automated. On average, deposits and withdrawals are credited to your destination account within 2-5 minutes after the transaction is confirmed.",
   },
 ];
 

@@ -86,11 +86,6 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
               .toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
-        <div className="flex gap-3">
-          <Button type="button" className="btn-secondary h-11 px-6">
-            Upload new
-          </Button>
-        </div>
       </div>
 
       <Form {...form}>

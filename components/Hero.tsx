@@ -17,18 +17,18 @@ const Hero = () => {
             {/* Tagline */}
             <div className="inline-flex items-center rounded-full bg-secondary/10 px-4 py-2 text-secondary mb-6 md:mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
               <span className="text-12-medium md:text-14-medium whitespace-nowrap">
-                Fully Automated Deriv transaction service
+                Fully Automated Deriv Funding & Withdrawal Service
               </span>
             </div>
 
             {/* Heading */}
             <h1 className="text-[40px] leading-[48px] md:text-[64px] md:leading-[72px] font-bold text-primary dark:text-white mb-6 animate-in fade-in slide-in-from-left-4 duration-700 delay-100">
-              Deposit and <br className="hidden md:block" /> Withdraw Deriv Asset Instantly.
+              Convert Your Deriv <br className="hidden md:block" /> Assets to Naira Instantly.
             </h1>
 
             {/* Description */}
             <p className="text-16-medium md:text-20-medium text-black-1/60 dark:text-white/60 mb-8 md:mb-10 max-w-[500px] animate-in fade-in slide-in-from-left-4 duration-700 delay-200">
-              With Pavied website you can now easily deposit and withdraw your Deriv asset easily without delay.
+              The fastest, most secure way to fund and withdraw from your Deriv account. No delays, no manual verification hassles.
             </p>
 
             {/* Action Buttons Box */}
@@ -39,7 +39,7 @@ const Hero = () => {
                   className="btn-secondary w-full lg:w-48 h-14 px-8 rounded-xl shadow-md group"
                 >
                   <Link href={ROUTES.SIGN_IN} className="flex items-center justify-center gap-2">
-                    <span className="text-16-bold">Get started</span>
+                    <span className="text-16-bold">Get Started Now</span>
                     <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
@@ -54,7 +54,7 @@ const Hero = () => {
               </div>
               
               <p className="mt-4 text-12-regular text-black-1/40 dark:text-white/40 md:text-14-regular">
-                Easy T&C conditions, Short verification process.
+                Simple T&Cs, lightning-fast verification process.
               </p>
             </div>
           </div>

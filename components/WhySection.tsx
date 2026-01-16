@@ -3,32 +3,32 @@ import { Clock, MessageSquare, ShieldCheck, Zap, Wallet, Headphones } from "luci
 const whyFeatures = [
   {
     title: "Automated Transactions",
-    description: "Our support team is a chat away from assisting you with any technical issues",
+    description: "Get credited in seconds. Our system is fully automated to ensure zero delays in your trading journey.",
     Icon: Clock,
   },
   {
-    title: "Flexible Funding Amounts",
-    description: "Our support team is a chat away from assisting you with any technical issues",
+    title: "Flexible Funding",
+    description: "Start small or go big. Fund your account with as little as $1 or withdraw large gains without restrictions.",
     Icon: MessageSquare,
   },
   {
-    title: "Fast & Reliable",
-    description: "Our support team is a chat away from assisting you with any technical issues",
+    title: "Unbeatable Speed",
+    description: "Why wait for manual agents? Pavied processes your requests at lightning speed, day or night.",
     Icon: Zap,
   },
   {
-    title: "Affordable Rates",
-    description: "Our support team is a chat away from assisting you with any technical issues",
+    title: "Competitive Rates",
+    description: "We offer the most competitive exchange rates in the market, ensuring you get more value for your money.",
     Icon: Wallet,
   },
   {
     title: "24/7 Availability",
-    description: "Our support team is a chat away from assisting you with any technical issues",
+    description: "Trading doesn't stop, and neither do we. Fund or withdraw anytime, including weekends and holidays.",
     Icon: Headphones,
   },
   {
-    title: "Secure & Trusted",
-    description: "Our support team is a chat away from assisting you with any technical issues",
+    title: "Safe & Secure",
+    description: "Your security is our priority. We use bank-level encryption to keep your funds and data safe.",
     Icon: ShieldCheck,
   },
 ];
@@ -40,10 +40,10 @@ const WhySection = () => {
         {/* Header */}
         <div className="mb-16 flex flex-col items-center text-center">
           <div className="mb-6 inline-flex items-center rounded-full bg-secondary/10 px-4 py-2 text-secondary">
-            <span className="text-12-medium md:text-14-medium font-semibold">Why Chose Pavied?</span>
+            <span className="text-12-medium md:text-14-medium font-semibold">Why Choose Pavied?</span>
           </div>
           <h2 className="max-w-4xl text-[32px] font-bold leading-[40px] text-primary dark:text-white md:text-[48px] md:leading-[56px]">
-            A new simplified way to turn your Deriv assets to cash and your cash to Deriv assets.
+            The reliable way to bridge your Deriv assets and local currency.
           </h2>
         </div>
 
