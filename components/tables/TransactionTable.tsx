@@ -5,8 +5,8 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  type ColumnDef
 } from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/table-core";
 import { useQueryStates } from "nuqs";
 import { use } from "react";
 

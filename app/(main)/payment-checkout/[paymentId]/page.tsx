@@ -1,8 +1,8 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
-import NotFoundPayment from "@/components/NotFoundPayment";
-import PaymentStateView from "@/components/PaymentStateView";
-import { getPaymentTransaction } from "@/lib/actions/payment.action";
+import ConnectedPaymentState from "@/components/payment/ConnectedPaymentState";
+import PaymentStateSkeleton from "@/components/skeletons/PaymentStateSkeleton";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 
@@ -16,13 +16,10 @@ const PaymentCheckOut = async ({
 
   const { paymentId } = await params;
 
-  const { success, data } = await getPaymentTransaction(paymentId);
-  if (!success || data?.userId !== user.id || data.type !== "deriv_deposit") return <NotFoundPayment />;
-
   return (
-    <PaymentStateView
-      transaction={JSON.parse(JSON.stringify(data))}
-    />
+    <Suspense fallback={<PaymentStateSkeleton />}>
+      <ConnectedPaymentState paymentId={paymentId} userId={user.id} />
+    </Suspense>
   );
 };
 
