@@ -15,7 +15,7 @@ const ProfileLogout = () => {
             src={data?.user?.image || "https://github.com/shadcn.png"}
             alt={data?.user?.name || "User"}
           />
-          <AvatarFallback className="flex h-full w-full items-center justify-center bg-accent text-[10px] font-bold">
+          <AvatarFallback className="flex h-full w-full items-center justify-center text-[10px] font-bold">
             {data?.user?.name
               ?.split(" ")
               .map((n) => n[0])

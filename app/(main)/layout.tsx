@@ -29,7 +29,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
                 src={user?.image || "https://github.com/shadcn.png"}
                 alt={user?.name || "User"}
               />
-              <AvatarFallback className="flex h-full w-full items-center justify-center bg-accent text-sm font-bold">
+              <AvatarFallback className="flex h-full w-full items-center justify-center text-sm font-bold">
                 {user?.name
                   ?.split(" ")
                   .map((n) => n[0])

@@ -4,7 +4,7 @@ import { getUserTransactions } from "@/lib/actions/payment.action";
 import { ROUTES } from "@/lib/constants/routes";
 
 const DashboardTransactions = async ({ userId }: { userId: string }) => {
-  const transactionRes = await getUserTransactions(userId);
+  const transactionRes = getUserTransactions(userId);
 
   return (
     <article className="mt-8 flex-1 overflow-visible rounded-2xl pt-0">
