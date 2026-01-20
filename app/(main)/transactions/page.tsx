@@ -53,7 +53,9 @@ const TransactionPage = async ({ searchParams }: PageProps) => {
       </div>
 
       <div className="md:hidden h-[calc(100dvh-116px)] overflow-y-scroll">
-        <TransactionList transactionRes={await transactionsPromise} />
+        <Suspense fallback={<DataTableSkeleton columns={1} rows={5} />}>
+          <TransactionList transactionRes={transactionsPromise} />
+        </Suspense>
       </div>
     </div>
   );

@@ -2,21 +2,21 @@ import Image from "next/image";
 
 const testimonials = [
   {
-    name: "Jesse Hiss",
-    role: "Founder, Fresh Sends",
-    content: "I was spending way too many hours every month on sales tax. And if you wanted someone on customer support from my tax service, there was no one. Pavied has made it possible to identify and know the transaction laws. And then on your behalf, registering, managing everything, is kind of taking the worry off my plate.",
+    name: "Chinedu Okeke",
+    role: "Forex Trader (Lagos)",
+    content: "I've tried many payment agents, but Pavied is on another level. The automation is real, I received my withdrawal in less than 2 minutes. No more chasing agents on WhatsApp or waiting for hours. If you're serious about trading, this is your best bet.",
     image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
-    name: "Sarah Chen",
-    role: "Digital Nomad",
-    content: "The speed of Deriv transactions on this platform is unmatched. I used to wait hours for my withdrawals to hit my local bank, but with Pavied, it's almost instant. The interface is clean and the customer support team actually answers your questions within minutes. Highly recommended for any serious trader.",
+    name: "Amaka Uzor",
+    role: "Digital Entrepreneur (PH)",
+    content: "Reliability is everything when you're trading. Pavied has never failed me. The $1 minimum funding is perfect for testing new strategies before going big. The interface is clean, and the support team is actually helpful and responsive.",
     image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    name: "Marcus Thorne",
-    role: "Trading Expert",
-    content: "Automating my deposits was the best decision I made this year. I no longer have to manually verify every single transaction. Pavied handles the heavy lifting, allowing me to focus entirely on my trading strategies. It's safe, secure, and incredibly reliable. A must-have tool for Deriv users.",
+    name: "Tunde Balogun",
+    role: "Professional Trader (Ibadan)",
+    content: "The rates here are consistently better than what I find elsewhere. Plus, the automated verification took only a few minutes. It's a game-changer for Nigerian Deriv traders who value their time as much as their money.",
     image: "https://randomuser.me/api/portraits/men/67.jpg",
   },
 ];
@@ -31,7 +31,7 @@ const TestimonialsSection = () => {
             <span className="text-12-medium md:text-14-medium">Testimonials</span>
           </div>
           <h2 className="text-[36px] font-bold leading-[44px] text-primary dark:text-white md:text-[56px] md:leading-[64px]">
-            These are what our users has to say about us.
+            Trusted by the Nigeria trading community.
           </h2>
         </div>
 

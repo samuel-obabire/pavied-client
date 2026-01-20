@@ -9,7 +9,7 @@ const Newsletter = () => {
           Subscribe to Our Newsletter
         </h2>
         <p className="mt-4 text-16-medium text-black-1/60 dark:text-white/60 md:text-18-medium">
-          Subscribe to our newsletter to get updates on new features.
+          Get the latest updates on market rates, new features, and exclusive trading tips delivered to your inbox.
         </p>
         
         <form 

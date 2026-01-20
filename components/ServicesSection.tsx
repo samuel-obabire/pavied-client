@@ -3,17 +3,17 @@ const services = [
   {
     id: "I",
     title: "Automated Deposits",
-    description: "Flexible funding starting at just $1 till any amount desired.",
+    description: "Flexible funding starting at just $1. Load your account and start trading instantly with our zero-delay system.",
   },
   {
     id: "II",
     title: "Automated Withdrawals",
-    description: "No limits- Withdraw any amount quickly and easily. It's simple, transparent and secure.",
+    description: "No limits, no stress. Withdraw any amount quickly and securely to your preferred local account.",
   },
   {
     id: "III",
-    title: "Real-Time Notifications",
-    description: "Stay updated at every step of your transaction with our real-time updates and notifications.",
+    title: "Real-Time Tracking",
+    description: "Stay informed at every stage with live transaction status updates directly on your dashboard.",
   },
 ];
 
@@ -30,11 +30,11 @@ const ServicesSection = () => {
             </div>
             
             <h2 className="text-[36px] font-bold leading-[44px] text-primary dark:text-white md:text-[56px] md:leading-[64px]">
-              Experience our top services on Pavied
+              Everything you need for seamless trading
             </h2>
             
             <p className="mt-6 text-16-medium text-black-1/60 dark:text-white/60 md:text-18-medium">
-              Connect your accounts and let us manage your transactions with speed and reliability from start to finish.
+              We provide the tools and speed you need to manage your Deriv assets without the hurdles of traditional methods.
             </p>
           </div>
 

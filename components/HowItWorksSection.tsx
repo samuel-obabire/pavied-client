@@ -3,36 +3,36 @@ import Image from "next/image";
 const depositSteps = [
   {
     step: 1,
-    title: "Sign up and Set up Account",
-    description: "Create an account on Pavied, Log in to your account if you have an account already.",
+    title: "Quick Sign-up",
+    description: "Create your account in minutes. If you already have one, simply log in to continue.",
     image: "/assets/home/deposit-1.webp",
     large: true,
   },
   {
     step: 2,
-    title: "Verify Account",
-    description: "Make sure to verify your account, Unverified accounts will not be permitted to make transactions.",
+    title: "Fast Verification",
+    description: "Complete a simple KYC process to keep your account secure and enable instant transactions.",
     image: "/assets/home/deposit-2.webp",
     large: true,
   },
   {
     step: 3,
-    title: "Sync Your Deriv Account",
-    description: "Sync your Deriv account with your Pavied account.",
+    title: "Link Account",
+    description: "Securely link your Deriv CR account ID with your Pavied profile.",
     image: "/assets/home/deposit-3.webp",
     large: false,
   },
   {
     step: 4,
-    title: "Choose Deposit Amount",
-    description: "Fund your Deriv account with as little as $1 or as much as you need.",
+    title: "Choose Amount",
+    description: "Fund your account with as little as $1 or any amount you need to start trading.",
     image: "/assets/home/deposit-4.webp",
     large: false,
   },
   {
     step: 5,
-    title: "Instant Processing",
-    description: "Complete payment, and your Deriv account will be credited immediately.",
+    title: "Instant Credit",
+    description: "Complete your payment, and your Deriv account will be credited immediately.",
     image: "/assets/home/deposit-5.webp",
     large: false,
   },
@@ -41,36 +41,36 @@ const depositSteps = [
 const withdrawalSteps = [
   {
     step: 1,
-    title: "Sign up and Set up Account",
-    description: "Create an account on Pavied, Log in to your account if you have an account already.",
+    title: "Quick Sign-up",
+    description: "Create your account in minutes. If you already have one, simply log in to continue.",
     image: "/assets/home/withdrawal-1.webp",
     large: true,
   },
   {
     step: 2,
-    title: "Verify Account",
-    description: "Make sure to verify your account, Unverified accounts will not be permitted to make transactions.",
+    title: "Fast Verification",
+    description: "Complete a simple KYC process to keep your account secure and enable instant transactions.",
     image: "/assets/home/withdrawal-2.webp",
     large: true,
   },
   {
     step: 3,
-    title: "Sync Your Deriv Account",
-    description: "After syncing your Deriv account, go to withdrawal section on our platform",
+    title: "Link Account",
+    description: "After linking your Deriv account, navigate to the withdrawal section on our platform.",
     image: "/assets/home/deposit-3.webp",
     large: false,
   },
   {
     step: 4,
-    title: "Enter Withdrawal Amount",
-    description: "Withdraw any amount, big or small.",
+    title: "Enter Amount",
+    description: "Withdraw any amount from your gains, big or small, without fuss.",
     image: "/assets/home/withdrawal-4.webp",
     large: false,
   },
   {
     step: 5,
-    title: "Automatic Payment",
-    description: "Receive funds instantly to your preferred payment method.",
+    title: "Automated Payout",
+    description: "Receive your funds instantly to your preferred local payment method.",
     image: "/assets/home/deposit-5.webp",
     large: false,
   },
@@ -108,8 +108,8 @@ const HowItWorksSection = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-12">
           <span className="text-secondary bg-secondary/10 px-3 py-1 rounded-full text-12-medium">How It Works</span>
-          <h2 className="mt-4 font-semibold text-2xl text-primary dark:text-white">Deposition Process</h2>
-          <p className="mt-2 text-16-medium text-black-1/60 dark:text-white/60">Here is a quick guide on how to make deposition via on our platform</p>
+          <h2 className="mt-4 font-semibold text-2xl text-primary dark:text-white">Deposit Process</h2>
+          <p className="mt-2 text-16-medium text-black-1/60 dark:text-white/60">Follow this simple guide to fund your account instantly.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-6">
@@ -120,7 +120,7 @@ const HowItWorksSection = () => {
 
         <div className="mt-20 mb-12">
           <h2 className="font-semibold text-2xl text-primary dark:text-white">Withdrawal Process</h2>
-          <p className="mt-2 text-16-medium text-black-1/60 dark:text-white/60">Here is a quick guide on how to make Withdrawal via on our platform</p>
+          <p className="mt-2 text-16-medium text-black-1/60 dark:text-white/60">Here is how to withdraw your funds easily and securely.</p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-6">

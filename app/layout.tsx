@@ -6,7 +6,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ReactNode } from "react";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
-import FloatingThemeToggle from "@/components/FloatingThemeToggle";
+
 
 const LatoSans = Lato({
   weight: ["400"],
@@ -104,7 +104,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <NuqsAdapter>{children}</NuqsAdapter>
-            <FloatingThemeToggle />
+
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{

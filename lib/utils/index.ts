@@ -111,7 +111,7 @@ export const sanitizeTwoDecimals = (value: string) => {
   const newValue = value.replace(/[^\d.]/g, "").replace(/(\..*)\./g, "$1");
 
   // limit decimal to 2 places if present
-  const parts = value.split(".");
+  const parts = newValue.split(".");
   if (parts.length === 2) {
     parts[1] = parts[1].slice(0, 2);
     return parts.join(".");
