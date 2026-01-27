@@ -1,8 +1,8 @@
 import StatsCard from "@/components/StatsCard";
-import { getUserById } from "@/lib/actions/user.action";
+import { getUserStats } from "@/lib/actions/stats.action";
 
 const DashboardStats = async ({ userId }: { userId: string }) => {
-  const { data } = await getUserById(userId);
+  const { data } = await getUserStats(userId);
 
   const {
     totalDeposits = 0,
