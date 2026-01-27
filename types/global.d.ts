@@ -25,15 +25,6 @@ type User = {
   phone: string;
   whatsApp: string;
   countryOfResidence?: string;
-  referralCode?: string;
-  referredBy?: string;
-  referralEarnings?: number;
-  referralCount?: number;
-  totalTransactions: number;
-  totalDeposits: number;
-  totalWithdrawals: number;
-  totalSuccessfulTransactions: number;
-  totalFailedTransactions: number;
   provider: string;
   providerAccountId: string;
   createdAt: Date;
@@ -41,9 +32,24 @@ type User = {
   onboardingStep: "bio" | "deriv" | "bank" | "complete";
 };
 
+type UserStats = {
+  userId: string;
+  totalTransactions: number;
+  totalDeposits: number;
+  totalWithdrawals: number;
+  totalSuccessfulTransactions: number;
+  totalFailedTransactions: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
 type OnboardingStep = User["onboardingStep"];
 
 type Referral = {
+  referralCode?: string;
+  referredBy?: string;
+  referralEarnings?: number;
+  referralCount?: number;
   referrerId: string;
   refereeId: string;
   joinedAt: string;
