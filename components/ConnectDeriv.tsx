@@ -1,6 +1,16 @@
 import Image from "next/image";
 import InfoCard from "./InfoCard";
 import { Button } from "./ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 const ConnectDeriv = () => {
   return (
@@ -24,16 +34,38 @@ const ConnectDeriv = () => {
         </div>
 
         <section className="space-y-6">
-          <a
-            href="https://oauth.deriv.com/oauth2/authorize?app_id=107466"
-            rel="noreferrer"
-            target="_blank"
-            className="block"
-          >
-            <Button className="btn-secondary w-full h-12 text-16-bold shadow-sm hover:shadow-md transition-all">
-              Connect Deriv Account
-            </Button>
-          </a>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="btn-secondary w-full h-12 text-16-bold shadow-sm hover:shadow-md transition-all">
+                Connect Deriv Account
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-white_dark-black-1 card-border text-black-1_dark-white">
+              <DialogHeader>
+                <DialogTitle>Connect Deriv Account</DialogTitle>
+                <DialogDescription>
+                  You are about to be redirected to Deriv to authorize this application. Do you want to
+                  proceed?
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="flex flex-row justify-center gap-2 items-center">
+                <DialogClose asChild>
+                  <Button variant="outline" type="button">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button asChild className="btn-secondary">
+                  <a
+                    href="https://oauth.deriv.com/oauth2/authorize?app_id=107466"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Proceed
+                  </a>
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           <div className="relative pt-2">
             <div className="absolute inset-0 flex items-center" aria-hidden="true">

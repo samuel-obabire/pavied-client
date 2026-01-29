@@ -1,4 +1,4 @@
-import BankAccountCardSkeleton from "./skeletons/BankAccountSekeleton";
+import BankAccountCardSkeleton from "./skeletons/BankAccountSkeleton";
 
 const AccountCardFallback = () => {
   return (
