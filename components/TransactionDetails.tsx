@@ -1,23 +1,32 @@
 import { notFound } from "next/navigation";
 import { use } from "react";
 import CopyToClipboard from "@/components/CopyToClipboard";
-import Divider from "@/components/Divider";
+import StatusBadge from "@/components/StatusBadge";
+import { Separator } from "@/components/ui/separator";
 import {
-    formatDateTime,
-    formatNumber,
-    getTransactionDetailsByType,
+  formatDateTime,
+  formatNumber,
+  getTransactionDetailsByType,
+  cn,
 } from "@/lib/utils";
 
 const DetailRow = ({
   label,
   children,
+  className,
 }: {
   label: string;
   children: React.ReactNode;
+  className?: string;
 }) => (
-  <div className="flex w-full items-baseline justify-between gap-3">
-    <span>{label}</span>
-    <div className="text-right">{children}</div>
+  <div
+    className={cn(
+      "flex w-full items-start justify-between gap-4 py-3 text-sm",
+      className
+    )}
+  >
+    <span className="text-gray-500 dark:text-gray-400 shrink-0">{label}</span>
+    <div className="text-right font-medium text-black-1 dark:text-white">{children}</div>
   </div>
 );
 
@@ -38,19 +47,19 @@ const TransactionDetails = ({
       return (
         <>
           <DetailRow label="Source of funds">
-            <div className="flex flex-col">
+            <div className="flex flex-col items-end gap-1">
               <span>{extra.paidFromBankName}</span>
-              <span>
-                {extra.paidFromAccountNumber} | {extra.paidFromAccountName}
+              <span className="text-gray-500 dark:text-gray-400 text-xs">
+                {extra.paidFromAccountNumber} • {extra.paidFromAccountName}
               </span>
             </div>
           </DetailRow>
 
           <DetailRow label="Fulfilled to">
-            <div className="flex flex-col">
+            <div className="flex flex-col items-end gap-1">
               <span>Deriv account</span>
-              <span>
-                {extra.derivLoginId} | {extra.currency}
+              <span className="text-gray-500 dark:text-gray-400 text-xs">
+                {extra.derivLoginId} • {extra.currency}
               </span>
             </div>
           </DetailRow>
@@ -72,19 +81,19 @@ const TransactionDetails = ({
       return (
         <>
           <DetailRow label="Source of funds">
-            <div className="flex flex-col">
+            <div className="flex flex-col items-end gap-1">
               <span>Deriv account</span>
-              <span>
-                {extra.derivLoginId} | {extra.currency}
+              <span className="text-gray-500 dark:text-gray-400 text-xs">
+                {extra.derivLoginId} • {extra.currency}
               </span>
             </div>
           </DetailRow>
 
           <DetailRow label="Receiver">
-            <div className="flex flex-col">
+            <div className="flex flex-col items-end gap-1">
               <span>{extra.receivingBankName}</span>
-              <span>
-                {extra.receivingBankAccountNumber} |{" "}
+              <span className="text-gray-500 dark:text-gray-400 text-xs">
+                {extra.receivingBankAccountNumber} •{" "}
                 {extra.recievingBankAccountName}
               </span>
             </div>
@@ -106,38 +115,41 @@ const TransactionDetails = ({
     return null;
   };
 
-  const statusText =
-    status === "success" ? (
-      <span className="text-success">Transaction successful</span>
-    ) : status === "failed" ? (
-      <span className="text-failed">Failed</span>
-    ) : (
-      <span className="text-secondary capitalize">{status}</span>
-    );
-
   return (
-    <div className="bg-white_dark-black-1 card-border text-14-medium sm:text-16-medium mx-auto flex w-full max-w-[550px] flex-col items-center gap-3 rounded-3xl px-4 py-8">
-      <div>{statusText}</div>
-
-      <div className="text-32-normal font-bold">
-        <span className="text-16-bold">₦</span>
-        {formatNumber(amount)}
+    <div className="mx-auto flex w-full max-w-[550px] flex-col overflow-hidden rounded-3xl bg-white_dark-black-1 card-border p-6 sm:p-8">
+      <div className="mb-6 flex flex-col items-center gap-4">
+        <StatusBadge variant={status}>{status}</StatusBadge>
+        <div className="flex flex-col items-center">
+          <span className="text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
+            Amount
+          </span>
+          <div className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <span className="mr-1">₦</span>
+            {formatNumber(amount)}
+          </div>
+        </div>
       </div>
 
-      <Divider className="my-2 w-full" />
+      <Separator className="mb-4" />
 
-      <DetailRow label="Transaction type">
-        {getTransactionDetailsByType(transaction).label}
-      </DetailRow>
+      <div className="flex flex-col gap-1">
+        <DetailRow label="Transaction type">
+          {getTransactionDetailsByType(transaction).label}
+        </DetailRow>
 
-      {renderTypeDetails()}
+        {renderTypeDetails()}
 
-      <DetailRow label="Txid">
-        {transactionId}
-        <CopyToClipboard className="size-4" text={transactionId} />
-      </DetailRow>
+        <DetailRow label="Reference ID">
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs">{transactionId}</span>
+            <CopyToClipboard className="size-3.5 text-gray-500" text={transactionId} />
+          </div>
+        </DetailRow>
 
-      <DetailRow label="Date">{formatDateTime(createdAt)}</DetailRow>
+        <DetailRow label="Date" className="pb-0">
+          {formatDateTime(createdAt)}
+        </DetailRow>
+      </div>
     </div>
   );
 };

@@ -289,7 +289,7 @@
   }
 
   .card-border {
-    @apply border border-gray-200  shadow-xs dark:border-none;
+    @apply border border-gray-200  shadow-xs dark:border-white/10;
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
