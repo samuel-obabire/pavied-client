@@ -189,8 +189,8 @@ export const createDerivDepositTransaction = async (
     if (!rateRes.success || !rateRes.data)
       throw new Error(rateRes.error?.message || "Unable to fetch rate data");
 
-    if (usedRate !== rateRes.data.depositRate)
-      throw new Error("Rate changed. Please refresh and try again.");
+    // if (usedRate !== rateRes.data.depositRate)
+    //   throw new Error("Rate changed. Please refresh and try again.");
 
     const convertedAmount = divideNumbers(amount, rateRes.data.depositRate);
 
