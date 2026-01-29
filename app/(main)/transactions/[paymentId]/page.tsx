@@ -23,7 +23,7 @@ const TransactionDetailsPage = async ({
     <div className="space-y-6 px-4">
       <h1 className="text-16-medium">Transaction details</h1>
 
-      <Suspense fallback={<div className="h-96 w-full animate-pulse rounded-3xl bg-gray-200 dark:bg-gray-800" />}>
+      <Suspense fallback={<div className="h-[30rem] w-full animate-pulse rounded-3xl bg-gray-200 dark:bg-gray-800 max-w-[550px] mx-auto" />}>
         <TransactionDetails transactionPromise={transactionPromise} />
       </Suspense>
     </div>
