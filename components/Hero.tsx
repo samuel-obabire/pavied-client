@@ -9,8 +9,9 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden pt-10 pb-20 md:pt-20 md:pb-32">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
-          
+        <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-8 relative">
+          {/* Background Glow */}
+          <div className="absolute -top-28 right-2 h-[45rem] w-[45rem] rounded-full bg-gradient-to-r from-secondary/10 to-transparent blur-md pointer-events-none" />
           {/* Left Content */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:max-w-[600px]">
             
@@ -61,7 +62,7 @@ const Hero = () => {
 
           {/* Right Image/Mockup */}
           <div className="relative w-full max-w-[650px] lg:max-w-none lg:flex-1 animate-in fade-in slide-in-from-right-4 duration-1000 delay-200">
-            <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl ">
+            <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl shadow-md">
               <Image
                 src="/assets/home/hero.webp"
                 alt="Pavied Dashboard Preview"
