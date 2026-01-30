@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
-
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getPaymentTransaction } from "@/lib/actions/payment.action";
-
 import FailedPayment from "./FailedPayment";
 import MakePayment from "./MakePayment";
 import PaymentSuccess from "./PaymentSuccess";
@@ -22,23 +20,27 @@ function getPaymentStateView(tx: Transaction) {
       return <FailedPayment />;
     case "success":
       return <PaymentSuccess />;
-  default:{
-    const exhaustiveCheck:never = tx.status
-    console.log(exhaustiveCheck)
-   throw new Error(`Unhandled transaction status: ${exhaustiveCheck}`);
-  }
+    default: {
+      const exhaustiveCheck: never = tx.status;
+      console.log(exhaustiveCheck);
+      throw new Error(`Unhandled transaction status: ${exhaustiveCheck}`);
+    }
   }
 }
 
 const PaymentStateView = ({ transaction }: Props) => {
   const [updatedTransaction, setUpdatedTransaction] = useState(transaction);
-  const [recieptUploadSuccess, setRecieptUploadSucess] = useState(false)
+  const [recieptUploadSuccess, setRecieptUploadSucess] = useState(false);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // If already done, don't start polling
-    if (["success", "failed"].includes(transaction.status) || !updatedTransaction.extra.recieptPath) return;
+    if (
+      ["success", "failed"].includes(transaction.status) ||
+      !updatedTransaction.extra.recieptPath
+    )
+      return;
 
     intervalRef.current = setInterval(async () => {
       console.log("Polling payment status...");
@@ -49,10 +51,10 @@ const PaymentStateView = ({ transaction }: Props) => {
         if (response.success && response.data) {
           const newTx = response.data as DerivDeposit;
 
-         setUpdatedTransaction((prevTx) => {
-          if (prevTx.status === newTx.status) return prevTx; //  no re-render
-              return newTx; // re-render
-            });
+          setUpdatedTransaction((prevTx) => {
+            if (prevTx.status === newTx.status) return prevTx; //  no re-render
+            return newTx; // re-render
+          });
 
           if (["success", "failed"].includes(newTx.status)) {
             clearInterval(intervalRef.current!);
@@ -64,17 +66,28 @@ const PaymentStateView = ({ transaction }: Props) => {
     }, 7000);
 
     return () => clearInterval(intervalRef.current!);
-  }, [transaction.transactionId, transaction.status, updatedTransaction.extra.recieptPath]);
+  }, [
+    transaction.transactionId,
+    transaction.status,
+    updatedTransaction.extra.recieptPath,
+  ]);
 
-  const handleRecieptUploadSuccess = useCallback((isSuccess:boolean) => {
-    setRecieptUploadSucess(isSuccess)
-  }, [])
+  const handleRecieptUploadSuccess = useCallback((isSuccess: boolean) => {
+    setRecieptUploadSucess(isSuccess);
+  }, []);
 
-const isRecieptUploaded = (("recieptPath" in updatedTransaction.extra &&
-     updatedTransaction.extra.recieptPath) || recieptUploadSuccess)
+  const isRecieptUploaded =
+    ("recieptPath" in updatedTransaction.extra &&
+      updatedTransaction.extra.recieptPath) ||
+    recieptUploadSuccess;
 
   if (!isRecieptUploaded) {
-    return (<MakePayment handleRecieptUploadSuccess={handleRecieptUploadSuccess} transaction={updatedTransaction} />);
+    return (
+      <MakePayment
+        handleRecieptUploadSuccess={handleRecieptUploadSuccess}
+        transaction={updatedTransaction}
+      />
+    );
   }
 
   return getPaymentStateView(updatedTransaction);
