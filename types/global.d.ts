@@ -22,6 +22,7 @@ type User = {
   id: string;
   email: string;
   telegramId: string;
+  disabled?: boolean;
   phone: string;
   whatsApp: string;
   countryOfResidence?: string;
@@ -41,6 +42,47 @@ type UserStats = {
   totalFailedTransactions: number;
   createdAt?: Date;
   updatedAt?: Date;
+};
+
+type SiteConfig = {
+  maintenanceMode: false;
+  paymentsPaused: false;
+
+  deriv: {
+    autopaymentsEnabled: true;
+
+    deposits: {
+      enabled: boolean;
+      maxAmount: number;
+    };
+
+    withdrawals: {
+      enabled: boolean;
+      maxAmount: number;
+    };
+
+    updatedAt: Date;
+    updatedBy: string;
+    changeReason: string;
+  };
+};
+
+type AdminBankAccount = {
+  id: string;
+  default?: boolean;
+  accountName: string;
+  accountNumber: string;
+  bankName: string;
+  bankCode: string;
+  syncedBanks: string[];
+  blackListedBanks: string[];
+  minAmountAllowed: number;
+  maxAmountAllowed: number;
+  requireManualConfirmation: boolean;
+  dailyCap: number;
+  isActive?: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type OnboardingStep = User["onboardingStep"];

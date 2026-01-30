@@ -20,6 +20,7 @@ import {
 } from "../handlers/deriv";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
+import logger from "../logger";
 import { verifySession } from "../server";
 import {
   divideNumbers,
@@ -38,6 +39,16 @@ import {
 import { fetchAgentAccount } from "./derivAgent.action";
 import { fetchCachedRate } from "./rate.action";
 import type { DerivDepositParams, DerivWithdrawalParams } from "./types/action";
+import {
+  assertCurrencyisAvailable,
+  assertDepositAmountWithinCurrencyDepositLimits,
+  assertDepositAmountWithinSiteLimits,
+  assertDerivPaymentEnabled,
+  assertRateIsTheSame,
+  assertSiteIsActive,
+  assertUserAccountIsActive,
+  assertUserCanFundTheAccount,
+} from "./validator";
 
 export const getUserDerivAccounts = async (
   userId: string,
@@ -169,39 +180,50 @@ export const createDerivDepositTransaction = async (
     },
   } = result;
 
-  let transactionId = "";
   const userId = session?.user.id as string;
 
   try {
-    const [rateRes, activeAccountRes] = await Promise.all([
-      fetchCachedRate(currency),
-      getUserDerivAccounts(userId, {
-        onlyActive: true,
-      }),
-    ]);
+    const [rateRes, activeAccountRes, siteConfig, assignedAccount] =
+      await Promise.all([
+        fetchCachedRate(currency),
+        getUserDerivAccounts(userId, {
+          onlyActive: true,
+        }),
+        firestoreAdapter.siteConfig.getSiteConfig(),
+        firestoreAdapter.adminBank.getAdminDefaultBankAccount(),
+      ]);
 
-    const acc = activeAccountRes.data?.find(
-      (acc) => acc.accountId === derivLoginId,
-    );
-
-    if (!acc || !acc.active) throw new Error("You cannot fund this account");
-
-    if (!rateRes.success || !rateRes.data)
+    if (!rateRes.data)
       throw new Error(rateRes.error?.message || "Unable to fetch rate data");
 
-    // if (usedRate !== rateRes.data.depositRate)
-    //   throw new Error("Rate changed. Please refresh and try again.");
+    if (!siteConfig) {
+      logger.error("Unable to fetch site settings");
+      throw new Error("Unable to complete your request");
+    }
+
+    if (!activeAccountRes.data) {
+      throw new Error("Unable to fetch user accounts");
+    }
+
+    if (!assignedAccount || !assignedAccount.isActive) {
+      logger.warn("No account is active for deposit");
+      throw new Error("Unable to complete request");
+    }
 
     const convertedAmount = divideNumbers(amount, rateRes.data.depositRate);
 
-    if (
-      convertedAmount < rateRes.data.depositMin ||
-      convertedAmount > rateRes.data.depositMax
-    ) {
-      throw new Error(
-        `Minimum deposit: ${rateRes.data.depositMin}, Maximum ${rateRes.data.depositMax}`,
-      );
-    }
+    assertSiteIsActive(siteConfig);
+    assertDerivPaymentEnabled(siteConfig);
+    await assertUserAccountIsActive(userId);
+    assertUserCanFundTheAccount(activeAccountRes.data, currency);
+    assertCurrencyisAvailable(rateRes.data, currency);
+    assertDepositAmountWithinSiteLimits(convertedAmount, siteConfig);
+    assertDepositAmountWithinCurrencyDepositLimits(
+      rateRes.data.depositMin,
+      rateRes.data.depositMax,
+      convertedAmount,
+    );
+    assertRateIsTheSame(rateRes.data.depositRate, usedRate);
 
     const transactionRef = db
       .collection("transactions")
@@ -221,9 +243,11 @@ export const createDerivDepositTransaction = async (
       paidFromAccountName,
     );
 
-    await db.runTransaction(async (t) => {
-      const pendingUserOrder = await t.get(userPendingTransactionRef);
-      const similarOrder = await t.get(duplicateUserPendingTransactionRef);
+    const transactionId = await db.runTransaction(async (t) => {
+      const pendingUserOrder = await t.get(userPendingTransactionRef.limit(1));
+      const similarOrder = await t.get(
+        duplicateUserPendingTransactionRef.limit(1),
+      );
 
       if (!pendingUserOrder.empty) {
         throw new Error(
@@ -232,24 +256,24 @@ export const createDerivDepositTransaction = async (
       }
       if (!similarOrder.empty) {
         throw new Error(
-          "Similar order exist already. Please try again in few minutes",
+          "Unable to complete your request. Please try again in few minutes",
         );
       }
 
-      transactionId = uuidv4();
+      const txId = uuidv4();
 
-      const transactionsRef = db.collection("transactions").doc(transactionId);
+      const transactionsRef = db.collection("transactions").doc(txId);
 
       t.set(transactionsRef, {
-        transactionId,
+        transactionId: txId,
         userId,
         amount,
         status: "pending",
         type: "deriv_deposit",
         assignedBank: {
-          bankName: "moniepoint bank",
-          accountNumber: "00000000",
-          acountName: "Evarest Direct Technologies",
+          bankName: assignedAccount.bankName,
+          accountNumber: assignedAccount.accountNumber,
+          acountName: assignedAccount.accountName,
         },
         extra: {
           amount: convertedAmount,
@@ -261,17 +285,19 @@ export const createDerivDepositTransaction = async (
           paidFromAccountName,
         },
         createdAt: new Date(),
-        updatedAt: new Date("2025-10-01T10:30:00Z"),
+        updatedAt: new Date(),
         fulfillment: {
           fulfilled: false,
         },
       } satisfies DerivDeposit);
+
+      return txId;
     });
+
+    return { success: true, data: { transactionId } };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
-
-  return { success: true, data: { transactionId } };
 };
 
 export const createDerivWithdrawalTransaction = async (
@@ -302,8 +328,6 @@ export const createDerivWithdrawalTransaction = async (
     },
   } = result;
 
-  let transactionId = "";
-
   try {
     const userId = session?.user.id as string;
 
@@ -324,7 +348,7 @@ export const createDerivWithdrawalTransaction = async (
       );
     }
 
-    transactionId = uuidv4();
+    const transactionId = uuidv4();
 
     await setById("transactions", transactionId, {
       transactionId,
