@@ -57,6 +57,7 @@ export const bankAccountSchema = {
     accountName: z
       .string()
       .min(5, { error: "Please select your bank account name" })
+      .toUpperCase()
       .trim(),
     accountNumber: z
       .string()

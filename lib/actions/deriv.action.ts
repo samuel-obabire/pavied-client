@@ -274,6 +274,7 @@ export const createDerivDepositTransaction = async (
           bankName: assignedAccount.bankName,
           accountNumber: assignedAccount.accountNumber,
           acountName: assignedAccount.accountName,
+          id: assignedAccount.id,
         },
         extra: {
           amount: convertedAmount,
