@@ -122,6 +122,7 @@ type DerivDeposit = BaseTransaction & {
     bankName: string;
     acountName: string;
     accountNumber: string;
+    id: string;
   };
   extra: {
     currency: string;
