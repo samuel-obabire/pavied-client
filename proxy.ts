@@ -19,7 +19,7 @@ const publicRoutes = [
   "/manifest.json",
 ];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const user = await verifySession();
 
   const pathname = request.nextUrl.pathname;
