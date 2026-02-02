@@ -29,7 +29,7 @@ export const api = {
   deriv: {
     triggerCompleteDerivDeposit: async (transactionId: string) => {
       return await fetchHandler<FundDerivSuccess>(
-        `${SHARED_API_URL}/process-deriv-deposit`,
+        `${SHARED_API_URL}/deriv/deriv-deposit`,
         {
           method: "POST",
           body: JSON.stringify({
