@@ -185,7 +185,7 @@ export const createDerivDepositTransaction = async (
   try {
     const [rateRes, activeAccountRes, siteConfig, assignedAccount] =
       await Promise.all([
-        fetchCachedRate(currency),
+        fetchCachedRate(currency)(),
         getUserDerivAccounts(userId, {
           onlyActive: true,
         }),
@@ -332,7 +332,7 @@ export const createDerivWithdrawalTransaction = async (
   try {
     const userId = session?.user.id as string;
 
-    const { success, data, error } = await fetchCachedRate(currency);
+    const { success, data, error } = await fetchCachedRate(currency)();
 
     if (!success || !data)
       throw new Error(error?.message || "Unable to fetch rate data");
