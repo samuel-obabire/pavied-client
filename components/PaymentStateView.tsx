@@ -22,7 +22,7 @@ function getPaymentStateView(tx: Transaction) {
       return <PaymentSuccess />;
     default: {
       const exhaustiveCheck: never = tx.status;
-      console.log(exhaustiveCheck);
+
       throw new Error(`Unhandled transaction status: ${exhaustiveCheck}`);
     }
   }
@@ -38,13 +38,11 @@ const PaymentStateView = ({ transaction }: Props) => {
     // If already done, don't start polling
     if (
       ["success", "failed"].includes(transaction.status) ||
-      !updatedTransaction.extra.recieptPath
+      !recieptUploadSuccess
     )
       return;
 
     intervalRef.current = setInterval(async () => {
-      console.log("Polling payment status...");
-
       try {
         const response = await getPaymentTransaction(transaction.transactionId);
 
@@ -63,14 +61,10 @@ const PaymentStateView = ({ transaction }: Props) => {
       } catch (error) {
         console.error(error);
       }
-    }, 7000);
+    }, 15000);
 
     return () => clearInterval(intervalRef.current!);
-  }, [
-    transaction.transactionId,
-    transaction.status,
-    updatedTransaction.extra.recieptPath,
-  ]);
+  }, [transaction.transactionId, transaction.status, recieptUploadSuccess]);
 
   const handleRecieptUploadSuccess = useCallback((isSuccess: boolean) => {
     setRecieptUploadSucess(isSuccess);

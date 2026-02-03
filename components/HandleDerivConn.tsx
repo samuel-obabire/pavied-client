@@ -28,7 +28,7 @@ const HandleDerivConn = () => {
   }, [router, stringifiedSearchParams, session.status, session.data]);
 
   return (
-    <div className="flex-center mt-16 flex">
+    <div className="flex-center mt-8 flex">
       <Loader className="animate-spin" />
     </div>
   );

@@ -19,9 +19,11 @@ const ExchangeRateList = ({
           data={rateRes.data}
           error={rateRes.error}
           render={(rates) => {
-            return rates.map((rate) => (
-              <ExchangeRateCard key={rate.code} accountRate={rate} />
-            ));
+            return rates
+              .filter((rate) => rate.active)
+              .map((rate) => (
+                <ExchangeRateCard key={rate.code} accountRate={rate} />
+              ));
           }}
         />
       </div>
