@@ -13,23 +13,23 @@ const Hero = () => {
           {/* Background Glow */}
           <div className="absolute -top-28 right-2 h-[45rem] w-[45rem] rounded-full bg-gradient-to-r from-secondary/10 to-transparent blur-md pointer-events-none" />
           {/* Left Content */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left lg:max-w-[600px]">
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left w-full lg:max-w-[600px]">
             
             {/* Tagline */}
             <div className="inline-flex items-center rounded-full bg-secondary/10 px-4 py-2 text-secondary mb-6 md:mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
-              <span className="text-12-medium md:text-14-medium whitespace-nowrap">
-                Fully Automated Deriv Funding & Withdrawal Service
+              <span className="text-xs">
+                Fund & Withdraw Your Deriv in Seconds - Automated, Secure & Instant
               </span>
             </div>
 
             {/* Heading */}
-            <h1 className="text-[40px] leading-[48px] md:text-[64px] md:leading-[72px] font-bold text-primary dark:text-white mb-6 animate-in fade-in slide-in-from-left-4 duration-700 delay-100">
-              Convert Your Deriv <br className="hidden md:block" /> Assets to Naira Instantly.
+            <h1 className="text-[35px] leading-[48px] md:text-[54px] md:leading-[62px] font-bold text-primary dark:text-white mb-6 animate-in fade-in slide-in-from-left-4 duration-700 delay-100">
+              Fast, Automated Deposits & Withdrawals for Deriv Traders in Nigeria.
             </h1>
 
             {/* Description */}
             <p className="text-16-medium md:text-20-medium text-black-1/60 dark:text-white/60 mb-8 md:mb-10 max-w-[500px] animate-in fade-in slide-in-from-left-4 duration-700 delay-200">
-              The fastest, most secure way to fund and withdraw from your Deriv account. No delays, no manual verification hassles.
+              No delays, No agents. Fast, Automated Funding & Withdrawals at Competitive Rates.
             </p>
 
             {/* Action Buttons Box */}
@@ -37,10 +37,10 @@ const Hero = () => {
               <div className="rounded-2xl border border-black-1/5 bg-white/50 p-3 dark:border-white/5 dark:bg-black-1/20 backdrop-blur-sm lg:inline-flex lg:items-center lg:gap-4">
                 <Button 
                   asChild 
-                  className="btn-secondary w-full lg:w-48 h-14 px-8 rounded-xl shadow-md group"
+                  className="btn-secondary w-full lg:w-64 h-14 px-8 rounded-xl shadow-md group"
                 >
                   <Link href={ROUTES.SIGN_IN} className="flex items-center justify-center gap-2">
-                    <span className="text-16-bold">Get Started Now</span>
+                    <span className="text-16-bold">Start Funding in Minutes</span>
                     <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
@@ -55,7 +55,7 @@ const Hero = () => {
               </div>
               
               <p className="mt-4 text-12-regular text-black-1/40 dark:text-white/40 md:text-14-regular">
-                Simple T&Cs, lightning-fast verification process.
+                Start with as little as $1
               </p>
             </div>
           </div>
