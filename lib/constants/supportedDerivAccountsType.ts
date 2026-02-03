@@ -17,6 +17,6 @@ export const supportedDerivAccountsType = [
   {
     currency: "eUSDT",
     icon: "/assets/usdt-currency.svg",
-    name: "Tether ER20",
+    name: "Tether ERC20",
   },
 ];

@@ -13,10 +13,13 @@ export const ROUTES = {
   TRANSACTIONS: "/transactions",
   HANDLE_DERIV: "/handle-deriv",
   CONNECT_DERIV: "/connect-deriv",
+  CANCEL_ORDER: "/api/cancel-order",
+
   DERIV: {
     DEPOSIT: "/deriv/deposit",
     WITHDRAWAL: "/deriv/withdrawal",
   },
+
   PAYMENT: (paymentId: string) => `/payment-checkout/${paymentId}`,
   VERIFY_DERIV_WITHDRAW: (transactionId: string) =>
     `/verify-deriv-withdrawal?tx=${transactionId}`,
