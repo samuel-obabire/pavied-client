@@ -1,7 +1,7 @@
 "use server";
 
 import "server-only";
-
+import { Client } from "@upstash/qstash";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -49,6 +49,8 @@ import {
   assertUserAccountIsActive,
   assertUserCanFundTheAccount,
 } from "./validator";
+
+const client = new Client({ token: process.env.QSTASH_TOKEN! });
 
 export const getUserDerivAccounts = async (
   userId: string,
@@ -295,6 +297,13 @@ export const createDerivDepositTransaction = async (
       return txId;
     });
 
+    // Automatically cancel order if not paid within 15 mins
+    await client.publishJSON({
+      url: `${process.env.NEXT_PUBLIC_URL}/api/cancel-order`,
+      body: { transactionId },
+      delay: 15 * 60, // cancel after 15mins
+    });
+
     return { success: true, data: { transactionId } };
   } catch (error) {
     return handleError(error) as ErrorResponse;
@@ -373,6 +382,12 @@ export const createDerivWithdrawalTransaction = async (
         fulfilled: false,
       },
     } satisfies DerivWithdrawal);
+
+    // 👇 Once uploading is done, queue an image processing task
+    const result = await client.publishJSON({
+      url: "https://your-api-endpoint.com/process-image",
+      body: { imageId: "123" },
+    });
 
     return { success: true, data: { transactionId } };
   } catch (error) {
