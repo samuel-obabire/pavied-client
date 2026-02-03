@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import DashboardTransactions from "@/components/dashboard/DashboardTransactions";
 import StatsSkeleton from "@/components/skeletons/StatsSkeleton";
