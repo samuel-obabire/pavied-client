@@ -1,14 +1,12 @@
 "use client";
 
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
-
 import { addDerivAccounts } from "@/lib/actions/deriv.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { cn } from "@/lib/utils";
-
-import ActionState, { ActionStatusProps } from "./ActionState";
+import ActionState, { type ActionStatusProps } from "./ActionState";
 import CustomButton from "./CustomButton";
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
 import SaveStepFooter from "./SaveOnboardingStep";
@@ -28,7 +26,7 @@ const DerivAccountSelectionList = ({
   parsedAccounts: DerivAccountLink[];
 }) => {
   const [selectedAccounts, setSelectedAccounts] = useState<DerivAccountLink[]>(
-    []
+    [],
   );
   const [actionState, setActionState] =
     useState<ActionStatusProps["state"]>("idle");
@@ -39,13 +37,13 @@ const DerivAccountSelectionList = ({
 
   const handleAccountSelection = (
     account: DerivAccountLink,
-    checked: boolean
+    checked: boolean,
   ) => {
     if (checked) {
       setSelectedAccounts((prev) => [...prev, account]);
     } else {
       setSelectedAccounts((prev) =>
-        prev.filter((a) => a.accountId !== account.accountId)
+        prev.filter((a) => a.accountId !== account.accountId),
       );
     }
   };

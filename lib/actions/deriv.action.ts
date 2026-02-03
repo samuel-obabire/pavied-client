@@ -108,7 +108,7 @@ export const addDerivAccounts = async (
           }
         }
 
-        await tx.addDerivAccount(account, userId);
+        await tx.addDerivAccount({ ...account, active: false }, userId);
       }
     });
   } catch (error) {
