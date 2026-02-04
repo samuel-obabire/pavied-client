@@ -66,7 +66,7 @@ export const api = {
       return await fetchHandler<null>(
         `${SHARED_API_URL}/transaction/mark-failed`,
         {
-          method: "PUT",
+          method: "POST",
           body: JSON.stringify({
             transactionId,
             reason,
