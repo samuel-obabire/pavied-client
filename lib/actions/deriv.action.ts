@@ -300,7 +300,7 @@ export const createDerivDepositTransaction = async (
     // Automatically cancel order if not paid within 15 mins
     await client.publishJSON({
       url: `${process.env.NEXT_PUBLIC_URL}/api/cancel-order`,
-      body: { transactionId },
+      body: { transactionId, reason: "Payment timeout" },
       delay: 15 * 60, // cancel after 15mins
     });
 
