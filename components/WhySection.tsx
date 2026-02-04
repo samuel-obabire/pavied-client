@@ -28,7 +28,7 @@ const whyFeatures = [
   },
   {
     title: "Safe & Secure",
-    description: "Your security is our priority. We use bank-level encryption to keep your funds and data safe.",
+    description: "Trusted by Nigerian traders.",
     Icon: ShieldCheck,
   },
 ];

@@ -1,10 +1,22 @@
+import { fetchCachedRate } from "@/lib/actions/rate.action";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import BrandName from "./BrandName";
 import { Button } from "./ui/button";
 import { ROUTES } from "@/lib/constants/routes";
+import { formatNairaAmount } from "@/lib/utils";
 
-const RatesSection = () => {
+const RatesSection = async () => {
+  const getUsdRate = fetchCachedRate("USD");
+  const { data: usdRate } = await getUsdRate();
+
+  const depositRateDisplay = usdRate?.depositRate
+    ? `${formatNairaAmount(usdRate.depositRate)}/$`
+    : "Best Market Rates";
+  const withdrawalRateDisplay = usdRate?.withdrawalRate
+    ? `${formatNairaAmount(usdRate.withdrawalRate)}/$`
+    : "Best Market Rates";
+
   return (
     <section className="py-20 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
@@ -24,11 +36,11 @@ const RatesSection = () => {
               <ul className="space-y-6 mb-10">
                 <li className="flex items-center gap-3 text-18-medium text-black-1 dark:text-white md:text-20-medium">
                   <span className="size-2 rounded-full bg-black-1 dark:bg-white" />
-                  <span>Deposit Fee: Flat Rate</span>
+                  <span>Deposit Rate: <span className="font-bold text-secondary">{depositRateDisplay}</span></span>
                 </li>
                 <li className="flex items-center gap-3 text-18-medium text-black-1 dark:text-white md:text-20-medium">
                   <span className="size-2 rounded-full bg-black-1 dark:bg-white" />
-                  <span>Withdrawal Fee: Flat Rate</span>
+                  <span>Withdrawal Rate: <span className="font-bold text-secondary">{withdrawalRateDisplay}</span></span>
                 </li>
               </ul>
 
