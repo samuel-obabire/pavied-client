@@ -6,6 +6,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ReactNode } from "react";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
+import WhatsAppWidget from "@/components/WhatsAppWidget";
 
 
 const LatoSans = Lato({
@@ -131,6 +132,7 @@ export default function RootLayout({
             />
           </ThemeProvider>
         </SessionProvider>
+        <WhatsAppWidget />
       </body>
     </html>
   );

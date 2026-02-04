@@ -5,20 +5,44 @@ import { Plus, Minus } from "lucide-react";
 
 const faqData = [
   {
+    question: "What is a Deriv payment agent?",
+    answer: "A Deriv payment agent helps traders deposit and withdraw funds from their Deriv accounts using local payment methods such as bank transfers.",
+  },
+  {
+    question: "Is Pavied an authorized Deriv payment agent?",
+    answer: "Yes. Pavied operates as a trusted Deriv payment agent and follows Deriv’s payment agent guidelines for secure transactions.",
+  },
+  {
+    question: "How fast are deposits and withdrawals?",
+    answer: "Most transactions are processed within 1–5 minutes during active hours, depending on network and bank confirmation.",
+  },
+  {
+    question: "What is the minimum and maximum amount I can transact?",
+    answer: "Transaction limits vary based on Deriv’s policies and current liquidity. Please contact support for the latest limits.",
+  },
+  {
+    question: "Do you charge any hidden fees?",
+    answer: "No. All rates are clearly communicated before transactions. Transparency is a core value at Pavied.",
+  },
+  {
+    question: "How do I fund my Deriv account through Pavied?",
+    answer: "Simply log in to your dashboard, select the deposit option, and follow the provided steps. Your Deriv account will be funded once payment is confirmed.",
+  },
+  {
+    question: "Is my money safe with Pavied?",
+    answer: "Yes. Your security is our top priority. Pavied is built with bank-grade encryption and secure protocols to ensure your data and funds are protected from end to end.",
+  },
+  {
+    question: "Can beginners use Pavied?",
+    answer: "Absolutely. Our platform is designed to be user-friendly, helping new traders deposit and withdraw with ease.",
+  },
+  {
     question: "What happens if my transaction fails?",
     answer: "In the unlikely event of a failed transaction, our system automatically triggers a review. If funds were debited, they will be refunded to your account instantly or resolved by our support team within minutes.",
   },
   {
     question: "How do I reach customer support?",
     answer: "Our support team is available 24/7. You can contact us through the live chat on our website or by sending an email to support@pavied.com for immediate assistance.",
-  },
-  {
-    question: "How secure is Pavied?",
-    answer: "Your security is our top priority. Pavied is built with bank-grade encryption and secure protocols to ensure your data and funds are protected from end to end.",
-  },
-  {
-    question: "How long until I receive my assets?",
-    answer: "Our processes are fully automated. On average, deposits and withdrawals are credited to your destination account within 2-5 minutes after the transaction is confirmed.",
   },
 ];
 
