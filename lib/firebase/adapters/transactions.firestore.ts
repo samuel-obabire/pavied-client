@@ -1,6 +1,6 @@
-import { db } from "@/firebase.config";
 import type { TransactionQueryParams } from "@/lib/actions/types/action";
 import { DbCollections } from "@/lib/constants/dbCollections";
+import { db } from "../firebase.config";
 import { getById } from "../firestore";
 import { dateConverter } from "../utils";
 

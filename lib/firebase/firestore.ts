@@ -1,7 +1,6 @@
 import { Timestamp, type WhereFilterOp } from "firebase-admin/firestore";
-import { db } from "@/firebase.config";
 import { dateConverter } from "../utils/firebase";
-import { firestoreDb } from "./firebase.config";
+import { db } from "./firebase.config";
 
 export const getById = async <T>(
   col: string,
@@ -52,10 +51,7 @@ export const queryWhere = async <T, B extends WhereFilterOp = "==">(
 };
 
 export const getAll = async <T>(col: string): Promise<T[]> => {
-  const snap = await firestoreDb
-    .collection(col)
-    .withConverter(dateConverter)
-    .get();
+  const snap = await db.collection(col).withConverter(dateConverter).get();
 
   return snap.docs.map((doc) => doc.data());
 };

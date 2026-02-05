@@ -1,5 +1,5 @@
 import { DbCollections } from "@/lib/constants/dbCollections";
-import { firestoreDb } from "../firebase.config";
+import { db } from "../firebase.config";
 import {
   deleteById,
   getAll,
@@ -47,16 +47,16 @@ export const adminBankFirestore = {
   ) => {
     if (bankAccountId === previousDefaultBankAccountId) return;
 
-    const batch = firestoreDb.batch();
+    const batch = db.batch();
 
-    const newBankRef = firestoreDb
+    const newBankRef = db
       .collection(DbCollections.ADMIN_BANK_ACCOUNTS)
       .doc(bankAccountId);
 
     batch.update(newBankRef, { default: true });
 
     if (previousDefaultBankAccountId) {
-      const previousBankRef = firestoreDb
+      const previousBankRef = db
         .collection(DbCollections.ADMIN_BANK_ACCOUNTS)
         .doc(previousDefaultBankAccountId);
 

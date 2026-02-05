@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { type NextRequest, NextResponse } from "next/server";
-import { db } from "@/firebase.config";
 import { DbCollections } from "@/lib/constants/dbCollections";
+import { db } from "@/lib/firebase/firebase.config";
 import { firestoreAdapter } from "@/lib/firebase/firestore.adapter";
 import handleError from "@/lib/handlers/error";
 
