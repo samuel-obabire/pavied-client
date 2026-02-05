@@ -10,6 +10,7 @@ import {
 import TransactionList from "@/components/TransactionList";
 import { columns } from "@/components/tables/columns";
 import DataTableSkeleton from "@/components/tables/DataTableSkeleton";
+import TransactionListSkeleton from "@/components/skeletons/TransactionListSkeleton";
 import TransactionTable from "@/components/tables/TransactionTable";
 import { getUserTransactions } from "@/lib/actions/payment.action";
 import { ROUTES } from "@/lib/constants/routes";
@@ -53,7 +54,7 @@ const TransactionPage = async ({ searchParams }: PageProps) => {
       </div>
 
       <div className="md:hidden h-[calc(100dvh-116px)] overflow-y-scroll">
-        <Suspense fallback={<DataTableSkeleton columns={1} rows={5} />}>
+        <Suspense fallback={<TransactionListSkeleton />}>
           <TransactionList transactionRes={transactionsPromise} />
         </Suspense>
       </div>

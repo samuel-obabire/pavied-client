@@ -9,11 +9,13 @@ const StepSelectBankAccount = ({
   onSelect,
   selectedBankAccount,
   onNext,
+  onBack,
 }: {
   bankAccountsRes: ActionResponse<BankAccount[]>;
   onSelect: (acc: BankAccount) => void;
   selectedBankAccount: BankAccount | null;
   onNext: (step: number) => void;
+  onBack: () => void;
 }) => {
   return (
     <div className="mt-4 space-y-3">
@@ -51,13 +53,23 @@ const StepSelectBankAccount = ({
         }
       />
 
-      <Button
-        disabled={!selectedBankAccount}
-        className="btn-secondary w-full"
-        onClick={() => onNext(3)}
-      >
-        Next
-      </Button>
+      <div className="grid grid-cols-2 gap-4">
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={onBack}
+        >
+          Back
+        </Button>
+        <Button
+          disabled={!selectedBankAccount}
+          className="btn-secondary w-full"
+          onClick={() => onNext(3)}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 };

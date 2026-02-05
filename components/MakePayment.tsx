@@ -167,7 +167,7 @@ const MakePayment = ({
               </p>
               <div className="flex justify-center">
                 <PaymentCountdown
-                  limitMinutes={10}
+                  limitMinutes={15}
                   transactionDate={transaction.createdAt}
                 />
               </div>

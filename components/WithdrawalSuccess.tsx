@@ -3,13 +3,8 @@
 import Link from "next/link";
 import { CheckCircle2, ExternalLink, LayoutDashboard } from "lucide-react";
 import { ROUTES } from "@/lib/constants/routes";
-import { formatNumber } from "@/lib/utils";
 
-type PaymentSuccessProps = {
-  transaction: DerivDeposit;
-};
-
-export default function PaymentSuccess({ transaction }: PaymentSuccessProps) {
+export default function WithdrawalSuccess() {
   return (
     <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-black-1 border border-gray-200 dark:border-gray-800 shadow-xl p-8">
@@ -25,45 +20,28 @@ export default function PaymentSuccess({ transaction }: PaymentSuccessProps) {
 
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Payment Successful!
+              Withdrawal Successful!
             </h2>
             <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs mx-auto">
-              Your deposit has been processed and credited to your Deriv
-              account.
+              Your withdrawal has been processed. You will receive your funds
+              shortly.
             </p>
           </div>
 
-          <div className="bg-gray-50 dark:bg-black-2 rounded-xl p-5 w-full space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Amount Deposited</span>
-              <span className="text-lg font-bold text-gray-900 dark:text-white">
-                ₦{formatNumber(transaction.amount)}
-              </span>
-            </div>
-            <div className="h-px bg-gray-200 dark:bg-gray-700" />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Credited to</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">
-                {transaction.extra.derivLoginId} ({transaction.extra.currency})
-              </span>
-            </div>
-            <div className="h-px bg-gray-200 dark:bg-gray-700" />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Amount Received</span>
-              <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                {formatNumber(transaction.extra.amount)}{" "}
-                {transaction.extra.currency}
-              </span>
-            </div>
+          <div className="bg-gray-50 dark:bg-black-2 rounded-xl p-4 w-full">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Funds are typically credited within a few minutes. Please check
+              your bank account.
+            </p>
           </div>
 
           <div className="flex flex-col gap-3 w-full pt-2">
             <Link
-              href={`/transactions/${transaction.transactionId}`}
+              href={ROUTES.TRANSACTIONS}
               className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl transition-all shadow-md hover:shadow-lg"
             >
               <ExternalLink className="w-4 h-4" />
-              View Transaction Details
+              View Transactions
             </Link>
 
             <Link

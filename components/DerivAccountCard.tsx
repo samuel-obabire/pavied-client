@@ -59,7 +59,7 @@ const DerivAccountCard = ({
     <div
       key={`${accountId}_${dateAdded}`}
       className={cn(
-        "group relative overflow-hidden bg-white_dark-black-2 border border-gray-100 dark:border-gray-800 rounded-xl p-4 transition-all duration-500 hover:shadow-md  hover:-translate-y-0.5",
+        "group relative overflow-hidden bg-white_dark-black-2 border border-gray-100 dark:border-gray-800 rounded-xl p-4 transition-all duration-500 hover:shadow-md  hover:-translate-y-0.5 w-full",
         {
           "ring-2 ring-secondary/30 border-secondary/50 bg-secondary/[0.02] shadow-md":
             selected,
@@ -68,7 +68,7 @@ const DerivAccountCard = ({
     >
       
 
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-4 w-full">
         <div className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50/50 dark:bg-white/5 border border-gray-100/50 dark:border-gray-800/50 shadow-sm group-hover:scale-105 transition-transform duration-500">
             <DerivCurrencyIcon currency={currency} />

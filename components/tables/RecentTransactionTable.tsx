@@ -8,6 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/lib/constants/routes";
 import {
   formatCustomDate,
   formatNairaAmount,
@@ -20,6 +22,8 @@ const RecentTransactionsTable = ({
 }: {
   transactions: Transaction[];
 }) => {
+  const router = useRouter();
+
   return (
     <Table className="border-black-1 max-md:hidden  w-full overflow-hidden rounded-2xl">
       <TableHeader className="bg-secondary/20 dark:bg-black-2">
@@ -51,6 +55,9 @@ const RecentTransactionsTable = ({
             <TableRow
               key={transaction.transactionId}
               className="border-accent/10 hover:bg-secondary/10 dark:hover:bg-black-3 cursor-pointer border-b transition-colors"
+              onClick={() =>
+                router.push(`${ROUTES.TRANSACTIONS}/${transaction.transactionId}`)
+              }
             >
               <TableCell className="px-4 py-3">{index + 1}</TableCell>
               <TableCell className="px-4 py-3">{transactionType}</TableCell>

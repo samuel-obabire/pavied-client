@@ -78,6 +78,8 @@ const WithdrawalFlow = ({
     }
   };
 
+  const handleBack = () => setStep(step - 1);
+
   return step === 1 ? (
     <StepSelectDerivAccount
       onNext={setStep}
@@ -88,6 +90,7 @@ const WithdrawalFlow = ({
   ) : step === 2 ? (
     <StepSelectBankAccount
       onNext={setStep}
+      onBack={handleBack}
       selectedBankAccount={state.selectedBankAccount}
       bankAccountsRes={bankAccountsRes}
       onSelect={selectBankAccount}
@@ -96,6 +99,7 @@ const WithdrawalFlow = ({
     <StepConfirm
       state={state}
       onSubmit={onSubmit}
+      onBack={handleBack}
       onWithdrawChange={handleWithdrawalAmountChange}
       onConvertedChange={handleConvertedAmountChange}
     />

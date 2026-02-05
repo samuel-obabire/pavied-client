@@ -22,7 +22,7 @@ export default function PaymentCountdown({
     const updateRemaining = () => {
       const { remainingMs: remaining, remainingText } = calculatePaymentExpiry(
         transactionDate,
-        10
+        limitMinutes
       );
 
       if (remaining <= 0) {

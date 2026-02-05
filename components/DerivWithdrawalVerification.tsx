@@ -2,13 +2,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  processDerivWithdrawal,
-  sendWithdrawEmail,
+    processDerivWithdrawal,
+    sendWithdrawEmail,
 } from "@/lib/actions/deriv.action";
 import { ROUTES } from "@/lib/constants/routes";
 import ActionState, { type ActionStateType } from "./ActionState";
 import InputWithdrawalOTP from "./InputWithdrawalOTP";
-import PaymentSuccess from "./PaymentSuccess";
+import WithdrawalSuccess from "./WithdrawalSuccess";
 
 const DerivWithdrawalVerification = ({
   transactionId,
@@ -86,7 +86,7 @@ const DerivWithdrawalVerification = ({
       />
 
       {isWithdrawalSuccess ? (
-        <PaymentSuccess />
+        <WithdrawalSuccess />
       ) : (
         <InputWithdrawalOTP onInput={onSubmit} />
       )}
