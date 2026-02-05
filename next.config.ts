@@ -5,6 +5,8 @@ import { ENV } from "./lib/env";
 const nextConfig: NextConfig = {
   serverExternalPackages: ["pino", "pino-pretty"],
 
+  output: "standalone",
+
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",
