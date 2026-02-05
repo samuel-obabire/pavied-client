@@ -99,17 +99,29 @@ export const addDerivAccounts = async (
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
     await firestoreAdapter.runTransaction(async (tx) => {
+      // First, perform all reads for accounts to satisfy Firestore
+      // requirement that reads must complete before any writes in a transaction.
+      const reads: Array<{
+        account: (typeof encryptedAccounts)[number];
+        existingAccount: any;
+      }> = [];
+
       for (const account of encryptedAccounts) {
         const existingAccount = await tx.getDerivAccount(account);
+        reads.push({ account, existingAccount });
+      }
 
-        if (existingAccount) {
-          if (existingAccount.userId !== userId) {
-            throw new Error(
-              `Account ${account.accountId} already exist in database with another user`,
-            );
-          }
+      // Validate reads
+      for (const { account, existingAccount } of reads) {
+        if (existingAccount && existingAccount.userId !== userId) {
+          throw new Error(
+            `Account ${account.accountId} already exist in database with another user`,
+          );
         }
+      }
 
+      // Now perform writes
+      for (const account of encryptedAccounts) {
         await tx.addDerivAccount({ ...account, active: false }, userId);
       }
     });
