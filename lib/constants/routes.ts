@@ -14,6 +14,7 @@ export const ROUTES = {
   HANDLE_DERIV: "/handle-deriv",
   CONNECT_DERIV: "/connect-deriv",
   CANCEL_ORDER: "/api/cancel-order",
+  VERIFY_DERIV_DEPOSIT: "/api/verify-deriv-deposit",
 
   DERIV: {
     DEPOSIT: "/deriv/deposit",

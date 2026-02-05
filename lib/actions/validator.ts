@@ -48,7 +48,6 @@ const assertCurrencyisAvailable = (
   currencyConfig: CurrencyConfig,
   currencytoFund: string,
 ) => {
-  console.log(currencyConfig, currencytoFund);
   if (!currencyConfig || !currencyConfig.active)
     throw new Error(
       `Deriv deposit  is currently not available for ${currencytoFund}`,

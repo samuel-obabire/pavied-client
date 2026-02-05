@@ -6,13 +6,14 @@ import {
 } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getDownloadURL, getStorage } from "firebase-admin/storage";
+import { ENV } from "../env";
 
 let serviceAccount: ServiceAccount;
 
-if (process.env.NODE_ENV === "development") {
+if (ENV.NODE_ENV === "development") {
   serviceAccount = require("../../serviceAccountKey.json") as ServiceAccount;
 } else {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT as string);
+  serviceAccount = JSON.parse(ENV.FIREBASE_SERVICE_ACCOUNT);
 }
 
 if (!getApps().length) {

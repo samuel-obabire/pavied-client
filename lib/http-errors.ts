@@ -5,7 +5,7 @@ export class RequestError extends Error {
   constructor(
     statusCode: number,
     message: string,
-    errors?: Record<string, string[]>
+    errors?: Record<string, string[]>,
   ) {
     super(message);
     this.statusCode = statusCode;
@@ -29,10 +29,9 @@ export class ValidationError extends RequestError {
 
         if (messages[0] === "Required") {
           return `${fieldName} is required`;
-        } else {
-          return messages.join(" and ");
         }
-      }
+        return messages.join(" and ");
+      },
     );
 
     return formattedMessages.join(", ");
@@ -47,14 +46,14 @@ export class NotFoundError extends RequestError {
 }
 
 export class ForbiddenError extends RequestError {
-  constructor(message: string = "Forbidden") {
+  constructor(message = "Forbidden") {
     super(403, message);
     this.name = "ForbiddenError";
   }
 }
 
 export class UnauthorizedError extends RequestError {
-  constructor(message: string = "Unauthorized") {
+  constructor(message = "Unauthorized") {
     super(401, message);
     this.name = "UnauthorizedError";
   }

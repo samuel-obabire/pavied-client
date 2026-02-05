@@ -1,8 +1,9 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
+import { ENV } from "@/lib/env";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com";
-  
+  const baseUrl = ENV.NEXT_PUBLIC_APP_URL || "https://pavied.com";
+
   return [
     {
       url: baseUrl,

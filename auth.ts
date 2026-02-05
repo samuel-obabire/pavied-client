@@ -2,13 +2,14 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import { api } from "./lib/api";
+import { ENV } from "./lib/env";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: ENV.GOOGLE_CLIENT_ID,
+      clientSecret: ENV.GOOGLE_CLIENT_SECRET,
     }),
   ],
   callbacks: {

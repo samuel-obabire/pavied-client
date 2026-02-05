@@ -1,19 +1,20 @@
 import {
-  initializeApp,
   cert,
-  ServiceAccount,
   getApps,
+  initializeApp,
+  type ServiceAccount,
 } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import { getStorage, getDownloadURL } from "firebase-admin/storage";
+import { getDownloadURL, getStorage } from "firebase-admin/storage";
+import { ENV } from "./lib/env";
 
 let serviceAccount: ServiceAccount;
 
-if (process.env.NODE_ENV === "development") {
+if (ENV.NODE_ENV === "development") {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   serviceAccount = require("./serviceAccountKey.json") as ServiceAccount;
 } else {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT!);
+  serviceAccount = JSON.parse(ENV.FIREBASE_SERVICE_ACCOUNT);
 }
 
 if (!getApps().length) {

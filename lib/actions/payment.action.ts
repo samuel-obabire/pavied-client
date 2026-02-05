@@ -5,10 +5,14 @@ import "server-only";
 import { after } from "next/server";
 import { bucket } from "@/firebase.config";
 import { api } from "../api";
+import { ROUTES } from "../constants/routes";
+import { ENV } from "../env";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
+import logger from "../logger";
 import { verifySession } from "../server";
+import { publishToQStash } from "../utils";
 import { UploadPaymentRecieptSchema } from "../validation";
 import type { TransactionQueryParams } from "./types/action";
 
@@ -84,14 +88,6 @@ export const uploadPaymentReciept = async (
 ): Promise<ActionResponse> => {
   const user = await verifySession();
 
-  let transactionId: string | null = null;
-
-  after(async () => {
-    if (user?.id && transactionId) {
-      await api.deriv.triggerCompleteDerivDeposit(transactionId);
-    }
-  });
-
   try {
     if (!user?.id) throw new UnauthorizedError();
 
@@ -102,8 +98,6 @@ export const uploadPaymentReciept = async (
 
     const { file, paymentId } = result;
 
-    transactionId = paymentId;
-
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
@@ -112,19 +106,37 @@ export const uploadPaymentReciept = async (
 
     const fileRef = bucket.file(destination);
 
-    // retrieve temporary url
-    // const [url] = await fileRef.getSignedUrl({
-    //   action: "read",
-    //   expires: Date.now() + 15 * 60 * 1000, // 15 minutes from now
-    // });
-
     await fileRef.save(buffer, {
       contentType: file.type,
     });
 
     await updateTransactionRecieptPath(paymentId, fileName);
 
-    // return { success: true, filePath: destination, signedUrl: url };
+    after(async () => {
+      logger.info(
+        `Triggering deriv deposit completion for payment: ${paymentId}`,
+      );
+
+      const result = await api.deriv.triggerCompleteDerivDeposit(paymentId);
+
+      if (!result.success) {
+        // retry confirmation using qStash
+        await publishToQStash({
+          url: `${ENV.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
+          delay: 15, // 15 seconds
+          body: {
+            transactionId: paymentId,
+          },
+        });
+
+        return;
+      }
+
+      logger.info(
+        `Deposit completion for payment: ${paymentId}. success: ${result.success}, ${result.data?.clientAccount}`,
+      );
+    });
+
     return { success: true };
   } catch (error) {
     return handleError(error) as ErrorResponse;
