@@ -2,8 +2,8 @@ import {
   type Transaction as FirestoreTransaction,
   Timestamp,
 } from "firebase-admin/firestore";
-import { db } from "@/firebase.config";
 import { DbCollections } from "@/lib/constants/dbCollections";
+import { db } from "../firebase.config";
 import type { DbTransaction } from "../firestore.transactions";
 
 const bankDocId = (bankCode: string, accountNumber: string) =>

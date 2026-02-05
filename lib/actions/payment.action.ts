@@ -3,10 +3,10 @@
 import "server-only";
 
 import { after } from "next/server";
-import { bucket } from "@/firebase.config";
 import { api } from "../api";
 import { ROUTES } from "../constants/routes";
 import { ENV } from "../env";
+import { bucket } from "../firebase/firebase.config";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";

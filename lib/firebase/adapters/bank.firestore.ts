@@ -1,5 +1,5 @@
-import { db } from "@/firebase.config";
 import { DbCollections } from "@/lib/constants/dbCollections";
+import { db } from "../firebase.config";
 import { deleteById } from "../firestore";
 import { dateConverter } from "../utils";
 

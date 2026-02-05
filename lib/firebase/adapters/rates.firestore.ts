@@ -1,5 +1,5 @@
-import { db } from "@/firebase.config";
 import { DbCollections } from "@/lib/constants/dbCollections";
+import { db } from "../firebase.config";
 import { dateConverter } from "../utils";
 
 export const ratesFirestore = {

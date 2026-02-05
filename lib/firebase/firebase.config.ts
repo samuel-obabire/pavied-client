@@ -12,7 +12,7 @@ if (!getApps().length) {
   });
 }
 
-const firestoreDb = getFirestore();
+const db = getFirestore();
 const bucket = getStorage().bucket();
 
-export { firestoreDb, bucket, getDownloadURL };
+export { db, bucket, getDownloadURL };
