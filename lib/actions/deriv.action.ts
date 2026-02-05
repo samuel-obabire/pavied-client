@@ -10,5 +10,4 @@ export {
   removeDerivAccount,
   sendWithdrawEmail,
   setDerivCookie,
-  triggerDerivDepositCompletion,
 } from "./deriv";
