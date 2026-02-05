@@ -10,7 +10,10 @@ import {
 import { useQueryStates } from "nuqs";
 import { use } from "react";
 
+
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/lib/constants/routes";
 import {
   Table,
   TableBody,
@@ -39,6 +42,8 @@ const TransactionTable = <TData, TValue>({
     urlKeys: paginationUrlKeys,
     shallow: false,
   });
+
+  const router = useRouter();
 
   const { data: tableData, error } = use(data);
 
@@ -92,6 +97,11 @@ const TransactionTable = <TData, TValue>({
                   className={`${i % 2 === 0 ? "" : "bg-accent dark:bg-black-2"} hover:bg-secondary/5 dark:hover:bg-black-3 cursor-pointer border-0  transition-colors`}
                   key={row.id}
                   data-state={row.getIsSelected() ? "selected" : undefined}
+                  onClick={() =>
+                    router.push(
+                      `${ROUTES.TRANSACTIONS}/${(row.original as Transaction).transactionId}`
+                    )
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="">

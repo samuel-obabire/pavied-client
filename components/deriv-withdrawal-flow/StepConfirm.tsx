@@ -10,11 +10,13 @@ const StepConfirm = ({
   onWithdrawChange,
   onConvertedChange,
   onSubmit,
+  onBack,
 }: {
   state: WithdrawalFlowState;
   onWithdrawChange: (v: string) => void;
   onConvertedChange: (v: string) => void;
   onSubmit: () => void;
+  onBack: () => void;
 }) => {
   const {
     selectedBankAccount,
@@ -89,16 +91,27 @@ const StepConfirm = ({
 
       {errorMessage && <div className="form-error">{errorMessage}</div>}
 
-      <CustomButton
-        disabled={
-          !selectedBankAccount || !selectedDerivAccount || !withdrawalAmount
-        }
-        className="btn-secondary mt-4 w-full"
-        onClick={onSubmit}
-        isLoading={isLoading}
-      >
-        Continue to payment
-      </CustomButton>
+      <div className="mt-4 grid grid-cols-2 gap-4">
+        <CustomButton
+          type="button"
+          disabled={isLoading}
+          variant="outline"
+          className="w-full"
+          onClick={onBack}
+        >
+          Back
+        </CustomButton>
+        <CustomButton
+          disabled={
+            !selectedBankAccount || !selectedDerivAccount || !withdrawalAmount
+          }
+          className="btn-secondary w-full"
+          onClick={onSubmit}
+          isLoading={isLoading}
+        >
+          Continue to payment
+        </CustomButton>
+      </div>
     </div>
   );
 };

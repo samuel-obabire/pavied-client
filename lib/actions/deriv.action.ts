@@ -227,40 +227,40 @@ export const createDerivDepositTransaction = async (
     );
     assertRateIsTheSame(rateRes.data.depositRate, usedRate);
 
-    const transactionRef = db
-      .collection("transactions")
-      .where("status", "in", ["pending", "processing"])
-      .where("type", "==", "deriv_deposit");
+    // const transactionRef = db
+    //   .collection("transactions")
+    //   .where("status", "in", ["pending", "processing"])
+    //   .where("type", "==", "deriv_deposit");
 
-    const userPendingTransactionRef = transactionRef.where(
-      "userId",
-      "==",
-      userId,
-    );
+    // const userPendingTransactionRef = transactionRef.where(
+    //   "userId",
+    //   "==",
+    //   userId,
+    // );
 
-    // Check to prevent users with similar name to have deposit transactions at the same time
-    const duplicateUserPendingTransactionRef = transactionRef.where(
-      "extra.paidFromAccountName",
-      "==",
-      paidFromAccountName,
-    );
+    // // Check to prevent users with similar name to have deposit transactions at the same time
+    // const duplicateUserPendingTransactionRef = transactionRef.where(
+    //   "extra.paidFromAccountName",
+    //   "==",
+    //   paidFromAccountName,
+    // );
 
     const transactionId = await db.runTransaction(async (t) => {
-      const pendingUserOrder = await t.get(userPendingTransactionRef.limit(1));
-      const similarOrder = await t.get(
-        duplicateUserPendingTransactionRef.limit(1),
-      );
+      // const pendingUserOrder = await t.get(userPendingTransactionRef.limit(1));
+      // const similarOrder = await t.get(
+      //   duplicateUserPendingTransactionRef.limit(1),
+      // );
 
-      if (!pendingUserOrder.empty) {
-        throw new Error(
-          "You have a pending order. Please create a new order when your pending order has expired or completed",
-        );
-      }
-      if (!similarOrder.empty) {
-        throw new Error(
-          "Unable to complete your request. Please try again in few minutes",
-        );
-      }
+      // if (!pendingUserOrder.empty) {
+      //   throw new Error(
+      //     "You have a pending order. Please create a new order when your pending order has expired or completed",
+      //   );
+      // }
+      // if (!similarOrder.empty) {
+      //   throw new Error(
+      //     "Unable to complete your request. Please try again in few minutes",
+      //   );
+      // }
 
       const txId = uuidv4();
 
@@ -298,11 +298,11 @@ export const createDerivDepositTransaction = async (
     });
 
     // Automatically cancel order if not paid within 15 mins
-    await client.publishJSON({
-      url: `${process.env.NEXT_PUBLIC_URL}/api/cancel-order`,
-      body: { transactionId, reason: "Payment timeout" },
-      delay: 15 * 60, // cancel after 15mins
-    });
+    // await client.publishJSON({
+    //   url: `${process.env.NEXT_PUBLIC_URL}/api/cancel-order`,
+    //   body: { transactionId, reason: "Payment timeout" },
+    //   delay: 15 * 60, // cancel after 15mins
+    // });
 
     return { success: true, data: { transactionId } };
   } catch (error) {
@@ -384,10 +384,10 @@ export const createDerivWithdrawalTransaction = async (
     } satisfies DerivWithdrawal);
 
     // 👇 Once uploading is done, queue an image processing task
-    const result = await client.publishJSON({
-      url: "https://your-api-endpoint.com/process-image",
-      body: { imageId: "123" },
-    });
+    // const result = await client.publishJSON({
+    //   url: "https://your-api-endpoint.com/process-image",
+    //   body: { imageId: "123" },
+    // });
 
     return { success: true, data: { transactionId } };
   } catch (error) {

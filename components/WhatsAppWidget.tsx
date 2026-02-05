@@ -23,7 +23,7 @@ export default function WhatsAppWidget() {
 
   return (
     <Link
-      href="https://wa.me/2349060133709" 
+      href="https://wa.me/2348112513899" 
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center transition-transform hover:scale-110"

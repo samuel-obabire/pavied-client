@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
+    Accordion,
+    AccordionItem,
+    AccordionTrigger,
+    AccordionContent,
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 import { sideLinks } from "@/lib/constants/sideLinks";
@@ -17,13 +17,14 @@ import { cn } from "@/lib/utils";
 
 import BrandName from "./BrandName";
 import ProfileLogout from "./ProfileLogout";
+import ThemeSwitcher from "./ThemeSwitcher";
 import { DialogTitle } from "./ui/dialog";
 import {
-  SheetTrigger,
-  Sheet,
-  SheetContent,
-  SheetClose,
-  SheetFooter,
+    SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetClose,
+    SheetFooter,
 } from "./ui/sheet";
 
 const MobileSheet = () => {
@@ -52,7 +53,7 @@ const MobileSheet = () => {
                   if (link.deposit && link.withdrawal) {
                     return (
                       <React.Fragment key={link.deposit.href}>
-                        <Separator className="border-accent/10 mb-2 border-1" />
+                        <Separator className="border-accent/10 mb-2 border" />
 
                         <Accordion
                           type="single"
@@ -111,7 +112,7 @@ const MobileSheet = () => {
 
                   return (
                     <React.Fragment key={href}>
-                      <Separator className="border-accent/10 mb-2 border-1" />
+                      <Separator className="border-accent/10 mb-2 border" />
                       <SheetClose asChild>
                         <Link href={href}>
                           <li
@@ -135,7 +136,10 @@ const MobileSheet = () => {
           </div>
 
           <SheetFooter className="p-0">
-            <div className="w-full min-w-0 items-center  gap-4 overflow-hidden">
+            <div className="flex w-full min-w-0 flex-col gap-4 overflow-hidden">
+              <div className="px-1 w-20">
+                <ThemeSwitcher />
+              </div>
               <ProfileLogout />
             </div>
           </SheetFooter>

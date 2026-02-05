@@ -10,19 +10,21 @@ import ProcessingPayment from "./ProcessingPayment";
 
 type Props = { transaction: DerivDeposit };
 
-function getPaymentStateView(tx: Transaction) {
+function getPaymentStateView(
+  tx: DerivDeposit,
+  uploadedAt?: Date
+): React.ReactNode {
   switch (tx.status) {
     case "pending":
-      return <PendingPayment />;
+      return <PendingPayment transaction={tx} />;
     case "processing":
-      return <ProcessingPayment />;
+      return <ProcessingPayment transaction={tx} uploadedAt={uploadedAt} />;
     case "failed":
-      return <FailedPayment />;
+      return <FailedPayment transaction={tx} />;
     case "success":
-      return <PaymentSuccess />;
+      return <PaymentSuccess transaction={tx} />;
     default: {
       const exhaustiveCheck: never = tx.status;
-
       throw new Error(`Unhandled transaction status: ${exhaustiveCheck}`);
     }
   }
@@ -31,27 +33,35 @@ function getPaymentStateView(tx: Transaction) {
 const PaymentStateView = ({ transaction }: Props) => {
   const [updatedTransaction, setUpdatedTransaction] = useState(transaction);
   const [recieptUploadSuccess, setRecieptUploadSucess] = useState(false);
+  const [uploadedAt, setUploadedAt] = useState<Date | undefined>(undefined);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // If already done, don't start polling
     if (
       ["success", "failed"].includes(transaction.status) ||
       !recieptUploadSuccess
     )
       return;
 
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     intervalRef.current = setInterval(async () => {
       try {
-        const response = await getPaymentTransaction(transaction.transactionId);
+        const response = await getPaymentTransaction(
+          transaction.transactionId
+        );
 
         if (response.success && response.data) {
           const newTx = response.data as DerivDeposit;
 
           setUpdatedTransaction((prevTx) => {
-            if (prevTx.status === newTx.status) return prevTx; //  no re-render
-            return newTx; // re-render
+            if (prevTx.status === newTx.status) return prevTx;
+            return newTx;
           });
 
           if (["success", "failed"].includes(newTx.status)) {
@@ -63,11 +73,17 @@ const PaymentStateView = ({ transaction }: Props) => {
       }
     }, 15000);
 
-    return () => clearInterval(intervalRef.current!);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      clearInterval(intervalRef.current!);
+    };
   }, [transaction.transactionId, transaction.status, recieptUploadSuccess]);
 
   const handleRecieptUploadSuccess = useCallback((isSuccess: boolean) => {
     setRecieptUploadSucess(isSuccess);
+    if (isSuccess) {
+      setUploadedAt(new Date());
+    }
   }, []);
 
   const isRecieptUploaded =
@@ -84,7 +100,13 @@ const PaymentStateView = ({ transaction }: Props) => {
     );
   }
 
-  return getPaymentStateView(updatedTransaction);
+  // After receipt upload, show ProcessingPayment immediately unless status is success/failed
+  if (["success", "failed"].includes(updatedTransaction.status)) {
+    return getPaymentStateView(updatedTransaction, uploadedAt);
+  }
+
+  // Receipt uploaded but not yet fully processed - show processing state
+  return <ProcessingPayment transaction={updatedTransaction} uploadedAt={uploadedAt} />;
 };
 
 export default PaymentStateView;

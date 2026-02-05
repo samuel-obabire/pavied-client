@@ -34,7 +34,7 @@ const ProfileLogout = () => {
         </div>
       </div>
 
-      <Separator className="border-accent/10 mb-2 border-1" />
+      <Separator className="border-accent/10 mb-2 border" />
 
       <button
         type="button"

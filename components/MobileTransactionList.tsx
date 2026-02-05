@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useQueryState } from "nuqs";
 import { useOnInView } from "react-intersection-observer";
 import { getUserTransactions } from "@/lib/actions/payment.action";
+import Divider from "./Divider";
 import TransactionCard from "./TransactionCard";
 
 const options = {
@@ -52,7 +53,7 @@ const MobileTransactionList = ({
 
   return (
     <div className="md:hidden">
-      {transactions.map((transaction, index, currTx) => {
+      {updatedTransactions.map((transaction, index, currTx) => {
         const isLast = index === currTx.length - 1;
 
         return (
@@ -61,6 +62,7 @@ const MobileTransactionList = ({
             ref={isLast ? trackingRef : null}
           >
             <TransactionCard transaction={transaction} />
+            {!isLast && <Divider className="my-4" />}
           </div>
         );
       })}
