@@ -20,19 +20,19 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
     if (!transaction) throw new NotFoundError(`Transaction ${transactionId}`);
 
     if (transaction && transaction.status !== "pending")
-      return NextResponse.json({ sucess: true }, { status: 201 });
+      return NextResponse.json({ success: true }, { status: 201 });
 
     // proceed to cancel
     await api.deriv.declineDerivDeposit(
       transactionId,
-      "",
+      "system:cancellation",
       reason ?? "Transaction cancelled",
     );
   } catch (error) {
     logger.error(error);
 
-    return NextResponse.json({ sucess: true }, { status: 201 });
+    return NextResponse.json({ success: true }, { status: 201 });
   }
 
-  return NextResponse.json({ sucess: true }, { status: 201 });
+  return NextResponse.json({ success: true }, { status: 201 });
 });

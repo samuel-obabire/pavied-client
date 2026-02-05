@@ -120,7 +120,7 @@ type DerivDeposit = BaseTransaction & {
   type: "deriv_deposit";
   assignedBank: {
     bankName: string;
-    acountName: string;
+    accountName: string;
     accountNumber: string;
     id: string;
   };

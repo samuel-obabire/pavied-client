@@ -143,7 +143,7 @@ export const createDerivDepositTransaction = async (
         assignedBank: {
           bankName: assignedAccount.bankName,
           accountNumber: assignedAccount.accountNumber,
-          acountName: assignedAccount.accountName,
+          accountName: assignedAccount.accountName,
           id: assignedAccount.id,
         },
         extra: {

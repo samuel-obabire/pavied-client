@@ -1,7 +1,6 @@
 "use server";
 
 import "server-only";
-import { Client } from "@upstash/qstash";
 import { v4 as uuidv4 } from "uuid";
 import { api } from "../../api";
 import { setById } from "../../firebase/firestore";
@@ -23,8 +22,6 @@ import {
 import { fetchAgentAccount } from "../derivAgent.action";
 import { fetchCachedRate } from "../rate.action";
 import type { DerivWithdrawalParams } from "../types/action";
-
-const client = new Client({ token: process.env.QSTASH_TOKEN! });
 
 export const createDerivWithdrawalTransaction = async (
   derivWithdrawalParams: DerivWithdrawalParams,
@@ -98,12 +95,6 @@ export const createDerivWithdrawalTransaction = async (
         fulfilled: false,
       },
     } satisfies DerivWithdrawal);
-
-    // 👇 Once uploading is done, queue an image processing task
-    const result = await client.publishJSON({
-      url: "https://your-api-endpoint.com/process-image",
-      body: { imageId: "123" },
-    });
 
     return { success: true, data: { transactionId } };
   } catch (error) {
@@ -186,7 +177,7 @@ export const sendWithdrawEmail = async ({
 }): Promise<ActionResponse<{ email: string }>> => {
   try {
     const accountToken = await getDerivAccountToken(userId, accountId);
-    console.log(accountToken, 3434);
+
     if (!accountToken) throw new Error("Account not found");
 
     const result = await verifyWithdrawEmail({

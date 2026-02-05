@@ -1,8 +1,8 @@
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { NextResponse } from "next/server";
-import { getPaymentTransaction } from "@/lib/actions/payment.action";
 import { api } from "@/lib/api";
 import { ROUTES } from "@/lib/constants/routes";
+import { firestoreAdapter } from "@/lib/firebase/firestore.adapter";
 import { NotFoundError } from "@/lib/http-errors";
 import logger from "@/lib/logger";
 import { publishToQStash } from "@/lib/utils";
@@ -19,7 +19,8 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
   };
 
   try {
-    const { data: transaction } = await getPaymentTransaction(transactionId);
+    const transaction =
+      await firestoreAdapter.transactions.getTransactionById(transactionId);
 
     if (!transaction) throw new NotFoundError(`Transaction ${transactionId}`);
 
@@ -55,8 +56,8 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
     }
   } catch (error) {
     logger.error(error);
-    return NextResponse.json({ sucess: true }, { status: 201 });
+    return NextResponse.json({ success: true }, { status: 201 });
   }
 
-  return NextResponse.json({ sucess: true }, { status: 201 });
+  return NextResponse.json({ success: true }, { status: 201 });
 });

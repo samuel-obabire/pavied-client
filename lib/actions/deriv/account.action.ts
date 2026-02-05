@@ -136,7 +136,6 @@ export const setDerivCookie = async (
   searchParams: string,
 ): Promise<ActionResponse> => {
   const user = await verifySession();
-  console.log(searchParams);
 
   if (!user?.id || !searchParams || typeof searchParams !== "string") {
     return redirect(ROUTES.SIGN_IN);
