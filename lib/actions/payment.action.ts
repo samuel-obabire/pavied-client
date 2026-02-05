@@ -6,6 +6,7 @@ import { after } from "next/server";
 import { bucket } from "@/firebase.config";
 import { api } from "../api";
 import { ROUTES } from "../constants/routes";
+import { ENV } from "../env";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
@@ -121,7 +122,7 @@ export const uploadPaymentReciept = async (
       if (!result.success) {
         // retry confirmation using qStash
         await publishToQStash({
-          url: `${process.env.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
+          url: `${ENV.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
           delay: 15, // 15 seconds
           body: {
             transactionId: paymentId,

@@ -2,6 +2,7 @@ import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { NextResponse } from "next/server";
 import { api } from "@/lib/api";
 import { ROUTES } from "@/lib/constants/routes";
+import { ENV } from "@/lib/env";
 import { firestoreAdapter } from "@/lib/firebase/firestore.adapter";
 import { NotFoundError } from "@/lib/http-errors";
 import logger from "@/lib/logger";
@@ -45,7 +46,7 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
 
           await publishToQStash({
             // recall the same route
-            url: `${process.env.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
+            url: `${ENV.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
             delay: delays[attempts - 1],
             body: {
               transactionId,

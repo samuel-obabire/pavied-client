@@ -4,11 +4,12 @@ import "server-only";
 
 import { DerivAPIClient } from "@deriv-com/api-client";
 import type { PaymentAgentWithdrawParams } from "../actions/types/action";
+import { ENV } from "../env";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import { isDerivError } from "../utils/deriv";
 import handleError from "./error";
 
-const APP_ID = process.env.DERIV_APP_ID;
+const APP_ID = ENV.DERIV_APP_ID;
 
 const createDerivApiConnection = () => {
   if (!APP_ID) throw new Error("APP_ID is missing");
