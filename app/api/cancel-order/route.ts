@@ -6,13 +6,16 @@ import logger from "@/lib/logger";
 //  Verify that this messages comes from QStash
 export const POST = verifySignatureAppRouter(async (req: Request) => {
   const body = await req.json();
-  const { transactionId } = body as { transactionId: string };
+  const { transactionId, reason } = body as {
+    transactionId: string;
+    reason?: string;
+  };
 
   try {
     await api.deriv.declineDerivDeposit(
       transactionId,
       "",
-      "Transaction cancelled as payment was not completed before timer elapsed",
+      reason ?? "Transaction cancelled",
     );
   } catch (error) {
     logger.error(error);

@@ -63,18 +63,20 @@ export const api = {
       actorId: string,
       reason: string,
     ) => {
-      return await fetchHandler<null>(`${SHARED_API_URL}/transaction/update`, {
-        method: "PUT",
-        body: JSON.stringify({
-          transactionId,
-          status: "failed",
-          reason,
-          actorId,
-        }),
-        headers: {
-          Authorization: `Bearer ${process.env.SHARED_API_TOKEN_CLIENT!}`,
+      return await fetchHandler<null>(
+        `${SHARED_API_URL}/transaction/mark-failed`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            transactionId,
+            reason,
+            actorId,
+          }),
+          headers: {
+            Authorization: `Bearer ${process.env.SHARED_API_TOKEN_CLIENT!}`,
+          },
         },
-      });
+      );
     },
   },
 };
