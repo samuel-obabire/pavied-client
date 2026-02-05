@@ -2,10 +2,8 @@
 
 import { useCallback, useState } from "react";
 import { AlertTriangle } from "lucide-react";
-
 import { uploadPaymentReciept } from "@/lib/actions/payment.action";
 import { cn } from "@/lib/utils";
-
 import CopyToClipboard from "./CopyToClipboard";
 import CustomButton from "./CustomButton";
 import Dropzone from "./Dropzone";
@@ -64,9 +62,8 @@ const MakePayment = ({
 
       <section className="relative overflow-hidden rounded-2xl bg-white dark:bg-black-1 border border-gray-200 dark:border-gray-800 shadow-xl transition-all">
         <div className="absolute top-0 left-0 right-0 h-1 bg-secondary" />
-        
+
         <div className="p-6 md:p-8 space-y-6">
-          
           {/* Amount Section */}
           <div className="flex flex-col items-center justify-center space-y-2">
             <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
@@ -96,7 +93,9 @@ const MakePayment = ({
                   <DerivCurrencyIcon currency="tUSDT" />
                 </div> */}
                 <div className="flex flex-col">
-                  <span className="text-xs font-medium text-gray-500">Bank Name</span>
+                  <span className="text-xs font-medium text-gray-500">
+                    Bank Name
+                  </span>
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {transaction.assignedBank.bankName}
                   </span>
@@ -120,9 +119,9 @@ const MakePayment = ({
                 </div>
               </div>
               <div className="bg-white dark:bg-black-3 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-blue-500 transition-colors">
-                <CopyToClipboard 
-                    text={transaction.assignedBank.accountNumber} 
-                    className="w-5 h-5 text-gray-500 hover:text-blue-600 p-2 box-content" 
+                <CopyToClipboard
+                  text={transaction.assignedBank.accountNumber}
+                  className="w-5 h-5 text-gray-500 hover:text-blue-600 p-2 box-content"
                 />
               </div>
             </div>
@@ -138,7 +137,7 @@ const MakePayment = ({
                     Account Name
                   </span>
                   <span className="font-medium text-gray-900 dark:text-white text-base">
-                    {transaction.assignedBank.acountName}
+                    {transaction.assignedBank.accountName}
                   </span>
                 </div>
               </div>
@@ -173,8 +172,8 @@ const MakePayment = ({
               </div>
             </div>
             <InfoCard
-                message="Make sure to confirm the payment before the timer runs out!"
-                className="text-center text-xs bg-transparent p-0 text-gray-600 dark:text-gray-400"
+              message="Make sure to confirm the payment before the timer runs out!"
+              className="text-center text-xs bg-transparent p-0 text-gray-600 dark:text-gray-400"
             />
           </div>
 
@@ -192,7 +191,7 @@ const MakePayment = ({
           <CustomButton
             className={cn(
               "w-full h-12 text-base font-semibold shadow-md hover:shadow-lg transition-all btn-secondary",
-              !file && "opacity-70"
+              !file && "opacity-70",
             )}
             disabled={!file}
             onClick={handlePaymentSubmit}

@@ -56,9 +56,7 @@ const envSchema = z.object({
   SENTRY_AUTH_TOKEN: z.string().min(1, "SENTRY_AUTH_TOKEN is required"),
 
   // Node environment
-  NODE_ENV: z
-    .enum(["development", "production", "test"])
-    .default("development"),
+  NODE_ENV: z.enum(["development", "production", "test"]),
 
   // Runtime (optional - added by Next.js)
   NEXT_RUNTIME: z.enum(["nodejs", "edge"]).optional(),

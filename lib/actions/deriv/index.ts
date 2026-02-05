@@ -6,9 +6,7 @@ export {
   setDerivCookie,
 } from "./account.action";
 // Deposit transaction exports
-export {
-  createDerivDepositTransaction,
-  triggerDerivDepositCompletion,
+export { createDerivDepositTransaction 
 } from "./deposit.action";
 // Withdrawal transaction exports
 export {
