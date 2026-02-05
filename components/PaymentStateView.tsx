@@ -12,7 +12,7 @@ type Props = { transaction: DerivDeposit };
 
 function getPaymentStateView(
   tx: DerivDeposit,
-  uploadedAt?: Date
+  uploadedAt?: Date,
 ): React.ReactNode {
   switch (tx.status) {
     case "pending":
@@ -52,9 +52,7 @@ const PaymentStateView = ({ transaction }: Props) => {
 
     intervalRef.current = setInterval(async () => {
       try {
-        const response = await getPaymentTransaction(
-          transaction.transactionId
-        );
+        const response = await getPaymentTransaction(transaction.transactionId);
 
         if (response.success && response.data) {
           const newTx = response.data as DerivDeposit;
@@ -71,7 +69,7 @@ const PaymentStateView = ({ transaction }: Props) => {
       } catch (error) {
         console.error(error);
       }
-    }, 15000);
+    }, 10000);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -106,7 +104,12 @@ const PaymentStateView = ({ transaction }: Props) => {
   }
 
   // Receipt uploaded but not yet fully processed - show processing state
-  return <ProcessingPayment transaction={updatedTransaction} uploadedAt={uploadedAt} />;
+  return (
+    <ProcessingPayment
+      transaction={updatedTransaction}
+      uploadedAt={uploadedAt}
+    />
+  );
 };
 
 export default PaymentStateView;

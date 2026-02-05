@@ -3,13 +3,11 @@
 import "server-only";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "@/firebase.config";
-import { api } from "../../api";
 import { firestoreAdapter } from "../../firebase/firestore.adapter";
 import action from "../../handlers/action";
 import handleError from "../../handlers/error";
 import { UnauthorizedError } from "../../http-errors";
 import logger from "../../logger";
-import { verifySession } from "../../server";
 import { divideNumbers, scheduleOrderCancellation } from "../../utils";
 import { DerivDepositSchema } from "../../validation";
 import { fetchCachedRate } from "../rate.action";
@@ -176,40 +174,6 @@ export const createDerivDepositTransaction = async (
   }
 };
 
-export const triggerDerivDepositCompletion = async (
-  transactionId: string,
-): Promise<ActionResponse> => {
-  const userId = await verifySession();
-
-  try {
-    if (!userId) {
-      throw new UnauthorizedError("Not Authorized");
-    }
-
-    if (!transactionId || typeof transactionId !== "string") {
-      throw new Error("Transaction id is required");
-    }
-
-    const transaction =
-      ((await firestoreAdapter.transactions.getTransactionById(
-        transactionId,
-      )) as Transaction) || null;
-
-    if (!transaction) throw new Error("Transaction not found");
-
-    const res = await api.deriv.triggerCompleteDerivDeposit(transactionId);
-
-    if (res.success) {
-      return { success: true };
-    }
-
-    return { success: false };
-  } catch (error) {
-    return handleError(error) as ErrorResponse;
-  }
-};
-
-// Helper function imported from account management
 async function getUserDerivAccounts(
   userId: string,
   { onlyActive }: { onlyActive: boolean } = { onlyActive: false },

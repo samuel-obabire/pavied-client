@@ -34,7 +34,6 @@ export const api = {
           method: "POST",
           body: JSON.stringify({
             transactionId,
-            source: "client_upload",
           }),
           headers: {
             Authorization: `Bearer ${process.env.SHARED_API_TOKEN_CLIENT!}`,
