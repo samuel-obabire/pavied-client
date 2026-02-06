@@ -32,7 +32,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
               <AvatarFallback className="flex h-full w-full items-center justify-center text-sm font-bold">
                 {user?.name
                   ?.split(" ")
-                  .map((n) => n[0])
+                  .map((n: string) => n[0])
                   .join("")
                   .toUpperCase() || "CN"}
               </AvatarFallback>
@@ -40,7 +40,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
 
             <div>
               <h1 className="text-16-bold text-gray-900 dark:text-white">
-                Welcome, {user?.name?.split(" ")[0] ?? "Trader"} 
+                Welcome, {user?.name?.split(" ")[0] ?? "Trader"}
               </h1>
             </div>
           </div>
