@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { api } from "./lib/api";
 import {
-    onBoardingRoutes,
-    pathnameToStep,
-    stepToRoute,
+  onBoardingRoutes,
+  pathnameToStep,
+  stepToRoute,
 } from "./lib/constants/onboarding";
 import { ROUTES } from "./lib/constants/routes";
 import logger from "./lib/logger";
@@ -14,6 +14,8 @@ const publicRoutes = [
   ROUTES.HANDLE_DERIV,
   ROUTES.SIGN_IN,
   ROUTES.CONTACT,
+  ROUTES.VERIFY_DERIV_DEPOSIT,
+  ROUTES.CANCEL_ORDER,
   "/sitemap.xml",
   "/robots.txt",
   "/manifest.json",
