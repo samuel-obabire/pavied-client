@@ -45,7 +45,7 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
 
           await publishToQStash({
             // recall the same route
-            url: `${process.env.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
+            url: `${process.env.NEXT_PUBLIC_URL}${ROUTES.VERIFY_DERIV_DEPOSIT}`,
             delay: delays[attempts - 1],
             body: {
               transactionId,

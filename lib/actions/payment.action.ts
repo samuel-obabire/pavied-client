@@ -121,7 +121,7 @@ export const uploadPaymentReciept = async (
       if (!result.success) {
         // retry confirmation using qStash
         await publishToQStash({
-          url: `${process.env.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
+          url: `${process.env.NEXT_PUBLIC_URL}${ROUTES.VERIFY_DERIV_DEPOSIT}`,
           delay: 15, // 15 seconds
           body: {
             transactionId: paymentId,
