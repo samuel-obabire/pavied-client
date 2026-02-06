@@ -37,7 +37,7 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
 
         if (attempts === 1) await redis.expire(keyName, 900); // expire after 15 mins
 
-        const delays = [60, 120, 240, 480, 720];
+        const delays = [60, 120, 180, 180, 300];
         if (attempts <= delays.length) {
           logger.info(
             `Resheduling  reconfirmation attempt ${attempts} for transaction: ${transactionId}`,
