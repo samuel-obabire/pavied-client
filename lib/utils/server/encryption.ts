@@ -2,10 +2,9 @@ import "server-only";
 
 import crypto from "crypto";
 import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
-import { ENV } from "../../env";
 
 const ALGO = "aes-256-gcm";
-const KEY = Buffer.from(ENV.TOKEN_ENCRYPTION_KEY, "utf8");
+const KEY = Buffer.from(process.env.TOKEN_ENCRYPTION_KEY!, "utf8");
 
 export const encryptToken = (token: string) => {
   const iv = crypto.randomBytes(12); // AES-GCM needs 12 byte IV

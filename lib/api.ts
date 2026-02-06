@@ -1,10 +1,12 @@
 import type { FundDerivSuccess } from "./actions/types/action";
-import { ENV } from "./env";
 import { fetchHandler } from "./handlers/fetch";
 
-const API_BASE_URL = ENV.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
 
-const SHARED_API_URL = ENV.SHARED_API_URL;
+const SHARED_API_URL =
+  process.env.SHARED_API_URL ||
+  "https://uneffeminately-nonzoologic-ehtel.ngrok-free.dev/api";
 
 export const api = {
   users: {
@@ -34,7 +36,7 @@ export const api = {
             transactionId,
           }),
           headers: {
-            Authorization: `Bearer ${ENV.SHARED_API_TOKEN_CLIENT}`,
+            Authorization: `Bearer ${process.env.SHARED_API_TOKEN_CLIENT!}`,
           },
         },
       );
@@ -49,7 +51,7 @@ export const api = {
             transactionId,
           }),
           headers: {
-            Authorization: `Bearer ${ENV.SHARED_API_TOKEN_CLIENT}`,
+            Authorization: `Bearer ${process.env.SHARED_API_TOKEN_CLIENT!}`,
           },
         },
       );
@@ -70,7 +72,7 @@ export const api = {
             actorId,
           }),
           headers: {
-            Authorization: `Bearer ${ENV.SHARED_API_TOKEN_CLIENT}`,
+            Authorization: `Bearer ${process.env.SHARED_API_TOKEN_CLIENT!}`,
           },
         },
       );

@@ -1,8 +1,7 @@
 import { Redis } from "@upstash/redis";
-import { ENV } from "../env";
 
-const UPSTASH_REDIS_REST_URL = ENV.UPSTASH_REDIS_REST_URL;
-const UPSTASH_REDIS_REST_TOKEN = ENV.UPSTASH_REDIS_REST_TOKEN;
+const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
 if (!UPSTASH_REDIS_REST_TOKEN || !UPSTASH_REDIS_REST_URL)
   throw new Error("Redis env missing");
