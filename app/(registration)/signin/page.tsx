@@ -1,6 +1,13 @@
+import { redirect } from "next/navigation";
 import SocialLogin from "@/components/SocialLogin";
+import { ROUTES } from "@/lib/constants/routes";
+import { verifySession } from "@/lib/server";
 
-export default function Signin() {
+export default async function Signin() {
+  const session = await verifySession();
+
+  if (session) redirect(ROUTES.DASHBOARD);
+
   return (
     <main className="container max-w-lg mx-auto flex flex-col items-center px-6">
       <div className="w-full space-y-10 text-center animate-in fade-in slide-in-from-bottom-4 duration-1000">
