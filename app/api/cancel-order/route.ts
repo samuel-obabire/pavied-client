@@ -1,7 +1,7 @@
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { NextResponse } from "next/server";
-import { getPaymentTransaction } from "@/lib/actions/payment.action";
 import { api } from "@/lib/api";
+import { firestoreAdapter } from "@/lib/firebase/firestore.adapter";
 import { NotFoundError } from "@/lib/http-errors";
 import logger from "@/lib/logger";
 
@@ -15,7 +15,8 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
   };
 
   try {
-    const { data: transaction } = await getPaymentTransaction(transactionId);
+    const transaction =
+      await firestoreAdapter.transactions.getTransactionById(transactionId);
 
     if (!transaction) throw new NotFoundError(`Transaction ${transactionId}`);
 
