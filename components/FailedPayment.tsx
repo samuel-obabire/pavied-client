@@ -75,10 +75,9 @@ export default function FailedPayment({ transaction }: FailedPaymentProps) {
               <Image
                 src="/assets/whatsapp.png"
                 alt="WhatsApp"
-                width={56}
-                height={56}
+                width={20}
+                height={20}
                 className="h-5 w-5 object-contain"
-                priority
               />
               Contact Support
             </a>
