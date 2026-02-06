@@ -1,8 +1,8 @@
 "use server";
 
 import "server-only";
+import { logger } from "@sentry/nextjs";
 import { v4 as uuidv4 } from "uuid";
-import { api } from "../../api";
 import { setById } from "../../firebase/firestore";
 import { firestoreAdapter } from "../../firebase/firestore.adapter";
 import action from "../../handlers/action";
@@ -13,7 +13,7 @@ import {
 } from "../../handlers/deriv";
 import handleError from "../../handlers/error";
 import { UnauthorizedError } from "../../http-errors";
-import { isSameRate, isWithinLimit, multiplyNumbers } from "../../utils";
+import { multiplyNumbers, scheduleOrderCancellation } from "../../utils";
 import { decryptToken } from "../../utils/server/encryption";
 import {
   DerivWithdrawalOTPSchema,
@@ -22,6 +22,18 @@ import {
 import { fetchAgentAccount } from "../derivAgent.action";
 import { fetchCachedRate } from "../rate.action";
 import type { DerivWithdrawalParams } from "../types/action";
+import {
+  assertCurrencyisAvailable,
+  assertCurrencyWithdrawIsAvailable,
+  assertDerivWithdrawalEnabled,
+  assertRateIsTheSame,
+  assertSiteIsActive,
+  assertUserAccountIsActive,
+  assertUserCanWithdrawFromAccount,
+  assertWithdrawAmountWithinCurrencyWithdrawLimits,
+  assertWithdrawalAmountWithinSiteLimits,
+} from "../validator";
+import { getUserDerivAccounts } from "./account.action";
 
 export const createDerivWithdrawalTransaction = async (
   derivWithdrawalParams: DerivWithdrawalParams,
@@ -51,32 +63,51 @@ export const createDerivWithdrawalTransaction = async (
     },
   } = result;
 
+  const userId = session?.user.id as string;
+
   try {
-    const userId = session?.user.id as string;
+    const [rateRes, activeAccountRes, siteConfig] = await Promise.all([
+      fetchCachedRate(currency)(),
+      getUserDerivAccounts(userId, {
+        onlyActive: true,
+      }),
+      firestoreAdapter.siteConfig.getSiteConfig(),
+    ]);
 
-    const { success, data, error } = await fetchCachedRate(currency)();
+    if (!rateRes.data)
+      throw new Error(rateRes.error?.message || "Unable to fetch rate data");
 
-    if (!success || !data)
-      throw new Error(error?.message || "Unable to fetch rate data");
-
-    const { withdrawalMax, withdrawalMin, withdrawalRate } = data;
-
-    if (!isSameRate(usedRate, withdrawalRate)) {
-      throw new Error("Rate changed. Please refresh.");
+    if (!siteConfig) {
+      logger.error("Unable to fetch site settings");
+      throw new Error("Unable to complete your request");
     }
 
-    if (!isWithinLimit(amount, withdrawalMin, withdrawalMax)) {
-      throw new Error(
-        `Minimum withdrawal: ${withdrawalMin}, Maximum ${withdrawalMax}`,
-      );
+    if (!activeAccountRes.data) {
+      throw new Error("Unable to fetch user accounts");
     }
+
+    const { withdrawalMax, withdrawalMin, withdrawalRate } = rateRes.data;
+
+    assertSiteIsActive(siteConfig);
+    assertDerivWithdrawalEnabled(siteConfig);
+    await assertUserAccountIsActive(userId);
+    await assertCurrencyWithdrawIsAvailable(currency);
+    assertUserCanWithdrawFromAccount(activeAccountRes.data, currency);
+    assertRateIsTheSame(withdrawalRate, usedRate);
+    assertCurrencyisAvailable(rateRes.data, currency);
+    assertWithdrawalAmountWithinSiteLimits(amount, siteConfig);
+    assertWithdrawAmountWithinCurrencyWithdrawLimits(
+      withdrawalMin,
+      withdrawalMax,
+      amount,
+    );
 
     const transactionId = uuidv4();
 
     await setById("transactions", transactionId, {
       transactionId,
       userId,
-      amount: multiplyNumbers(data.withdrawalRate, amount),
+      amount: multiplyNumbers(withdrawalRate, amount),
       status: "pending",
       type: "deriv_withdrawal",
 
@@ -95,6 +126,9 @@ export const createDerivWithdrawalTransaction = async (
         fulfilled: false,
       },
     } satisfies DerivWithdrawal);
+
+    // Autocancel the order after 30 mins of non-payment
+    await scheduleOrderCancellation(transactionId, "Payment timeout", 30 * 60);
 
     return { success: true, data: { transactionId } };
   } catch (error) {
@@ -158,11 +192,23 @@ export const processDerivWithdrawal = async (paymentData: {
     });
 
     if (paymentAgentWithdrawResponse?.paymentagent_withdraw === 1) {
-      await api.deriv.confirmClientWithdraw(transaction.transactionId);
+      logger.info(
+        `Deriv withdrawal tx: ${transactionId} successful with ref: ${paymentAgentWithdrawResponse.transaction_id}`,
+      );
+
+      await firestoreAdapter.runTransaction(async (tx) => {
+        const transaction = await tx.getTransaction(transactionId);
+        if (!transaction) throw new Error("Transaction not found");
+
+        if (transaction.status === "pending") {
+          await tx.updateTransaction(transactionId, { status: "processing" });
+        }
+      });
 
       return { success: true };
     }
-    throw new Error("Payment agent withdrawal failed");
+
+    throw new Error("Payment agent withdrawal failed please try again later");
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
