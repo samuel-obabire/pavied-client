@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { WIDGET_HIDDEN_PREFIXES, WIDGET_HIDDEN_ROUTES } from "@/lib/constants/widget";
+import { WHATSAPP_SUPPORT_LINK } from "@/lib/constants/contacts";
 
 export default function WhatsAppWidget() {
   const pathname = usePathname();
@@ -23,7 +24,7 @@ export default function WhatsAppWidget() {
 
   return (
     <Link
-      href="https://wa.me/2348112513899" 
+      href={WHATSAPP_SUPPORT_LINK}
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center transition-transform hover:scale-110"
