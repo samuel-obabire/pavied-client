@@ -60,7 +60,7 @@ const BankAccountCard = ({
         className={cn(
           "group relative overflow-hidden bg-white_dark-black-2 border border-gray-100 dark:border-gray-800 rounded-xl p-4 transition-all duration-500 hover:shadow-md hover:-translate-y-0.5",
           {
-            "ring-2 ring-secondary/30 border-secondary/50 bg-secondary/[0.02] shadow-md":
+            "ring-2 ring-inset ring-secondary/30 border-secondary/50 bg-secondary/[0.02] shadow-md":
               selected,
           }
         )}
