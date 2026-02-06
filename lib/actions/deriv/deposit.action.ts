@@ -16,7 +16,7 @@ import {
   assertCurrencyisAvailable,
   assertDepositAmountWithinCurrencyDepositLimits,
   assertDepositAmountWithinSiteLimits,
-  assertDerivPaymentEnabled,
+  assertDerivDepositEnabled,
   assertRateIsTheSame,
   assertSiteIsActive,
   assertUserAccountIsActive,
@@ -83,7 +83,7 @@ export const createDerivDepositTransaction = async (
     const convertedAmount = divideNumbers(amount, rateRes.data.depositRate);
 
     assertSiteIsActive(siteConfig);
-    assertDerivPaymentEnabled(siteConfig);
+    assertDerivDepositEnabled(siteConfig);
     await assertUserAccountIsActive(userId);
     assertUserCanFundTheAccount(activeAccountRes.data, currency);
     assertCurrencyisAvailable(rateRes.data, currency);

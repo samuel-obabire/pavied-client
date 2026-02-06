@@ -20,7 +20,7 @@ const assertPaymentsNotPaused = (siteConfig: SiteConfig) => {
   }
 };
 
-const assertDerivPaymentEnabled = (siteConfig: SiteConfig) => {
+const assertDerivDepositEnabled = (siteConfig: SiteConfig) => {
   if (!siteConfig.deriv.deposits.enabled) {
     throw new Error("Deriv deposits are currently disabled");
   }
@@ -80,9 +80,65 @@ const assertDepositAmountWithinCurrencyDepositLimits = (
   }
 };
 
+const assertWithdrawalAmountWithinSiteLimits = (
+  amount: number,
+  siteConfig: SiteConfig,
+) => {
+  if (amount > siteConfig.deriv.withdrawals.maxAmount) {
+    throw new Error("Transaction is greater than the max deposit amount");
+  }
+};
+
+const assertWithdrawAmountWithinCurrencyWithdrawLimits = (
+  currencyWithdrawalMin: number,
+  currencyWithdrawalMax: number,
+  amountToFund: number,
+) => {
+  if (
+    amountToFund < currencyWithdrawalMin ||
+    amountToFund > currencyWithdrawalMax
+  ) {
+    throw new Error(
+      `Minimum deposit: ${currencyWithdrawalMin}, Maximum ${currencyWithdrawalMax}`,
+    );
+  }
+};
+
+const assertDerivWithdrawalEnabled = (siteConfig: SiteConfig) => {
+  if (!siteConfig.deriv.withdrawals.enabled) {
+    throw new Error("Deriv withdrawals are currently disabled");
+  }
+};
+
+const assertUserCanWithdrawFromAccount = (
+  userDerivAccounts: DerivAccount[],
+  currencyToWithdraw: string,
+) => {
+  const acc = userDerivAccounts.find(
+    (acc) => acc.currency === currencyToWithdraw,
+  );
+
+  if (!acc || !acc.active)
+    throw new Error(
+      "You cannot withdraw from this account as the account is disabled",
+    );
+};
+
+const assertCurrencyWithdrawIsAvailable = async (
+  currencyToWithdraw: string,
+) => {
+  const agentAccount =
+    await firestoreAdapter.deriv.getAgentAccount(currencyToWithdraw);
+
+  if (!agentAccount || !agentAccount.active)
+    throw new Error(
+      `Deriv withdrawal  is currently not available for ${currencyToWithdraw} at the moment please try again later`,
+    );
+};
+
 export {
   assertCurrencyisAvailable,
-  assertDerivPaymentEnabled,
+  assertDerivDepositEnabled,
   assertUserAccountIsActive,
   assertSiteIsActive,
   assertPaymentsNotPaused,
@@ -90,4 +146,9 @@ export {
   assertDepositAmountWithinSiteLimits,
   assertRateIsTheSame,
   assertDepositAmountWithinCurrencyDepositLimits,
+  assertWithdrawalAmountWithinSiteLimits,
+  assertWithdrawAmountWithinCurrencyWithdrawLimits,
+  assertDerivWithdrawalEnabled,
+  assertUserCanWithdrawFromAccount,
+  assertCurrencyWithdrawIsAvailable,
 };

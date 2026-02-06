@@ -1,3 +1,5 @@
+import type { TransactionFieldMap } from "../actions/types/action";
+
 export interface DbTransaction {
   getBankAccount(
     bankCode: string,
@@ -13,8 +15,8 @@ export interface DbTransaction {
 
   addDerivAccount(derivAccount: DerivAccount, userId: string): Promise<void>;
   getTransaction(transactionId: string): Promise<Transaction | null>;
-  updateTransaction<T extends { [x: string]: any }>(
+  updateTransaction(
     transactionId: string,
-    data: T,
+    data: Partial<TransactionFieldMap>,
   ): Promise<void>;
 }
