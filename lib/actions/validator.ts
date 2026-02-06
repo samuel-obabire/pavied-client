@@ -129,6 +129,7 @@ const assertCurrencyWithdrawIsAvailable = async (
 ) => {
   const agentAccount =
     await firestoreAdapter.deriv.getAgentAccount(currencyToWithdraw);
+  console.log(agentAccount);
 
   if (!agentAccount || !agentAccount.active)
     throw new Error(
