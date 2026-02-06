@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { XCircle, RefreshCw, MessageCircle } from "lucide-react";
+import { XCircle, RefreshCw } from "lucide-react";
 import { ROUTES } from "@/lib/constants/routes";
 import { formatNumber } from "@/lib/utils";
+import { WHATSAPP_SUPPORT_LINK } from "@/lib/constants/contacts";
+import Image from "next/image";
 
 type FailedPaymentProps = {
   transaction: DerivDeposit;
@@ -65,12 +67,18 @@ export default function FailedPayment({ transaction }: FailedPaymentProps) {
             </Link>
 
             <a
-              href="https://wa.me/2348000000000"
+              href={WHATSAPP_SUPPORT_LINK}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-green-500 hover:bg-green-600 text-white font-medium rounded-xl transition-colors shadow-md hover:shadow-lg"
             >
-              <MessageCircle className="w-4 h-4" />
+              <Image
+                src="/assets/whatsapp.png"
+                alt="WhatsApp"
+                width={20}
+                height={20}
+                className="h-5 w-5 object-contain"
+              />
               Contact Support
             </a>
 
