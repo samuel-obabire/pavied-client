@@ -1,9 +1,40 @@
+import { Suspense } from "react";
+import { Loader } from "lucide-react";
 import { redirect } from "next/navigation";
 import DerivWithdrawalVerification from "@/components/DerivWithdrawalVerification";
+import InfoCard from "@/components/InfoCard";
 import NotFound from "@/components/NotFoundPayment";
+import { sendWithdrawEmail } from "@/lib/actions/deriv";
 import { getPaymentTransaction } from "@/lib/actions/payment.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
+
+const Verification = async ({
+  ...props
+}: {
+  transactionId: string;
+  accountId: string;
+  userId: string;
+}) => {
+  const result = await sendWithdrawEmail({
+    userId: props.userId,
+    accountId: props.accountId,
+  });
+
+  if (!result.success) {
+    return (
+      <InfoCard
+        className="py-6 flex flex-center text-lg! text-red-500"
+        message={
+          result.error?.message ??
+          "Unable to complete your withdrawal request. Please try again later"
+        }
+      />
+    );
+  }
+
+  return <DerivWithdrawalVerification {...props} />;
+};
 
 const DerivWithdrawalVerificationPage = async ({
   searchParams,
@@ -27,11 +58,19 @@ const DerivWithdrawalVerificationPage = async ({
   }
 
   return (
-    <DerivWithdrawalVerification
-      transactionId={tx}
-      accountId={data.extra.derivLoginId}
-      userId={user.id}
-    />
+    <Suspense
+      fallback={
+        <div className="flex-center flex mt-6">
+          <Loader className="animate-spin" />
+        </div>
+      }
+    >
+      <Verification
+        accountId={data.extra.derivLoginId}
+        transactionId={tx}
+        userId={user.id}
+      />
+    </Suspense>
   );
 };
 

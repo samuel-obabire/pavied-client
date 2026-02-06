@@ -93,7 +93,7 @@ export const verifyWithdrawEmail = async (data: {
     derivAPI.disconnect();
 
     if (isDerivError(error)) {
-      throw new Error(`${error.code}: ${error.message}`);
+      throw new Error(error.message);
     }
   } finally {
     derivAPI.disconnect();
