@@ -6,7 +6,6 @@ import { SessionProvider } from "next-auth/react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
-import { ENV } from "@/lib/env";
 
 const LatoSans = Lato({
   weight: ["400"],
@@ -20,7 +19,9 @@ const FederoSans = Federo({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(ENV.NEXT_PUBLIC_APP_URL || "https://pavied.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com",
+  ),
   title: {
     default: "Pavied – Fast & Secure Deriv Deposits and Withdrawals",
     template: "%s | Pavied",
@@ -113,8 +114,8 @@ export default function RootLayout({
                   "@context": "https://schema.org",
                   "@type": "Organization",
                   name: "Pavied",
-                  url: ENV.NEXT_PUBLIC_APP_URL || "https://pavied.com",
-                  logo: `${ENV.NEXT_PUBLIC_APP_URL || "https://pavied.com"}/favicon.ico`,
+                  url: process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com",
+                  logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com"}/favicon.ico`,
                   sameAs: [
                     "https://twitter.com/pavied",
                     "https://facebook.com/pavied",

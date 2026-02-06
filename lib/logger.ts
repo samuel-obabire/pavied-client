@@ -1,11 +1,10 @@
 import pino from "pino";
-import { ENV } from "./env";
 
-const isEdge = ENV.NEXT_RUNTIME === "edge";
-const isProduction = ENV.NODE_ENV === "production";
+const isEdge = process.env.NEXT_RUNTIME === "edge";
+const isProduction = process.env.NODE_ENV === "production";
 
 const logger = pino({
-  level: ENV.LOG_LEVEL,
+  level: process.env.LOG_LEVEL || "info",
   transport:
     !isEdge && !isProduction
       ? {

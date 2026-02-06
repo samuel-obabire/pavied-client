@@ -5,14 +5,13 @@ import "server-only";
 import { after } from "next/server";
 import { api } from "../api";
 import { ROUTES } from "../constants/routes";
-import { ENV } from "../env";
 import { bucket } from "../firebase/firebase.config";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
 import logger from "../logger";
 import { verifySession } from "../server";
-import { publishToQStash } from "../utils";
+import { publishToQStash } from "../utils/qstash";
 import { UploadPaymentRecieptSchema } from "../validation";
 import type { TransactionQueryParams } from "./types/action";
 
@@ -122,7 +121,7 @@ export const uploadPaymentReciept = async (
       if (!result.success) {
         // retry confirmation using qStash
         await publishToQStash({
-          url: `${ENV.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
+          url: `${process.env.NEXT_PUBLIC_URL}/${ROUTES.VERIFY_DERIV_DEPOSIT}`,
           delay: 15, // 15 seconds
           body: {
             transactionId: paymentId,

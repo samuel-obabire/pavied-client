@@ -1,7 +1,6 @@
 import { Client } from "@upstash/qstash";
-import { ENV } from "../env";
 
-const client = new Client({ token: ENV.QSTASH_TOKEN });
+const client = new Client({ token: process.env.QSTASH_TOKEN! });
 
 type PublishOptions = {
   url: string;
@@ -25,7 +24,7 @@ export const scheduleOrderCancellation = async (
   delayInSeconds: number = 15 * 60,
 ) => {
   return publishToQStash({
-    url: `${ENV.NEXT_PUBLIC_URL}/api/cancel-order`,
+    url: `${process.env.NEXT_PUBLIC_URL}/api/cancel-order`,
     body: { transactionId, reason },
     delay: delayInSeconds,
   });
