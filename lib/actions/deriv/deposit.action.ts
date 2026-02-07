@@ -110,7 +110,7 @@ export const createDerivDepositTransaction = async (
     const assignedAccount = assignDepositBankAccount({
       adminAcc: adminActiveBankAccounts,
       clientBankCode: paidFromBankCode,
-      clientTotalTransactions: 0,
+      clientTotalTransactions: userStats.totalDeposits,
       nairaAmountToFund: amount,
     });
 
