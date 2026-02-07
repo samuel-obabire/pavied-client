@@ -22,6 +22,7 @@ import {
   assertUserAccountIsActive,
   assertUserCanFundTheAccount,
 } from "../validator";
+import { assignDepositBankAccount } from "./bankAccountSelector";
 
 export const createDerivDepositTransaction = async (
   derivDepositParams: DerivDepositParams,
@@ -53,15 +54,21 @@ export const createDerivDepositTransaction = async (
   const userId = session?.user.id as string;
 
   try {
-    const [rateRes, activeAccountRes, siteConfig, assignedAccount] =
-      await Promise.all([
-        fetchCachedRate(currency)(),
-        getUserDerivAccounts(userId, {
-          onlyActive: true,
-        }),
-        firestoreAdapter.siteConfig.getSiteConfig(),
-        firestoreAdapter.adminBank.getAdminDefaultBankAccount(),
-      ]);
+    const [
+      rateRes,
+      activeAccountRes,
+      siteConfig,
+      adminActiveBankAccounts,
+      userStats,
+    ] = await Promise.all([
+      fetchCachedRate(currency)(),
+      getUserDerivAccounts(userId, {
+        onlyActive: true,
+      }),
+      firestoreAdapter.siteConfig.getSiteConfig(),
+      firestoreAdapter.adminBank.getAdminActiveBankAccounts(),
+      firestoreAdapter.stats.getUserStats(userId),
+    ]);
 
     if (!rateRes.data)
       throw new Error(rateRes.error?.message || "Unable to fetch rate data");
@@ -75,9 +82,14 @@ export const createDerivDepositTransaction = async (
       throw new Error("Unable to fetch user accounts");
     }
 
-    if (!assignedAccount || !assignedAccount.isActive) {
+    if (!userStats) {
+      logger.warn("unable to find user stats please try later");
+      throw new Error("Unable to complete your request");
+    }
+
+    if (!adminActiveBankAccounts || !adminActiveBankAccounts.length) {
       logger.warn("No account is active for deposit");
-      throw new Error("Unable to complete request");
+      throw new Error("Unable to complete request. Please try again later.");
     }
 
     const convertedAmount = divideNumbers(amount, rateRes.data.depositRate);
@@ -94,6 +106,20 @@ export const createDerivDepositTransaction = async (
       convertedAmount,
     );
     assertRateIsTheSame(rateRes.data.depositRate, usedRate);
+
+    const assignedAccount = assignDepositBankAccount({
+      adminAcc: adminActiveBankAccounts,
+      clientBankCode: paidFromBankCode,
+      clientTotalTransactions: userStats.totalDeposits,
+      nairaAmountToFund: amount,
+    });
+
+    if (!assignedAccount) {
+      logger.error(`Unable to assign bank account for ${userId}`);
+      throw new Error(
+        "Unable to complete your request. Please try again later",
+      );
+    }
 
     const transactionRef = db
       .collection("transactions")

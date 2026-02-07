@@ -1,12 +1,6 @@
 import { DbCollections } from "@/lib/constants/dbCollections";
 import { db } from "../firebase.config";
-import {
-  deleteById,
-  getAll,
-  queryWhere,
-  setById,
-  updateByid,
-} from "../firestore";
+import { deleteById, queryWhere, setById, updateByid } from "../firestore";
 
 export const adminBankFirestore = {
   addAdminBankAccount: async (
@@ -18,8 +12,13 @@ export const adminBankFirestore = {
       bankAccount,
     );
   },
-  getAdminBankAccounts: async () => {
-    return await getAll<AdminBankAccount>(DbCollections.ADMIN_BANK_ACCOUNTS);
+  getAdminActiveBankAccounts: async () => {
+    return await queryWhere<AdminBankAccount>(
+      DbCollections.ADMIN_BANK_ACCOUNTS,
+      "isActive",
+      "==",
+      true,
+    );
   },
   updateAdminBankAccount: async (
     bankAccountId: string,
