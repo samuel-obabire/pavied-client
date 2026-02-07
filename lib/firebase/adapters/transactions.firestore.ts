@@ -29,7 +29,7 @@ export const transactionsFirestore = {
       .limit(perPage)
       .withConverter(dateConverter);
 
-    if (page > 1) q = q.offset(page * perPage);
+    if (page > 1) q = q.offset((page - 1) * perPage);
     if (startDate) q = q.where("createdAt", ">=", new Date(startDate));
     if (endDate) q = q.where("createdAt", "<=", new Date(endDate));
     if (status) q = q.where("status", "==", status);

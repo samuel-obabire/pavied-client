@@ -16,8 +16,10 @@ const options = {
 
 const MobileTransactionList = ({
   transactions,
+  infiniteScrollEnabled = false,
 }: {
   transactions: Transaction[];
+  infiniteScrollEnabled?: boolean;
 }) => {
   const [updatedTransactions, setUpdatedTransactions] =
     useState<Transaction[]>(transactions);
@@ -68,7 +70,7 @@ const MobileTransactionList = ({
         return (
           <div
             key={`mobile-${transaction.transactionId}`}
-            ref={isLast ? trackingRef : null}
+            ref={infiniteScrollEnabled && isLast ? trackingRef : null}
           >
             <TransactionCard transaction={transaction} />
             {!isLast && <Divider className="my-4" />}
