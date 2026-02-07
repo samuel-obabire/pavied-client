@@ -1,4 +1,5 @@
 import type { TransactionQueryParams } from "@/lib/actions/types/action";
+import { PER_PAGE } from "@/lib/constants";
 import { DbCollections } from "@/lib/constants/dbCollections";
 import { db } from "../firebase.config";
 import { getById } from "../firestore";
@@ -12,7 +13,14 @@ export const transactionsFirestore = {
     userId: string,
     query: TransactionQueryParams,
   ) => {
-    const { page = 1, perPage = 10, startDate, endDate, status, type } = query;
+    const {
+      page = 1,
+      perPage = PER_PAGE,
+      startDate,
+      endDate,
+      status,
+      type,
+    } = query;
 
     let q = db
       .collection(DbCollections.TRANSACTIONS)
@@ -21,7 +29,7 @@ export const transactionsFirestore = {
       .limit(perPage)
       .withConverter(dateConverter);
 
-    if (page > 1) q = q.offset((page - 1) * perPage);
+    if (page > 1) q = q.offset(page * perPage);
     if (startDate) q = q.where("createdAt", ">=", new Date(startDate));
     if (endDate) q = q.where("createdAt", "<=", new Date(endDate));
     if (status) q = q.where("status", "==", status);
