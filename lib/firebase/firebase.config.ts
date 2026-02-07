@@ -6,10 +6,12 @@ const serviceAccount = JSON.parse(
   process.env.FIREBASE_SERVICE_ACCOUNT as string,
 );
 
+const storageBucket = process.env.FIREBASE_STORAGE_BUCKET;
+
 if (!getApps().length) {
   initializeApp({
     credential: cert(serviceAccount),
-    storageBucket: "pavied-telegram.firebasestorage.app",
+    storageBucket,
   });
 }
 
