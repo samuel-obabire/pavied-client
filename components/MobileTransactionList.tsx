@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useQueryState } from "nuqs";
 import { useOnInView } from "react-intersection-observer";
 import { getUserTransactions } from "@/lib/actions/payment.action";
+import { PER_PAGE } from "@/lib/constants";
 import Divider from "./Divider";
 import TransactionCard from "./TransactionCard";
 
@@ -15,8 +16,10 @@ const options = {
 
 const MobileTransactionList = ({
   transactions,
+  infiniteScrollEnabled = false,
 }: {
   transactions: Transaction[];
+  infiniteScrollEnabled?: boolean;
 }) => {
   const [updatedTransactions, setUpdatedTransactions] =
     useState<Transaction[]>(transactions);
@@ -31,23 +34,31 @@ const MobileTransactionList = ({
     status: status ?? undefined,
   };
 
+  useEffect(() => {
+    setUpdatedTransactions(transactions);
+  }, [transactions]);
+
   const trackingRef = useOnInView(async (inView) => {
+    if (!inView) return;
+
     try {
-      if (inView && transactions.length && session.status === "authenticated") {
+      if (updatedTransactions.length && session.status === "authenticated") {
         const { success, data } = await getUserTransactions(
           session.data?.user.id as string,
           {
-            page: Math.ceil(transactions.length / 20) + 1,
-            perPage: 20,
+            page: Math.ceil(updatedTransactions.length / PER_PAGE) + 1,
+            perPage: PER_PAGE,
             ...queryOptions,
           },
         );
 
-        if (success && data?.length)
-          setUpdatedTransactions([...updatedTransactions, ...data]);
+        if (success && data?.length) {
+          setUpdatedTransactions((prevTrx) => [...prevTrx, ...data]);
+        }
       }
     } catch (error) {
       console.error(error);
+    } finally {
     }
   }, options);
 
@@ -58,8 +69,8 @@ const MobileTransactionList = ({
 
         return (
           <div
-            key={transaction.transactionId}
-            ref={isLast ? trackingRef : null}
+            key={`mobile-${transaction.transactionId}`}
+            ref={infiniteScrollEnabled && isLast ? trackingRef : null}
           >
             <TransactionCard transaction={transaction} />
             {!isLast && <Divider className="my-4" />}

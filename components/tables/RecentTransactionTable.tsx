@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -8,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRouter } from "next/navigation";
 import { ROUTES } from "@/lib/constants/routes";
 import {
   formatCustomDate,
@@ -53,10 +53,12 @@ const RecentTransactionsTable = ({
 
           return (
             <TableRow
-              key={transaction.transactionId}
+              key={`desktop-${transaction.transactionId}`}
               className="border-accent/10 hover:bg-secondary/10 dark:hover:bg-black-3 cursor-pointer border-b transition-colors"
               onClick={() =>
-                router.push(`${ROUTES.TRANSACTIONS}/${transaction.transactionId}`)
+                router.push(
+                  `${ROUTES.TRANSACTIONS}/${transaction.transactionId}`,
+                )
               }
             >
               <TableCell className="px-4 py-3">{index + 1}</TableCell>

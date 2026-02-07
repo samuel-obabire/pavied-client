@@ -7,18 +7,19 @@ import {
   parseAsTimestamp,
   type SearchParams,
 } from "nuqs/server";
+import TransactionListSkeleton from "@/components/skeletons/TransactionListSkeleton";
 import TransactionList from "@/components/TransactionList";
 import { columns } from "@/components/tables/columns";
 import DataTableSkeleton from "@/components/tables/DataTableSkeleton";
-import TransactionListSkeleton from "@/components/skeletons/TransactionListSkeleton";
 import TransactionTable from "@/components/tables/TransactionTable";
 import { getUserTransactions } from "@/lib/actions/payment.action";
+import { PER_PAGE } from "@/lib/constants";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 
 const transactionsSearchParams = {
   page: parseAsInteger.withDefault(1),
-  perPage: parseAsInteger.withDefault(10),
+  perPage: parseAsInteger.withDefault(PER_PAGE),
   startDate: parseAsTimestamp,
   endDate: parseAsTimestamp,
   type: parseAsString,
