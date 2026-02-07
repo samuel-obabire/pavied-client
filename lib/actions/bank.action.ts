@@ -64,7 +64,7 @@ export const addUserBankAccount = async (
       if (existingBankAccount)
         throw new Error("Account already exist in the database");
 
-      tx.addBankAccount(bankAccount, userId);
+      tx.addBankAccount({ ...bankAccount, active: false }, userId);
     });
   } catch (error) {
     return handleError(error) as ErrorResponse;
