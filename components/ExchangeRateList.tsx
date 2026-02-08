@@ -1,4 +1,5 @@
 import { ArrowDownLeft, ArrowDownRight } from "lucide-react";
+import { formatNumber } from "@/lib/utils";
 import DataRenderer from "./DataRenderer";
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
 
@@ -45,7 +46,7 @@ const ExchangeRateCard = ({ accountRate }: { accountRate: CurrencyConfig }) => {
           <ArrowDownRight className="text-success bg-white_dark-black-2 rounded-full p-1" />
           Deposit Rate:
         </div>
-        ₦ {depositRate}
+        ₦ {formatNumber(depositRate)}
       </div>
 
       <div className="flex gap-4">
@@ -53,7 +54,7 @@ const ExchangeRateCard = ({ accountRate }: { accountRate: CurrencyConfig }) => {
           <ArrowDownLeft className="bg-white_dark-black-2 rounded-full p-1 text-[#A83A34]" />{" "}
           Withdrawal Rate:
         </div>
-        ₦ {withdrawalRate}
+        ₦ {formatNumber(withdrawalRate)}
       </div>
     </div>
   );
