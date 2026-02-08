@@ -115,9 +115,11 @@ export const createDerivDepositTransaction = async (
     });
 
     if (!assignedAccount) {
-      logger.error(`Unable to assign bank account for ${userId}`);
+      logger.error(
+        `Unable to assign bank account for ${userId} ${paidFromBankName} ${paidFromBankCode}`,
+      );
       throw new Error(
-        "Unable to complete your request. Please try again later",
+        "Unable to complete your request. Please select a different bank or try again later",
       );
     }
 
