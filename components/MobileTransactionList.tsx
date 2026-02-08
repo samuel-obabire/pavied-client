@@ -16,7 +16,7 @@ const options = {
 
 const MobileTransactionList = ({
   transactions,
-  infiniteScrollEnabled = false,
+  infiniteScrollEnabled = true,
 }: {
   transactions: Transaction[];
   infiniteScrollEnabled?: boolean;
