@@ -75,9 +75,9 @@ const DerivAccountSelectionList = ({
           successTitle="Account(s) Under Review"
           successMessage={
             <>
-              <p className="text-center">
-                Your account submitted deriv account is currently under review,
-                It will be ready for transaction once we have verified it
+              <p className="text-14-medium text-center text-gray-500">
+                Your Deriv account details have been submitted and are currently under review.
+                You&apos;ll be able to start transacting as soon as the verification is complete.
               </p>
 
               {data?.user.onboardingStep !== "complete" ? (
