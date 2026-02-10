@@ -1,13 +1,12 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { FieldValue, FieldValues } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
 import Select from "react-select";
 import countryList from "react-select-country-list";
-import { z } from "zod";
-
+import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -22,8 +21,7 @@ import "react-phone-number-input/style.css";
 import { updateUser } from "@/lib/actions/user.action";
 import { OnboardingStep } from "@/lib/constants/onboarding";
 import { AccountRegistrationSchema } from "@/lib/validation";
-
-import ActionState, { ActionStateType } from "../ActionState";
+import ActionState, { type ActionStateType } from "../ActionState";
 import CustomFormField, { FormFieldTypes } from "../CustomFormField";
 import SaveOnboardingStep from "../SaveOnboardingStep";
 
@@ -119,21 +117,25 @@ const RegistrationForm = () => {
                   field={field as FieldValue<FieldValues>}
                 >
                   <Select
-                    menuPortalTarget={null}
+                    menuPortalTarget={
+                      typeof document !== "undefined" ? document.body : null
+                    }
                     instanceId="residence-select"
                     classNamePrefix="react-select"
                     options={options}
+                    defaultInputValue=""
                     value={options.find(
-                      (option) => option.value === field.value
+                      (option) => option.value === field.value,
                     )}
                     onChange={(selected) => {
                       return field.onChange(
-                        (selected as { value: string })?.value ?? ""
+                        (selected as { value: string })?.value ?? "",
                       );
                     }}
                     getOptionLabel={(option) => option.label}
                     getOptionValue={(option) => option.value}
                     isClearable
+                    maxMenuHeight={300}
                   />
                 </CustomFormField>
 
