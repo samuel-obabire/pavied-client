@@ -14,11 +14,11 @@ export const nigeriaBanks = [
     code: "999992",
     icon: "/assets/bank-logos/opay.jpg",
   },
-  {
-    name: "PalmPay",
-    code: "999991",
-    icon: "/assets/bank-logos/palmpay.jpg",
-  },
+  // {
+  //   name: "PalmPay",
+  //   code: "999991",
+  //   icon: "/assets/bank-logos/palmpay.jpg",
+  // },
   {
     name: "Access Bank Plc",
     code: "044",
@@ -69,9 +69,9 @@ export const nigeriaBanks = [
     code: "104",
     icon: "/assets/bank-logos/parallex.jpg",
   },
-  {
-    name: "Zenith Bank Plc",
-    code: "057",
-    icon: "/assets/bank-logos/zenith.jpg",
-  },
+  // {
+  //   name: "Zenith Bank Plc",
+  //   code: "057",
+  //   icon: "/assets/bank-logos/zenith.jpg",
+  // },
 ];
