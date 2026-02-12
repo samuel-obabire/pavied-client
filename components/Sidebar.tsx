@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
 } from "@/components/ui/accordion";
 import { sideLinks } from "@/lib/constants/sideLinks";
 import { cn } from "@/lib/utils";
@@ -22,9 +22,7 @@ const Sidebar = () => {
   return (
     <aside className="bg-white_dark-black-1 sticky top-0 left-0 hidden h-screen w-full flex-col border-r border-gray-200 dark:border-gray-800 lg:flex lg:w-[260px]">
       <div className="p-6">
-        <Link href="/">
-          <BrandName />
-        </Link>
+        <BrandName />
       </div>
 
       <div className="flex flex-1 flex-col justify-between px-4 pb-6">

@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const BrandName = () => {
+const BrandName = ({ className }: { className?: string }) => {
   return (
-    <Link href="/">
+    <Link href="/" className={className}>
       <div className="text-32-normal font-federo text-primary dark:text-white">
         <span className="relative left-1">Pa</span>
         <span className="relative inline-block h-10 w-9 ">
@@ -18,7 +18,6 @@ const BrandName = () => {
         <span className="relative right-2">ied</span>
       </div>
     </Link>
-
   );
 };
 

@@ -8,11 +8,11 @@ import { useState } from "react";
 import BrandName from "./BrandName";
 import { Button } from "./ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
 } from "./ui/sheet";
 import { ROUTES } from "@/lib/constants/routes";
 import { cn } from "@/lib/utils";
@@ -30,9 +30,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b border-black-1/5 bg-white/80 backdrop-blur-md dark:border-white/5 dark:bg-black-2/80">
       <div className="max-w-[1300px] mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         {/* Logo */}
-        <Link href="/" className="transition-opacity hover:opacity-90">
-          <BrandName />
-        </Link>
+        <BrandName className="transition-opacity hover:opacity-90" />
 
         {/* Desktop Navigation (Centered) */}
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 md:flex">

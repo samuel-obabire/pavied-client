@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { api } from "./lib/api";
 import {
-  onBoardingRoutes,
-  pathnameToStep,
-  stepToRoute,
+    onBoardingRoutes,
+    pathnameToStep,
+    stepToRoute,
 } from "./lib/constants/onboarding";
 import { ROUTES } from "./lib/constants/routes";
 import logger from "./lib/logger";
@@ -40,7 +40,8 @@ export async function proxy(request: NextRequest) {
   // If user is on the onboarding route
   if (onBoardingRoutes.includes(pathname)) {
     try {
-      const { success, data } = await api.users.getById(user!.id!);
+      if (!user?.id) throw new Error("User ID missing");
+      const { success, data } = await api.users.getById(user.id);
 
       if (!success || !data) {
         throw new Error("User not found in middleware fetch");
@@ -54,7 +55,13 @@ export async function proxy(request: NextRequest) {
       }
     } catch (err) {
       logger.error({ err, pathname }, "Onboarding middleware error");
-      return redirect(ROUTES.HOME);
+      const response = NextResponse.redirect(new URL(ROUTES.SIGN_IN, request.url));
+      // Clear session cookies to force logout if user data is invalid
+      response.cookies.delete("authjs.session-token");
+      response.cookies.delete("__Secure-authjs.session-token");
+      response.cookies.delete("next-auth.session-token");
+      response.cookies.delete("__Secure-next-auth.session-token");
+      return response;
     }
   }
 
