@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FaPhoneAlt, FaEnvelope, FaRegClock, FaDiscord, FaInstagram, FaFacebook, FaTiktok } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { WHATSAPP_SUPPORT_NUMBER } from "@/lib/constants/contacts";
+
 
 const ContactSection = () => {
   return (
@@ -71,15 +73,20 @@ const ContactSection = () => {
 
             <div className="space-y-6">
               {/* Mobile */}
-              <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black-2 shadow-sm">
+              <a 
+                href={`tel:+${WHATSAPP_SUPPORT_NUMBER}`}
+                className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black-2 shadow-sm transition-all hover:border-secondary/50 group"
+              >
                 <div className="size-12 rounded-lg bg-secondary flex items-center justify-center text-white shrink-0">
                   <FaPhoneAlt className="size-5" />
                 </div>
                 <div>
                   <h4 className="text-18-bold text-black-1 dark:text-white">Mobile</h4>
-                  <p className="text-14-regular text-black-1/70 dark:text-white/70">(+234) 912 2342 234</p>
+                  <p className="text-14-regular text-black-1/70 dark:text-white/70">
+                    (+{WHATSAPP_SUPPORT_NUMBER.slice(0, 3)}) {WHATSAPP_SUPPORT_NUMBER.slice(3, 6)} {WHATSAPP_SUPPORT_NUMBER.slice(6, 10)} {WHATSAPP_SUPPORT_NUMBER.slice(10)}
+                  </p>
                 </div>
-              </div>
+              </a>
 
               {/* Availability */}
               <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black-2 shadow-sm">
@@ -93,15 +100,18 @@ const ContactSection = () => {
               </div>
 
               {/* Email */}
-              <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black-2 shadow-sm">
+              <a 
+                href={`mailto:support@pavied.com`}
+                className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black-2 shadow-sm transition-all hover:border-secondary/50 group"
+              >
                 <div className="size-12 rounded-lg bg-secondary flex items-center justify-center text-white shrink-0">
                   <FaEnvelope className="size-5" />
                 </div>
                 <div>
                   <h4 className="text-18-bold text-black-1 dark:text-white">Email</h4>
-                  <p className="text-14-regular text-black-1/70 dark:text-white/70">pavied@ggmail.com</p>
+                  <p className="text-14-regular text-black-1/70 dark:text-white/70">support@pavied.com</p>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
 
