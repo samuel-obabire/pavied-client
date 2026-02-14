@@ -2,7 +2,8 @@
 
 import "server-only";
 import { v4 as uuidv4 } from "uuid";
-import { db } from "@/lib/firebase/firebase.config";
+import prisma from "@/lib/prisma";
+import type { DerivAccount } from "@/prisma/lib/generated/prisma/client";
 import { firestoreAdapter } from "../../firebase/firestore.adapter";
 import action from "../../handlers/action";
 import handleError from "../../handlers/error";
@@ -123,36 +124,36 @@ export const createDerivDepositTransaction = async (
       );
     }
 
-    const transactionRef = db
-      .collection("transactions")
-      .where("status", "in", ["pending", "processing"])
-      .where("type", "==", "deriv_deposit");
+    const transactionId = await prisma.$transaction(async (tx) => {
+      // Check for pending/processing orders for this user
+      const pendingUserOrder = await tx.transaction.findFirst({
+        where: {
+          userId,
+          status: { in: ["PENDING", "PROCESSING"] },
+          type: "DERIV_DEPOSIT",
+        },
+      });
 
-    const userPendingTransactionRef = transactionRef.where(
-      "userId",
-      "==",
-      userId,
-    );
-
-    // Check to prevent users with similar name to have deposit transactions at the same time
-    const duplicateUserPendingTransactionRef = transactionRef.where(
-      "extra.paidFromAccountName",
-      "==",
-      paidFromAccountName,
-    );
-
-    const transactionId = await db.runTransaction(async (t) => {
-      const pendingUserOrder = await t.get(userPendingTransactionRef.limit(1));
-      const similarOrder = await t.get(
-        duplicateUserPendingTransactionRef.limit(1),
-      );
-
-      if (!pendingUserOrder.empty) {
+      if (pendingUserOrder) {
         throw new Error(
           "You have a pending order. Please create a new order when your pending order has expired or completed",
         );
       }
-      if (!similarOrder.empty) {
+
+      // Check to prevent users with similar bank account from having deposit transactions at the same time
+      const similarOrder = await tx.transaction.findFirst({
+        where: {
+          status: { in: ["PENDING", "PROCESSING"] },
+          type: "DERIV_DEPOSIT",
+          derivDepositExtra: {
+            is: {
+              paidFromAccountName,
+            },
+          },
+        },
+      });
+
+      if (similarOrder) {
         throw new Error(
           "Unable to complete your request. Please try again in few minutes",
         );
@@ -160,37 +161,36 @@ export const createDerivDepositTransaction = async (
 
       const txId = uuidv4();
 
-      const transactionsRef = db.collection("transactions").doc(txId);
+      const transaction = await tx.transaction.create({
+        data: {
+          transactionId: txId,
+          amount,
+          status: "PENDING",
+          type: "DERIV_DEPOSIT",
+          fulfillmentFulfilled: false,
+          derivDepositExtra: {
+            create: {
+              currency,
+              amount: convertedAmount,
+              derivLoginId,
+              paidFromBankName,
+              paidFromBankCode,
+              paidFromAccountNumber,
+              paidFromAccountName,
+              assignedBankId: assignedAccount.id,
+              assignedBankName: assignedAccount.bankName,
+              assignedBankAccountName: assignedAccount.accountName,
+              assignedBankAccountNumber: assignedAccount.accountNumber,
+            },
+          },
+          user: { connect: { id: userId } },
+        },
+        include: {
+          derivDepositExtra: true,
+        },
+      });
 
-      t.set(transactionsRef, {
-        transactionId: txId,
-        userId,
-        amount,
-        status: "pending",
-        type: "deriv_deposit",
-        assignedBank: {
-          bankName: assignedAccount.bankName,
-          accountNumber: assignedAccount.accountNumber,
-          accountName: assignedAccount.accountName,
-          id: assignedAccount.id,
-        },
-        extra: {
-          amount: convertedAmount,
-          currency,
-          derivLoginId,
-          paidFromBankName,
-          paidFromBankCode,
-          paidFromAccountNumber,
-          paidFromAccountName,
-        },
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        fulfillment: {
-          fulfilled: false,
-        },
-      } satisfies DerivDeposit);
-
-      return txId;
+      return transaction.transactionId;
     });
 
     // Automatically cancel order if not paid within 15 mins

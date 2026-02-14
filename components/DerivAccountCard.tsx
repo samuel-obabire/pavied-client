@@ -5,17 +5,18 @@ import Image from "next/image";
 import { removeDerivAccount } from "@/lib/actions/deriv.action";
 import { cn } from "@/lib/utils";
 import { getDerivAccount } from "@/lib/utils/deriv";
+import type { DerivAccount } from "@/prisma/lib/generated/prisma/browser";
 import ActionState, { type ActionStateType } from "./ActionState";
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 
@@ -30,7 +31,7 @@ const DerivAccountCard = ({
   showContext?: boolean;
   showActive?: boolean;
 }) => {
-  const { accountId, currency, dateAdded, active } = derivAccount;
+  const { accountId, currency, active, createdAt } = derivAccount;
   const [actionState, setActionState] = useState<ActionStateType>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -57,17 +58,15 @@ const DerivAccountCard = ({
 
   const AccountCard = () => (
     <div
-      key={`${accountId}_${dateAdded}`}
+      key={`${accountId}_${createdAt}`}
       className={cn(
         "group relative overflow-hidden bg-white_dark-black-2 border border-gray-100 dark:border-gray-800 rounded-xl p-4 transition-all duration-500 hover:shadow-md  hover:-translate-y-0.5 w-full",
         {
           "ring-2 ring-inset ring-secondary/30 border-secondary/50 bg-secondary/[0.02] shadow-md":
             selected,
-        }
+        },
       )}
     >
-      
-
       <div className="flex justify-between items-start mb-4 w-full">
         <div className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50/50 dark:bg-white/5 border border-gray-100/50 dark:border-gray-800/50 shadow-sm group-hover:scale-105 transition-transform duration-500">
@@ -124,7 +123,7 @@ const DerivAccountCard = ({
             Date Added
           </span>
           <span className="text-13-medium text-gray-600 dark:text-gray-300">
-            {dateAdded!.toLocaleDateString("en-US", {
+            {createdAt.toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",

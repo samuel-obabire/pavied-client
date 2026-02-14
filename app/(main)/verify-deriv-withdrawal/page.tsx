@@ -8,6 +8,7 @@ import { sendWithdrawEmail } from "@/lib/actions/deriv";
 import { getPaymentTransaction } from "@/lib/actions/payment.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
+import { transactionIsDerivWithdrawal } from "@/lib/utils";
 
 const Verification = async ({
   ...props
@@ -43,16 +44,18 @@ const DerivWithdrawalVerificationPage = async ({
 }) => {
   const { tx } = await searchParams;
 
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
   if (!user?.id) redirect(ROUTES.SIGN_IN);
 
-  const { success, data } = await getPaymentTransaction(tx);
+  const { data: transaction } = await getPaymentTransaction(tx);
 
   if (
-    !success ||
-    data?.userId !== user.id ||
-    data.type !== "deriv_withdrawal" ||
-    data.status !== "pending"
+    !transaction?.derivWithdrawalExtra ||
+    !transactionIsDerivWithdrawal(transaction) ||
+    transaction.userId !== user.id ||
+    transaction.type !== "DERIV_WITHDRAWAL" ||
+    transaction.status !== "PENDING"
   ) {
     return <NotFound />;
   }
@@ -66,7 +69,7 @@ const DerivWithdrawalVerificationPage = async ({
       }
     >
       <Verification
-        accountId={data.extra.derivLoginId}
+        accountId={transaction.derivWithdrawalExtra.derivLoginId}
         transactionId={tx}
         userId={user.id}
       />

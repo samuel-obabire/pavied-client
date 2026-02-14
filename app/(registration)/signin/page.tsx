@@ -17,7 +17,8 @@ export default async function Signin() {
           </h1>
 
           <p className="text-16-medium text-black-1/60 dark:text-white/60 md:text-18-medium max-w-sm mx-auto">
-            Join thousands of traders using Pavied for fast and secure Deriv transactions.
+            Join thousands of traders using Pavied for fast and secure Deriv
+            transactions.
           </p>
         </header>
 
@@ -34,9 +35,20 @@ export default async function Signin() {
         <footer className="pt-4">
           <p className="text-12-regular text-black-1/50 dark:text-white/50 max-w-xs mx-auto">
             By continuing, you agree to our{" "}
-            <a href="#" className="underline hover:text-primary transition-colors">Terms</a>{" "}
+            <a
+              href="#"
+              className="underline hover:text-primary transition-colors"
+            >
+              Terms
+            </a>{" "}
             and{" "}
-            <a href="#" className="underline hover:text-primary transition-colors">Privacy Policy</a>.
+            <a
+              href="#"
+              className="underline hover:text-primary transition-colors"
+            >
+              Privacy Policy
+            </a>
+            .
           </p>
         </footer>
       </div>

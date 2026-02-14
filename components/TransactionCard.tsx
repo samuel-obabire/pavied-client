@@ -3,14 +3,20 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/lib/constants/routes";
+import type { DecimalToNumber } from "@/lib/prisma-adapters/utils";
 import {
-    formatCustomDate,
-    formatNairaAmount,
-    getTransactionDetailsByType,
+  formatCustomDate,
+  formatNairaAmount,
+  getTransactionDetailsByType,
 } from "@/lib/utils";
+import type { Transaction } from "@/prisma/lib/generated/prisma/browser";
 import StatusBadge from "./StatusBadge";
 
-const TransactionCard = ({ transaction }: { transaction: Transaction }) => {
+const TransactionCard = ({
+  transaction,
+}: {
+  transaction: DecimalToNumber<Transaction>;
+}) => {
   const { icon, label } = getTransactionDetailsByType(transaction);
   const router = useRouter();
 

@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { OnboardingStep } from "./constants/onboarding";
+import { OnboardingStep } from "@/prisma/lib/generated/prisma/enums";
 import { supportedDerivAccountsType } from "./constants/supportedDerivAccountsType";
 
 export const AccountRegistrationSchema = z.object({
-  fullName: z
+  name: z
     .string()
     .min(5, {
       error: "Name is required and must have a minimum of 5 characters",
@@ -13,7 +13,7 @@ export const AccountRegistrationSchema = z.object({
     .string()
     .min(2, { error: "Please select your nationality" }),
   phone: z.string().min(6, { error: "Please enter your phone number" }),
-  whatsApp: z
+  whatsapp: z
     .string()
     .min(6, { error: "Please enter a valid  number" })
     .optional()
@@ -61,7 +61,7 @@ export const bankAccountSchema = {
       .trim(),
     accountNumber: z
       .string()
-      .min(10, { error: "Please provide a valid bank account number" })
+      .length(10, { error: "Please provide a valid bank account number" })
       .trim(),
   }),
 
@@ -72,7 +72,7 @@ export const bankAccountSchema = {
       .min(5, { error: "Please select your bank account name" }),
     accountNumber: z
       .string()
-      .min(10, { error: "Please provide a valid bank account number" }),
+      .length(10, { error: "Please provide a valid bank account number" }),
     bankCode: z
       .string()
       .min(3, { error: "Please provide bank code with min of 3 characters" }),

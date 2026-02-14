@@ -1,11 +1,10 @@
 "use client";
 import { Info } from "lucide-react";
 import CountUp from "react-countup";
-
 import {
-    Tooltip,
-    TooltipTrigger,
-    TooltipContent,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 
 type StatsCardProps = {

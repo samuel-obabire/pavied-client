@@ -2,6 +2,7 @@
 
 import "server-only";
 
+import type { DerivAccount } from "@/prisma/lib/generated/prisma/client";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 

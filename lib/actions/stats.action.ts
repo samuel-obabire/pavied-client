@@ -10,7 +10,8 @@ import { verifySession } from "../server";
 export const getUserStats = async (
   userId: string,
 ): Promise<ActionResponse<UserStats>> => {
-  const loggedInUser = await verifySession();
+  const session = await verifySession();
+  const loggedInUser = session?.user;
 
   try {
     if (!loggedInUser?.id || userId !== loggedInUser.id) {

@@ -10,6 +10,10 @@ import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
 import logger from "../logger";
+import type {
+  BaseTransaction,
+  TransactionWithData,
+} from "../prisma-adapters/types";
 import { verifySession } from "../server";
 import { publishToQStash } from "../utils/qstash";
 import { UploadPaymentRecieptSchema } from "../validation";
@@ -17,8 +21,9 @@ import type { TransactionQueryParams } from "./types/action";
 
 export const getPaymentTransaction = async (
   paymentId: string,
-): Promise<ActionResponse<Transaction>> => {
-  const user = await verifySession();
+): Promise<ActionResponse<TransactionWithData>> => {
+  const session = await verifySession();
+  const user = session?.user;
 
   try {
     if (!paymentId || !user?.id) {
@@ -39,8 +44,9 @@ export const getPaymentTransaction = async (
 export const getUserTransactions = async (
   userId: string,
   query: TransactionQueryParams = {},
-): Promise<ActionResponse<Transaction[]>> => {
-  const user = await verifySession();
+): Promise<ActionResponse<BaseTransaction[]>> => {
+  const session = await verifySession();
+  const user = session?.user;
 
   if (!user?.id || user?.id !== userId) {
     return handleError(
@@ -58,7 +64,7 @@ export const getUserTransactions = async (
   }
 };
 
-const updateTransactionRecieptPath = async (
+const updateDerivDepositTransactionRecieptPath = async (
   paymentId: string,
   recieptPath: string,
 ): Promise<ActionResponse> => {
@@ -71,9 +77,7 @@ const updateTransactionRecieptPath = async (
       const transaction = await tx.getTransaction(paymentId);
       if (!transaction) throw new NotFoundError("Transaction");
 
-      await tx.updateTransaction(paymentId, {
-        "extra.recieptPath": recieptPath,
-      });
+      await tx.updateDerivDepositTransactionRecieptPath(paymentId, recieptPath);
     });
 
     return { success: true };
@@ -85,7 +89,8 @@ const updateTransactionRecieptPath = async (
 export const uploadPaymentReciept = async (
   formData: FormData,
 ): Promise<ActionResponse> => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   try {
     if (!user?.id) throw new UnauthorizedError();
@@ -109,7 +114,7 @@ export const uploadPaymentReciept = async (
       contentType: file.type,
     });
 
-    await updateTransactionRecieptPath(paymentId, fileName);
+    await updateDerivDepositTransactionRecieptPath(paymentId, fileName);
 
     after(async () => {
       logger.info(

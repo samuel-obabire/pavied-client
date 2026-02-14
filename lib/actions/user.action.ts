@@ -2,6 +2,9 @@
 
 import "server-only";
 
+import type z from "zod";
+import type { User } from "@/prisma/lib/generated/prisma/client";
+import type { UserUpdateInput } from "@/prisma/lib/generated/prisma/models";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
@@ -10,7 +13,7 @@ import { verifySession } from "../server";
 import { AccountRegistrationSchema } from "../validation";
 
 export const updateUser = async (
-  userData: Partial<User>,
+  userData: z.infer<typeof AccountRegistrationSchema>,
 ): Promise<ActionResponse> => {
   const result = await action({
     params: userData,
@@ -29,9 +32,7 @@ export const updateUser = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await firestoreAdapter.user.updateUserById(userId, {
-      ...user,
-    });
+    await firestoreAdapter.user.updateUserById(userId, user as UserUpdateInput);
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -42,10 +43,11 @@ export const updateUser = async (
 export const getUserById = async (
   userId: string,
 ): Promise<ActionResponse<User>> => {
-  const loggedInUser = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   try {
-    if (!loggedInUser?.id || userId !== loggedInUser.id) {
+    if (!user?.id || userId !== user.id) {
       throw new UnauthorizedError("Not Authorized");
     }
 

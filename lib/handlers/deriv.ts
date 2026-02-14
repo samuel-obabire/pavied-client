@@ -3,6 +3,7 @@
 import "server-only";
 
 import { DerivAPIClient } from "@deriv-com/api-client";
+import type { DerivAccount } from "@/prisma/lib/generated/prisma/client";
 import type { PaymentAgentWithdrawParams } from "../actions/types/action";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import { isDerivError } from "../utils/deriv";
@@ -123,9 +124,9 @@ export const getDerivAccountToken = async (
   derivLoginId: string,
 ) => {
   const res = await getUserDerivAccountWithTokens(userId);
-  if (!res.success) return null;
+  if (!res.success || !res.data) return null;
 
-  const account = res.data!.find((acc) => acc.accountId === derivLoginId);
+  const account = res.data.find((acc) => acc.accountId === derivLoginId);
   if (!account || !account.token) return null;
 
   return account.token;

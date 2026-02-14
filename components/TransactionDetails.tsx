@@ -1,13 +1,16 @@
-import { notFound } from "next/navigation";
 import { use } from "react";
+import { notFound } from "next/navigation";
 import CopyToClipboard from "@/components/CopyToClipboard";
 import StatusBadge from "@/components/StatusBadge";
 import { Separator } from "@/components/ui/separator";
+import type { TransactionWithData } from "@/lib/prisma-adapters/types";
 import {
+  cn,
   formatDateTime,
   formatNumber,
   getTransactionDetailsByType,
-  cn,
+  transactionIsDerivDeposit,
+  transactionIsDerivWithdrawal,
 } from "@/lib/utils";
 
 const DetailRow = ({
@@ -22,35 +25,48 @@ const DetailRow = ({
   <div
     className={cn(
       "flex w-full items-start justify-between gap-4 py-3 text-sm",
-      className
+      className,
     )}
   >
     <span className="text-gray-500 dark:text-gray-400 shrink-0">{label}</span>
-    <div className="text-right font-medium text-black-1 dark:text-white">{children}</div>
+    <div className="text-right font-medium text-black-1 dark:text-white">
+      {children}
+    </div>
   </div>
 );
 
 const TransactionDetails = ({
   transactionPromise,
 }: {
-  transactionPromise: Promise<Transaction | null>;
+  transactionPromise: Promise<ActionResponse<TransactionWithData>>;
 }) => {
-  const transaction = use(transactionPromise);
+  const { data: transaction } = use(transactionPromise);
 
   if (!transaction) return notFound();
 
-  const { status, amount, transactionId, createdAt, type, extra, fulfillment } =
+  const { status, amount, transactionId, createdAt, fulfillmentFulfilledAt } =
     transaction;
 
   const renderTypeDetails = () => {
-    if (type === "deriv_deposit") {
+    if (
+      transaction.derivDepositExtra &&
+      transactionIsDerivDeposit(transaction)
+    ) {
+      const {
+        paidFromAccountName,
+        paidFromAccountNumber,
+        paidFromBankName,
+        derivLoginId,
+        currency,
+      } = transaction.derivDepositExtra;
+
       return (
         <>
           <DetailRow label="Source of funds">
             <div className="flex flex-col items-end gap-1">
-              <span>{extra.paidFromBankName}</span>
+              <span>{paidFromBankName}</span>
               <span className="text-gray-500 dark:text-gray-400 text-xs">
-                {extra.paidFromAccountNumber} • {extra.paidFromAccountName}
+                {paidFromAccountNumber} • {paidFromAccountName}
               </span>
             </div>
           </DetailRow>
@@ -59,53 +75,64 @@ const TransactionDetails = ({
             <div className="flex flex-col items-end gap-1">
               <span>Deriv account</span>
               <span className="text-gray-500 dark:text-gray-400 text-xs">
-                {extra.derivLoginId} • {extra.currency}
+                {derivLoginId} • {currency}
               </span>
             </div>
           </DetailRow>
 
-          {fulfillment.fulfilledAt && (
+          {fulfillmentFulfilledAt && (
             <DetailRow label="Fulfillment time">
-              {formatDateTime(fulfillment.fulfilledAt)}
+              {formatDateTime(fulfillmentFulfilledAt)}
             </DetailRow>
           )}
 
           <DetailRow label="Received amount">
-            {formatNumber(extra.amount)} {extra.currency}
+            {formatNumber(amount)} {currency}
           </DetailRow>
         </>
       );
     }
 
-    if (type === "deriv_withdrawal") {
+    if (
+      transaction.derivWithdrawalExtra &&
+      transactionIsDerivWithdrawal(transaction)
+    ) {
+      const {
+        amount,
+        currency,
+        derivLoginId,
+        receivingBankAccountNumber,
+        receivingBankName,
+        recievingBankAccountName,
+      } = transaction.derivWithdrawalExtra;
+
       return (
         <>
           <DetailRow label="Source of funds">
             <div className="flex flex-col items-end gap-1">
               <span>Deriv account</span>
               <span className="text-gray-500 dark:text-gray-400 text-xs">
-                {extra.derivLoginId} • {extra.currency}
+                {derivLoginId} • {currency}
               </span>
             </div>
           </DetailRow>
 
           <DetailRow label="Receiver">
             <div className="flex flex-col items-end gap-1">
-              <span>{extra.receivingBankName}</span>
+              <span>{receivingBankName}</span>
               <span className="text-gray-500 dark:text-gray-400 text-xs">
-                {extra.receivingBankAccountNumber} •{" "}
-                {extra.recievingBankAccountName}
+                {receivingBankAccountNumber} • {recievingBankAccountName}
               </span>
             </div>
           </DetailRow>
 
           <DetailRow label="Received amount">
-            {formatNumber(extra.amount)} {extra.currency}
+            {formatNumber(amount)} {currency}
           </DetailRow>
 
-          {fulfillment.fulfilledAt && (
+          {fulfillmentFulfilledAt && (
             <DetailRow label="Fulfillment time">
-              {formatDateTime(fulfillment.fulfilledAt)}
+              {formatDateTime(fulfillmentFulfilledAt)}
             </DetailRow>
           )}
         </>
@@ -142,7 +169,10 @@ const TransactionDetails = ({
         <DetailRow label="Reference ID">
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs">{transactionId}</span>
-            <CopyToClipboard className="size-3.5 text-gray-500" text={transactionId} />
+            <CopyToClipboard
+              className="size-3.5 text-gray-500"
+              text={transactionId}
+            />
           </div>
         </DetailRow>
 

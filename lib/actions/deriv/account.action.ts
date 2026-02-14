@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
+import type { DerivAccount } from "@/prisma/lib/generated/prisma/client";
 import { ROUTES } from "../../constants/routes";
 import { firestoreAdapter } from "../../firebase/firestore.adapter";
 import action from "../../handlers/action";
@@ -17,10 +18,11 @@ export const getUserDerivAccounts = async (
   userId: string,
   { onlyActive }: { onlyActive: boolean } = { onlyActive: false },
 ): Promise<ActionResponse<DerivAccount[]>> => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   try {
-    if (!userId || !user?.id || userId !== user?.id) {
+    if (!userId || !user?.id || userId !== user.id) {
       throw new UnauthorizedError("Not Authorized");
     }
 
@@ -135,7 +137,8 @@ export const removeDerivAccount = async (
 export const setDerivCookie = async (
   searchParams: string,
 ): Promise<ActionResponse> => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   if (!user?.id || !searchParams || typeof searchParams !== "string") {
     return redirect(ROUTES.SIGN_IN);

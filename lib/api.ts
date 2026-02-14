@@ -1,3 +1,4 @@
+import type { User } from "@/prisma/lib/generated/prisma/client";
 import type { FundDerivSuccess } from "./actions/types/action";
 import { fetchHandler } from "./handlers/fetch";
 

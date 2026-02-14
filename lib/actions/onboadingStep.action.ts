@@ -2,17 +2,18 @@
 
 import "server-only";
 
+import type { OnboardingStep } from "@/prisma/lib/generated/prisma/client";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
 import { OnboardingStepSchema } from "../validation";
 
-export const updateOnboardingStep = async (onboardingStep: {
+export const updateOnboardingStep = async (data: {
   onboardingStep: OnboardingStep;
 }): Promise<ActionResponse> => {
   const result = await action({
-    params: onboardingStep,
+    params: data,
     schema: OnboardingStepSchema,
     authorise: true,
   });

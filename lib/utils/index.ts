@@ -1,6 +1,10 @@
 import { type ClassValue, clsx } from "clsx";
 import Decimal from "decimal.js";
 import { twMerge } from "tailwind-merge";
+import type {
+  BaseTransaction,
+  TransactionWithData,
+} from "../prisma-adapters/types";
 import { getDerivTransactionDetails } from "./deriv";
 
 export { publishToQStash, scheduleOrderCancellation } from "./qstash";
@@ -9,7 +13,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const getTransactionDetails = (transaction: Transaction) => {
+const getTransactionDetails = (transaction: BaseTransaction) => {
   const transactionsDetailsType = {
     deriv_deposit: getDerivTransactionDetails,
     deriv_withdrawal: getDerivTransactionDetails,
@@ -25,7 +29,7 @@ const getTransactionDetails = (transaction: Transaction) => {
   return { label: "Generic", icon: "/assets/deriv.png" };
 };
 
-export const getTransactionDetailsByType = (transaction: Transaction) => {
+export const getTransactionDetailsByType = (transaction: BaseTransaction) => {
   const details = getTransactionDetails(transaction);
 
   return details;
@@ -153,4 +157,18 @@ export const isSameRate = (
 export const isWithinLimit = (value: number, min: number, max: number) => {
   if (value < min || value > max) return false;
   return true;
+};
+
+export const transactionIsDerivDeposit = (
+  tx: TransactionWithData,
+): tx is TransactionWithData &
+  NonNullable<TransactionWithData["derivDepositExtra"]> => {
+  return tx.type === "DERIV_DEPOSIT" && tx.derivDepositExtra !== null;
+};
+
+export const transactionIsDerivWithdrawal = (
+  tx: TransactionWithData,
+): tx is TransactionWithData &
+  NonNullable<TransactionWithData["derivWithdrawalExtra"]> => {
+  return tx.type === "DERIV_WITHDRAWAL" && tx.derivWithdrawalExtra !== null;
 };

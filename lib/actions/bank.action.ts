@@ -3,6 +3,7 @@
 import "server-only";
 
 import { revalidatePath } from "next/cache";
+import type { BankAccount } from "@/prisma/lib/generated/prisma/client";
 import { ROUTES } from "../constants/routes";
 import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
@@ -15,7 +16,8 @@ export const getUserBankAccounts = async (
   userId: string,
   { onlyActive }: { onlyActive: boolean } = { onlyActive: false },
 ): Promise<ActionResponse<BankAccount[]>> => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   try {
     if (!userId || !user?.id || userId !== user?.id) {
@@ -64,7 +66,7 @@ export const addUserBankAccount = async (
       if (existingBankAccount)
         throw new Error("Account already exist in the database");
 
-      tx.addBankAccount({ ...bankAccount, active: false }, userId);
+      await tx.addBankAccount({ ...bankAccount }, userId);
     });
   } catch (error) {
     return handleError(error) as ErrorResponse;

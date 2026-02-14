@@ -8,6 +8,7 @@ import {
 import { ROUTES } from "./lib/constants/routes";
 import logger from "./lib/logger";
 import { verifySession } from "./lib/server";
+import type { OnboardingStep } from "./prisma/lib/generated/prisma/enums";
 
 const publicRoutes = [
   ROUTES.HOME,
@@ -22,7 +23,8 @@ const publicRoutes = [
 ];
 
 export async function proxy(request: NextRequest) {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   const pathname = request.nextUrl.pathname;
 
@@ -38,9 +40,9 @@ export async function proxy(request: NextRequest) {
   }
 
   // If user is on the onboarding route
-  if (onBoardingRoutes.includes(pathname)) {
+  if (user && onBoardingRoutes.includes(pathname)) {
     try {
-      const { success, data } = await api.users.getById(user!.id!);
+      const { success, data } = await api.users.getById(user.id);
 
       if (!success || !data) {
         throw new Error("User not found in middleware fetch");
@@ -65,10 +67,10 @@ export async function proxy(request: NextRequest) {
     !publicRoutes.includes(pathname)
   ) {
     if (
-      user?.onboardingStep !== "complete" &&
+      user?.onboardingStep !== ("COMPLETE" as OnboardingStep) &&
       pathname !== ROUTES.CONNECT_DERIV
     ) {
-      return redirect(stepToRoute[user?.onboardingStep ?? "bio"]);
+      return redirect(stepToRoute[user.onboardingStep as OnboardingStep]);
     }
   }
 

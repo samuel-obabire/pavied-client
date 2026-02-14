@@ -1,21 +1,21 @@
-import { adminBankFirestore } from "./adapters/adminBank.firestore";
-import { bankFirestore } from "./adapters/bank.firestore";
-import { derivFirestore } from "./adapters/deriv.firestore";
-import { ratesFirestore } from "./adapters/rates.firestore";
-import { statsFirestore } from "./adapters/stats.firestore";
-import { runFirestoreTransaction } from "./adapters/transactionRunner.firestore";
-import { transactionsFirestore } from "./adapters/transactions.firestore";
-import { usersFirestore } from "./adapters/users.firestore";
-import { siteConfigStore } from "./siteConfig";
+import { adminBankAdapter } from "../prisma-adapters/adminBank.prisma";
+import { bankAdapter } from "../prisma-adapters/bank.prisma";
+import { derivAdapter } from "../prisma-adapters/deriv.prisma";
+import { ratesAdapter } from "../prisma-adapters/rates.prisma";
+import { siteConfigAdapter } from "../prisma-adapters/siteConfig.prisma";
+import { statsAdapter } from "../prisma-adapters/stats.prisma";
+import { runPrismaTransaction } from "../prisma-adapters/transactionRunner.prisma";
+import { transactionsAdapter } from "../prisma-adapters/transactions.prisma";
+import { usersAdapter } from "../prisma-adapters/users.prisma";
 
 export const firestoreAdapter = {
-  user: usersFirestore,
-  stats: statsFirestore,
-  transactions: transactionsFirestore,
-  deriv: derivFirestore,
-  bank: bankFirestore,
-  adminBank: adminBankFirestore,
-  rates: ratesFirestore,
-  siteConfig: siteConfigStore,
-  runTransaction: runFirestoreTransaction,
+  user: usersAdapter,
+  stats: statsAdapter,
+  transactions: transactionsAdapter,
+  deriv: derivAdapter,
+  bank: bankAdapter,
+  adminBank: adminBankAdapter,
+  rates: ratesAdapter,
+  siteConfig: siteConfigAdapter,
+  runTransaction: runPrismaTransaction,
 };

@@ -34,7 +34,8 @@ const AccountList = async ({ userId }: { userId: string }) => {
 };
 
 const DerivSettingsPage = async () => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   if (!user?.id) redirect(ROUTES.HOME);
 

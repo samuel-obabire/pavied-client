@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import TransactionDetails from "@/components/TransactionDetails";
+import { getPaymentTransaction } from "@/lib/actions/payment.action";
 import { ROUTES } from "@/lib/constants/routes";
-import { firestoreAdapter } from "@/lib/firebase/firestore.adapter";
 import { verifySession } from "@/lib/server";
 
 const TransactionDetailsPage = async ({
@@ -10,20 +10,24 @@ const TransactionDetailsPage = async ({
 }: {
   params: Promise<{ paymentId: string }>;
 }) => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
   if (!user?.id) redirect(ROUTES.SIGN_IN);
 
   const { paymentId = "" } = await params;
   if (!paymentId || typeof paymentId !== "string") return notFound();
 
-  const transactionPromise =
-    firestoreAdapter.transactions.getTransactionById(paymentId);
+  const transactionPromise = getPaymentTransaction(paymentId);
 
   return (
     <div className="space-y-6 px-4">
       <h1 className="text-16-medium">Transaction details</h1>
 
-      <Suspense fallback={<div className="h-[30rem] w-full animate-pulse rounded-3xl bg-gray-200 dark:bg-gray-800 max-w-[550px] mx-auto" />}>
+      <Suspense
+        fallback={
+          <div className="h-[30rem] w-full animate-pulse rounded-3xl bg-gray-200 dark:bg-gray-800 max-w-[550px] mx-auto" />
+        }
+      >
         <TransactionDetails transactionPromise={transactionPromise} />
       </Suspense>
     </div>
