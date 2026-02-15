@@ -7,10 +7,10 @@ import { redirect } from "next/navigation";
 import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
 import type { DerivAccount } from "@/prisma/lib/generated/prisma/client";
 import { ROUTES } from "../../constants/routes";
-import { firestoreAdapter } from "../../firebase/firestore.adapter";
 import action from "../../handlers/action";
 import handleError from "../../handlers/error";
 import { UnauthorizedError } from "../../http-errors";
+import { prismaAdapter } from "../../prisma-adapters/prisma.adapter";
 import { verifySession } from "../../server";
 import { DerivAccountLinkSchema, DerivAccountSchema } from "../../validation";
 
@@ -26,12 +26,9 @@ export const getUserDerivAccounts = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const derivAccounts = await firestoreAdapter.deriv.getDerivAccounts(
-      userId,
-      {
-        onlyActive,
-      },
-    );
+    const derivAccounts = await prismaAdapter.deriv.getDerivAccounts(userId, {
+      onlyActive,
+    });
 
     return { success: true, data: derivAccounts };
   } catch (error) {
@@ -65,33 +62,10 @@ export const addDerivAccounts = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await firestoreAdapter.runTransaction(async (tx) => {
-      // First, perform all reads for accounts to satisfy Firestore
-      // requirement that reads must complete before any writes in a transaction.
-      const reads: Array<{
-        account: (typeof encryptedAccounts)[number];
-        existingAccount: any;
-      }> = [];
-
-      for (const account of encryptedAccounts) {
-        const existingAccount = await tx.getDerivAccount(account);
-        reads.push({ account, existingAccount });
-      }
-
-      // Validate reads
-      for (const { account, existingAccount } of reads) {
-        if (existingAccount && existingAccount.userId !== userId) {
-          throw new Error(
-            `Account ${account.accountId} already exist in database with another user`,
-          );
-        }
-      }
-
-      // Now perform writes
-      for (const account of encryptedAccounts) {
-        await tx.addDerivAccount({ ...account, active: false }, userId);
-      }
-    });
+    await prismaAdapter.derivFlow.syncUserDerivAccounts(
+      userId,
+      encryptedAccounts,
+    );
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -121,7 +95,7 @@ export const removeDerivAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await firestoreAdapter.deriv.removeDerivAccount({
+    await prismaAdapter.deriv.removeDerivAccount({
       ...parsedDerivAccount,
       userId,
     });

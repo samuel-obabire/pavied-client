@@ -58,6 +58,7 @@ const TransactionDetails = ({
         paidFromBankName,
         derivLoginId,
         currency,
+        amount: value,
       } = transaction.derivDepositExtra;
 
       return (
@@ -87,7 +88,7 @@ const TransactionDetails = ({
           )}
 
           <DetailRow label="Received amount">
-            {formatNumber(amount)} {currency}
+            {formatNumber(value)} {currency}
           </DetailRow>
         </>
       );

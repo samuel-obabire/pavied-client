@@ -2,9 +2,9 @@
 
 import "server-only";
 
-import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
 import { verifySession } from "../server";
 
 export const getUserStats = async (
@@ -18,7 +18,7 @@ export const getUserStats = async (
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const stats = await firestoreAdapter.stats.getUserStats(userId);
+    const stats = await prismaAdapter.stats.getUserStats(userId);
 
     if (!stats) throw new NotFoundError("User");
 

@@ -6,10 +6,10 @@ import { after } from "next/server";
 import { api } from "../api";
 import { ROUTES } from "../constants/routes";
 import { bucket } from "../firebase/firebase.config";
-import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
 import logger from "../logger";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
 import type {
   BaseTransaction,
   TransactionWithData,
@@ -31,7 +31,7 @@ export const getPaymentTransaction = async (
     }
 
     const transaction =
-      await firestoreAdapter.transactions.getTransactionById(paymentId);
+      await prismaAdapter.transactions.getTransactionById(paymentId);
 
     if (!transaction) throw new NotFoundError("Transaction");
 
@@ -55,8 +55,10 @@ export const getUserTransactions = async (
   }
 
   try {
-    const transactions =
-      await firestoreAdapter.transactions.getUserTransactions(userId, query);
+    const transactions = await prismaAdapter.transactions.getUserTransactions(
+      userId,
+      query,
+    );
 
     return { success: true, data: transactions };
   } catch (error) {
@@ -73,7 +75,7 @@ const updateDerivDepositTransactionRecieptPath = async (
       throw new Error("Reciept path and payment id is required");
     }
 
-    await firestoreAdapter.runTransaction(async (tx) => {
+    await prismaAdapter.runDbTransaction(async (tx) => {
       const transaction = await tx.getTransaction(paymentId);
       if (!transaction) throw new NotFoundError("Transaction");
 

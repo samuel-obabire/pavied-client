@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ROUTES } from "@/lib/constants/routes";
+import type { BaseTransaction } from "@/lib/prisma-adapters/types";
 import {
   formatCustomDate,
   formatNairaAmount,
@@ -20,7 +21,7 @@ import StatusBadge from "../StatusBadge";
 const RecentTransactionsTable = ({
   transactions,
 }: {
-  transactions: Transaction[];
+  transactions: BaseTransaction[];
 }) => {
   const router = useRouter();
 

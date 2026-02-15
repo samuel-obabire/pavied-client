@@ -4,7 +4,7 @@ import type {
   DerivAccount,
   SiteConfig,
 } from "@/prisma/lib/generated/prisma/client";
-import { firestoreAdapter } from "../firebase/firestore.adapter";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
 import type { DecimalToNumber } from "../prisma-adapters/utils";
 
 export const supportedCurrencies: SupportedCurrencies = [
@@ -33,7 +33,7 @@ const assertDerivDepositEnabled = (siteConfig: SiteConfig) => {
 };
 
 const assertUserAccountIsActive = async (userId: string) => {
-  const user = await firestoreAdapter.user.getUserById(userId);
+  const user = await prismaAdapter.user.getUserById(userId);
 
   if (user?.disabled) {
     throw new Error("User account is disabled");
@@ -134,7 +134,7 @@ const assertCurrencyWithdrawIsAvailable = async (
   currencyToWithdraw: string,
 ) => {
   const agentAccount =
-    await firestoreAdapter.deriv.getAgentAccount(currencyToWithdraw);
+    await prismaAdapter.deriv.getAgentAccount(currencyToWithdraw);
 
   if (!agentAccount || !agentAccount.active)
     throw new Error(

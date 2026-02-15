@@ -8,7 +8,6 @@ export const transactionsAdapter = {
     const transaction = await prisma.transaction.findUnique({
       where: { transactionId },
       include: {
-        // user: { select: { id: true } },
         derivDepositExtra: true,
         derivWithdrawalExtra: true,
       },

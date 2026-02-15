@@ -3,10 +3,10 @@
 import "server-only";
 
 import type { OnboardingStep } from "@/prisma/lib/generated/prisma/client";
-import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
 import { OnboardingStepSchema } from "../validation";
 
 export const updateOnboardingStep = async (data: {
@@ -29,7 +29,7 @@ export const updateOnboardingStep = async (data: {
   try {
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await firestoreAdapter.user.updateUserById(userId, {
+    await prismaAdapter.user.updateUserById(userId, {
       onboardingStep: step.onboardingStep,
     });
   } catch (error) {

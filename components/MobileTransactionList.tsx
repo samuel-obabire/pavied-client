@@ -6,6 +6,7 @@ import { useOnInView } from "react-intersection-observer";
 import { getUserTransactions } from "@/lib/actions/payment.action";
 import { useSession } from "@/lib/auth-client";
 import { PER_PAGE } from "@/lib/constants";
+import type { BaseTransaction } from "@/lib/prisma-adapters/types";
 import Divider from "./Divider";
 import TransactionCard from "./TransactionCard";
 
@@ -18,11 +19,11 @@ const MobileTransactionList = ({
   transactions,
   infiniteScrollEnabled = true,
 }: {
-  transactions: Transaction[];
+  transactions: BaseTransaction[];
   infiniteScrollEnabled?: boolean;
 }) => {
   const [updatedTransactions, setUpdatedTransactions] =
-    useState<Transaction[]>(transactions);
+    useState<BaseTransaction[]>(transactions);
 
   const [type] = useQueryState("type");
   const [status] = useQueryState("status");

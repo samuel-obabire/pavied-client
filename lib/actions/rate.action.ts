@@ -1,7 +1,7 @@
 import { unstable_cache as nextCache } from "next/cache";
 import type { CurrencyRate } from "@/prisma/lib/generated/prisma/client";
-import { firestoreAdapter } from "../firebase/firestore.adapter";
 import handleError from "../handlers/error";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
 import {
   type DecimalToNumber,
   transformDecimals,
@@ -10,7 +10,7 @@ import {
 export const fetchCachedRates = nextCache(
   async (): Promise<ActionResponse<DecimalToNumber<CurrencyRate[]>>> => {
     try {
-      const currencyRates = await firestoreAdapter.rates.getRates();
+      const currencyRates = await prismaAdapter.rates.getRates();
 
       return { success: true, data: transformDecimals(currencyRates) };
     } catch (error) {
@@ -26,7 +26,7 @@ export const fetchCachedRate = (currency: string) =>
     async (): Promise<ActionResponse<DecimalToNumber<CurrencyRate>>> => {
       try {
         const currencyRate =
-          await firestoreAdapter.rates.getRateByCurrency(currency);
+          await prismaAdapter.rates.getRateByCurrency(currency);
 
         if (!currencyRate) throw new Error("Currency config not found");
 

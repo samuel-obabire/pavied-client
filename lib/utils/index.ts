@@ -15,8 +15,8 @@ export function cn(...inputs: ClassValue[]) {
 
 const getTransactionDetails = (transaction: BaseTransaction) => {
   const transactionsDetailsType = {
-    deriv_deposit: getDerivTransactionDetails,
-    deriv_withdrawal: getDerivTransactionDetails,
+    DERIV_DEPOSIT: getDerivTransactionDetails,
+    DERIV_WITHDRAWAL: getDerivTransactionDetails,
   };
 
   const detailsFn =
@@ -65,8 +65,6 @@ export const formatDateTime = (inputDate: Date) => {
   const timeStr = `${hours}:${minutes}`;
 
   const period = date.getHours() >= 12 ? "PM" : "AM";
-
-  // return { date: dateStr, time: timeStr, period };
 
   return `${dateStr} at ${timeStr} ${period}`;
 };
