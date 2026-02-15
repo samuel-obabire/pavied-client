@@ -1,5 +1,4 @@
-import type zod from "zod";
-import { ZodError, type ZodType } from "zod";
+import zod, { ZodError, type ZodType } from "zod";
 import { UnauthorizedError, ValidationError } from "../http-errors";
 import { verifySession } from "../server";
 

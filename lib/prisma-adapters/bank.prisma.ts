@@ -49,7 +49,7 @@ export const bankAdapter = {
     bankCode,
     accountNumber,
     userId,
-  }: Partial<BankAccount>) => {
+  }: Pick<BankAccount, "bankCode" | "accountNumber" | "userId">) => {
     await prisma.bankAccount.deleteMany({
       where: {
         bankCode,

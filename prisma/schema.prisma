@@ -117,7 +117,7 @@ model BankAccount {
 model DerivAccount {
   id        String  @id @default(cuid())
   accountId String  @unique
-  currency  String  @unique
+  currency  String
   active    Boolean @default(false)
   token     String
 

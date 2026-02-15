@@ -2,14 +2,16 @@
 
 import "server-only";
 
+import type { UserStats } from "@/prisma/lib/generated/prisma/client";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
 import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
+import type { DecimalToNumber } from "../prisma-adapters/utils";
 import { verifySession } from "../server";
 
 export const getUserStats = async (
   userId: string,
-): Promise<ActionResponse<UserStats>> => {
+): Promise<ActionResponse<DecimalToNumber<UserStats>>> => {
   const session = await verifySession();
   const loggedInUser = session?.user;
 
@@ -20,7 +22,7 @@ export const getUserStats = async (
 
     const stats = await prismaAdapter.stats.getUserStats(userId);
 
-    if (!stats) throw new NotFoundError("User");
+    if (!stats) throw new NotFoundError("User stats");
 
     return { success: true, data: stats };
   } catch (error) {

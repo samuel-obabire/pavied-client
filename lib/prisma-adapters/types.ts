@@ -1,5 +1,5 @@
 import type { Transaction } from "@/prisma/lib/generated/prisma/browser";
-import type { TransactionGetPayload } from "@/prisma/lib/generated/prisma/models";
+import type { TransactionGetPayload } from "@/prisma/lib/generated/prisma/models/Transaction";
 import type { DecimalToNumber } from "./utils";
 
 export type TransactionWithData = DecimalToNumber<

@@ -95,10 +95,7 @@ export const removeDerivAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await prismaAdapter.deriv.removeDerivAccount({
-      ...parsedDerivAccount,
-      userId,
-    });
+    await prismaAdapter.deriv.removeDerivAccount(parsedDerivAccount.accountId);
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

@@ -1,10 +1,9 @@
 import prisma from "@/lib/prisma";
 
 export const derivAdapter = {
-  removeDerivAccount: async ({ currency, accountId }: DerivAccount) => {
+  removeDerivAccount: async (accountId: string) => {
     await prisma.derivAccount.deleteMany({
       where: {
-        currency,
         accountId,
       },
     });
@@ -21,16 +20,12 @@ export const derivAdapter = {
         userId,
         ...(onlyActive && { active: true }),
       },
+      omit: {
+        ...(!withToken && { token: true }),
+      },
     });
 
-    if (!withToken) {
-      return accounts.map(({ token, ...rest }) => ({
-        ...rest,
-        dateAdded: rest.dateAdded,
-      })) as DerivAccount[];
-    }
-
-    return accounts as DerivAccount[];
+    return accounts;
   },
 
   getAgentAccount: async (currency: string) => {
@@ -38,14 +33,6 @@ export const derivAdapter = {
       where: { currency },
     });
 
-    if (!account) return null;
-
-    return {
-      accountId: account.accountId,
-      currency: account.currency,
-      active: account.active,
-      token: account.token,
-      dateAdded: account.createdAt,
-    } as DerivAccount;
+    return account;
   },
 };

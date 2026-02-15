@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { transformDecimals } from "./utils";
 
 export const statsAdapter = {
   getUserStats: async (userId: string) => {
@@ -6,17 +7,6 @@ export const statsAdapter = {
       where: { userId },
     });
 
-    if (!stats) return null;
-
-    return {
-      userId: stats.userId,
-      totalTransactions: stats.totalTransactions,
-      totalDeposits: Number(stats.totalDeposits),
-      totalWithdrawals: Number(stats.totalWithdrawals),
-      totalSuccessfulTransactions: stats.totalSuccessfulTransactions,
-      totalFailedTransactions: stats.totalFailedTransactions,
-      createdAt: stats.createdAt,
-      updatedAt: stats.updatedAt,
-    } as UserStats;
+    return transformDecimals(stats);
   },
 };
