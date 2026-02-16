@@ -8,7 +8,8 @@ import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 
 const DashboardPage = async () => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   if (!user?.id) redirect(ROUTES.SIGN_IN);
 

@@ -1,7 +1,6 @@
-import * as React from "react";
+import type * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils/index";
 
 const badgeVariants = cva(
@@ -17,16 +16,16 @@ const badgeVariants = cva(
           "bg-destructive [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60 border-transparent text-white",
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-        pending: "text-secondary",
-        processing: "text-secondary",
-        success: "text-[#02A315]",
-        failed: "text-[#E20404]",
+        PENDING: "text-secondary",
+        PROCESSING: "text-secondary",
+        SUCCESS: "text-[#02A315]",
+        FAILED: "text-[#E20404]",
       },
     },
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 function Badge({

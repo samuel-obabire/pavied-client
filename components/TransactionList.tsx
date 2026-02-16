@@ -1,4 +1,5 @@
 import { use } from "react";
+import type { BaseTransaction } from "@/lib/prisma-adapters/types";
 import DataRenderer from "./DataRenderer";
 import MobileTransactionList from "./MobileTransactionList";
 import RecentTransactionsTable from "./tables/RecentTransactionTable";
@@ -6,7 +7,7 @@ import RecentTransactionsTable from "./tables/RecentTransactionTable";
 const TransactionList = ({
   transactionRes,
 }: {
-  transactionRes: Promise<ActionResponse<Transaction[]>>;
+  transactionRes: Promise<ActionResponse<BaseTransaction[]>>;
 }) => {
   const { data, success, error } = use(transactionRes);
 

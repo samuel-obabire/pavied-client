@@ -5,12 +5,13 @@ import DataRenderer from "@/components/DataRenderer";
 import BankAccountRegister from "@/components/forms/BankAccountRegister";
 import SaveOnboardingStep from "@/components/SaveOnboardingStep";
 import { getUserBankAccounts } from "@/lib/actions/bank.action";
-import { OnboardingStep } from "@/lib/constants/onboarding";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
+import { OnboardingStep } from "@/prisma/lib/generated/prisma/enums";
 
 const BankAccountOnboardingPage = async () => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   if (!user?.id) redirect(ROUTES.HOME);
 

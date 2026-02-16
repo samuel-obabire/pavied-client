@@ -2,9 +2,9 @@ import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { NextResponse } from "next/server";
 import { api } from "@/lib/api";
 import { ROUTES } from "@/lib/constants/routes";
-import { firestoreAdapter } from "@/lib/firebase/firestore.adapter";
 import { NotFoundError } from "@/lib/http-errors";
 import logger from "@/lib/logger";
+import { prismaAdapter } from "@/lib/prisma-adapters/prisma.adapter";
 import { publishToQStash } from "@/lib/utils";
 import { redis } from "@/lib/utils/redis";
 
@@ -20,11 +20,11 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
 
   try {
     const transaction =
-      await firestoreAdapter.transactions.getTransactionById(transactionId);
+      await prismaAdapter.transactions.getTransactionById(transactionId);
 
     if (!transaction) throw new NotFoundError(`Transaction ${transactionId}`);
 
-    if (transaction && transaction.status === "pending") {
+    if (transaction && transaction.status === "PENDING") {
       const result = await api.deriv.triggerCompleteDerivDeposit(
         transaction?.transactionId,
       );

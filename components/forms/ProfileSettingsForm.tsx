@@ -1,15 +1,15 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
+import { useSession } from "@/lib/auth-client";
 import "react-phone-number-input/style.css";
+
 import Select from "react-select";
 import countryList from "react-select-country-list";
-import { z } from "zod";
-
+import type { z } from "zod";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,19 +17,21 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel, FormMessage
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { updateUser } from "@/lib/actions/user.action";
 import { AccountRegistrationSchema } from "@/lib/validation";
-import ActionState, { ActionStateType } from "../ActionState";
+import type { User } from "@/prisma/lib/generated/prisma/browser";
+import ActionState, { type ActionStateType } from "../ActionState";
 
 interface ProfileSettingsFormProps {
   user: User;
 }
 
 const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
-  const { data } = useSession();
+  const { data: session } = useSession();
   const [errorMessage, setErrorMessage] = useState("");
   const [actionState, setActionState] = useState<ActionStateType>("idle");
   const options = useMemo(() => countryList().getData(), []);
@@ -37,10 +39,10 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
   const form = useForm<z.infer<typeof AccountRegistrationSchema>>({
     resolver: zodResolver(AccountRegistrationSchema),
     defaultValues: {
-      fullName: user.fullName || "",
+      name: user.name || "",
       countryOfResidence: user.countryOfResidence || "",
       phone: user.phone || "",
-      whatsApp: user.whatsApp || "",
+      whatsapp: user.whatsapp || "",
     },
   });
 
@@ -75,11 +77,11 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
         <Avatar className="h-24 w-24 border border-border">
           <AvatarImage
             className="h-full w-full object-cover"
-            src={data?.user?.image || "https://github.com/shadcn.png"}
-            alt={data?.user?.name || "User"}
+            src={session?.user?.image || "https://github.com/shadcn.png"}
+            alt={session?.user?.name || "User"}
           />
           <AvatarFallback className="flex h-full w-full items-center justify-center bg-accent text-2xl font-bold">
-            {data?.user?.name
+            {session?.user?.name
               ?.split(" ")
               .map((n) => n[0])
               .join("")
@@ -92,7 +94,7 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="fullName"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-16-medium text-black-1_dark-white">
@@ -127,10 +129,12 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
                     options={options}
                     placeholder="Select your nationality"
                     value={options.find(
-                      (option) => option.value === field.value
+                      (option) => option.value === field.value,
                     )}
                     onChange={(selected) => {
-                      field.onChange((selected as { value: string })?.value ?? "");
+                      field.onChange(
+                        (selected as { value: string })?.value ?? "",
+                      );
                     }}
                     getOptionLabel={(option) => option.label}
                     getOptionValue={(option) => option.value}
@@ -165,7 +169,7 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
 
           <FormField
             control={form.control}
-            name="whatsApp"
+            name="whatsapp"
             render={({ field }) => (
               <FormItem className="flex flex-col items-start gap-2">
                 <FormLabel className="text-16-medium text-black-1_dark-white">
@@ -185,7 +189,10 @@ const ProfileSettingsForm = ({ user }: ProfileSettingsFormProps) => {
           />
 
           <div className="pt-4">
-            <Button type="submit" className="btn-primary w-full h-12 text-16-bold">
+            <Button
+              type="submit"
+              className="btn-primary w-full h-12 text-16-bold"
+            >
               Save
             </Button>
           </div>

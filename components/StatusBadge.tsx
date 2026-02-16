@@ -1,10 +1,10 @@
-import { HTMLAttributes, ReactNode } from "react";
-
+import type { HTMLAttributes, ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
+import type { TransactionStatus } from "@/prisma/lib/generated/prisma/enums";
 
 type StatusBadgeProps = {
   children: ReactNode;
-  variant: BaseTransaction["status"];
+  variant: TransactionStatus;
   otherProps?: HTMLAttributes<HTMLSpanElement>;
 };
 

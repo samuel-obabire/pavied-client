@@ -1,13 +1,5 @@
-/* eslint-disable no-unused-vars */
-
+import { OnboardingStep } from "@/prisma/lib/generated/prisma/enums";
 import { ROUTES } from "./routes";
-
-export enum OnboardingStep {
-  REGISTER = "bio",
-  SETUP_DERIV = "deriv",
-  SETUP_BANK = "bank",
-  COMPLETE = "complete",
-}
 
 export const onBoardingRoutes = [
   ROUTES.ONBOARD_BIO,
@@ -16,14 +8,14 @@ export const onBoardingRoutes = [
 ];
 
 export const pathnameToStep: Record<string, OnboardingStep> = {
-  [ROUTES.ONBOARD_BIO]: OnboardingStep.REGISTER,
-  [ROUTES.ONBOARD_DERIV]: OnboardingStep.SETUP_DERIV,
-  [ROUTES.ONBOARD_BANK]: OnboardingStep.SETUP_BANK,
+  [ROUTES.ONBOARD_BIO]: OnboardingStep.BIO,
+  [ROUTES.ONBOARD_DERIV]: OnboardingStep.DERIV,
+  [ROUTES.ONBOARD_BANK]: OnboardingStep.BANK,
 };
 
 export const stepToRoute: Record<OnboardingStep, string> = {
-  [OnboardingStep.REGISTER]: ROUTES.ONBOARD_BIO,
-  [OnboardingStep.SETUP_DERIV]: ROUTES.ONBOARD_DERIV,
-  [OnboardingStep.SETUP_BANK]: ROUTES.ONBOARD_BANK,
+  [OnboardingStep.BIO]: ROUTES.ONBOARD_BIO,
+  [OnboardingStep.DERIV]: ROUTES.ONBOARD_DERIV,
+  [OnboardingStep.BANK]: ROUTES.ONBOARD_BANK,
   [OnboardingStep.COMPLETE]: ROUTES.DASHBOARD,
 };
