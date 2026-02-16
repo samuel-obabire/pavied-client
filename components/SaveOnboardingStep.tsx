@@ -57,8 +57,7 @@ const SaveOnboardingStep = ({
     <div className="flex w-full place-content-center">
       <CustomButton
         isLoading={isLoading}
-        variant="ghost"
-        className={cn("btn-outline !font-normal w-full", buttonClass)}
+        className={cn("btn-secondary w-full", buttonClass)}
         onClick={saveStepAndContinue}
       >
         {label}

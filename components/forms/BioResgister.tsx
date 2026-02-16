@@ -68,7 +68,7 @@ const RegistrationForm = () => {
       <ActionState
         state={actionState}
         pendingTitle="Registering Account"
-        successTitle="Account  successfully updated"
+        successTitle="Account successfully updated"
         errorMessage={errorMessage}
         retryAction={retrySubmit}
         successMessage={

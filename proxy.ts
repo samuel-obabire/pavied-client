@@ -14,6 +14,10 @@ const publicRoutes = [
   ROUTES.HOME,
   ROUTES.HANDLE_DERIV,
   ROUTES.SIGN_IN,
+  ROUTES.SIGN_UP,
+  ROUTES.EMAIL_VERIFICATION,
+  ROUTES.FORGOT_PASSWORD,
+  ROUTES.RESET_PASSWORD,
   ROUTES.CONTACT,
   ROUTES.VERIFY_DERIV_DEPOSIT,
   ROUTES.CANCEL_ORDER,
@@ -56,7 +60,13 @@ export async function proxy(request: NextRequest) {
       }
     } catch (err) {
       logger.error({ err, pathname }, "Onboarding middleware error");
-      return redirect(ROUTES.HOME);
+      const response = NextResponse.redirect(new URL(ROUTES.SIGN_IN, request.url));
+      // Clear session cookies to force logout if user data is invalid
+      response.cookies.delete("authjs.session-token");
+      response.cookies.delete("__Secure-authjs.session-token");
+      response.cookies.delete("next-auth.session-token");
+      response.cookies.delete("__Secure-next-auth.session-token");
+      return response;
     }
   }
 

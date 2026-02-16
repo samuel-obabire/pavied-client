@@ -20,6 +20,63 @@ export const AccountRegistrationSchema = z.object({
     .or(z.literal("")),
 });
 
+export const SignupSchema = z
+  .object({
+    email: z.string().email({ error: "Please enter a valid email address" }),
+    password: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+    confirmPassword: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export const SigninSchema = z.object({
+  email: z.string().email({ error: "Please enter a valid email address" }),
+  password: z
+    .string()
+    .min(1, { error: "Password is required" }),
+});
+
+export const ForgotPasswordSchema = z.object({
+  email: z.string().email({ error: "Please enter a valid email address" }),
+});
+
+export const ResetPasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+    confirmPassword: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export const ChangePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(1, { error: "Current password is required" }),
+    newPassword: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+    confirmPassword: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 export const DerivAccountSchema = {
   // client: z.object({
   //   currency: z

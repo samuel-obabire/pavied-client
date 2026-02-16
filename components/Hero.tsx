@@ -39,7 +39,7 @@ const Hero = () => {
                   asChild 
                   className="btn-secondary w-full lg:w-64 h-14 px-8 rounded-xl shadow-md group"
                 >
-                  <Link href={ROUTES.SIGN_IN} className="flex items-center justify-center gap-2">
+                  <Link href={ROUTES.SIGN_UP} className="flex items-center justify-center gap-2">
                     <span className="text-16-bold">Start Funding in Minutes</span>
                     <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
                   </Link>
@@ -54,7 +54,7 @@ const Hero = () => {
                 </Button>
               </div>
               
-              <p className="mt-4 text-12-regular text-black-1/40 dark:text-white/40 md:text-14-regular">
+              <p className="mt-4 text-14-regular text-black-1/40 dark:text-white/40 md:text-16-regular">
                 Start with as little as $1
               </p>
             </div>
