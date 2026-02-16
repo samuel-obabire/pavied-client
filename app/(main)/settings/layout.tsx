@@ -18,6 +18,10 @@ const sidebarLinks = [
     label: "Deriv account",
     href: ROUTES.SETUP_DERIV,
   },
+  {
+    label: "Password & Security",
+    href: ROUTES.SETTINGS_PASSWORD,
+  },
 ];
 
 const SettingsLayout = ({ children }: { children: React.ReactNode }) => {

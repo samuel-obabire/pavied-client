@@ -8,6 +8,7 @@ export const ROUTES = {
   RESET_PASSWORD: "/reset-password",
   SETTINGS: "/settings",
   SETTINGS_BIO: "/settings/bio",
+  SETTINGS_PASSWORD: "/settings/security/password",
   SETUP_DERIV: "/settings/deriv",
   SETUP_BANK: "/settings/bank",
   DASHBOARD: "/dashboard",

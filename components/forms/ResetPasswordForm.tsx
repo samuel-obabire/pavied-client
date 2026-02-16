@@ -1,90 +1,132 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-    Form, FormField,
+    Form,
+    FormControl,
+    FormField,
     FormItem,
     FormLabel,
-    FormMessage
+    FormMessage,
 } from "@/components/ui/form";
-import CustomFormField, { FormFieldTypes } from "../CustomFormField";
-import { ResetPasswordSchema } from "@/lib/validation";
-import { ROUTES } from "@/lib/constants/routes";
-import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { ChangePasswordSchema } from "@/lib/validation";
+import ActionState, { type ActionStateType } from "../ActionState";
 
 const ResetPasswordForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [actionState, setActionState] = useState<ActionStateType>("idle");
 
-  const form = useForm<z.infer<typeof ResetPasswordSchema>>({
-    resolver: zodResolver(ResetPasswordSchema),
+  const form = useForm<z.infer<typeof ChangePasswordSchema>>({
+    resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
-      password: "",
+      currentPassword: "",
+      newPassword: "",
       confirmPassword: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof ResetPasswordSchema>) {
-    setIsLoading(true);
-    try {
-      // TODO: Implement actual password reset logic here
-      console.log("Reset password values:", values);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Mock delay
-      router.push(ROUTES.SIGN_IN);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+  async function onSubmit(values: z.infer<typeof ChangePasswordSchema>) {
+    // TODO: Implement server action for password change
+    console.log(values);
+    
+    // Simulate API call
+    setActionState("pending");
+    setTimeout(() => {
+        setActionState("success");
+    }, 1000);
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <CustomFormField
-                fieldType={FormFieldTypes.PASSWORD}
-                placeholder="********"
-                field={field as any}
-              />
-              <FormMessage className="form-error" />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <CustomFormField
-                fieldType={FormFieldTypes.PASSWORD}
-                placeholder="********"
-                field={field as any}
-              />
-              <FormMessage className="form-error" />
-            </FormItem>
-          )}
-        />
+    <div className="space-y-8">
+      <ActionState
+        state={actionState}
+        pendingTitle="Updating Password"
+        successTitle="Password successfully updated"
+        errorMessage={errorMessage}
+        retryAction={() => form.handleSubmit(onSubmit)()}
+      />
 
-        <Button
-            className="btn-primary w-full mt-4"
-            type="submit"
-            disabled={isLoading}
-        >
-            {isLoading ? "Resetting Password..." : "Reset Password"}
-        </Button>
-      </form>
-    </Form>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-16-medium text-black-1_dark-white">
+                  Current Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder="Enter current password"
+                    className="inputClass w-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-16-medium text-black-1_dark-white">
+                  New Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder="Enter new password"
+                    className="inputClass w-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-16-medium text-black-1_dark-white">
+                  Confirm New Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    placeholder="Re-enter new password"
+                    className="inputClass w-full"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="pt-4">
+            <Button
+              type="submit"
+              className="btn-primary w-full h-12 text-16-bold"
+            >
+              Update Password
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 };
 
