@@ -1,8 +1,6 @@
-import zod, { ZodError, ZodType } from "zod";
-
-import { auth } from "@/auth";
-
+import zod, { ZodError, type ZodType } from "zod";
 import { UnauthorizedError, ValidationError } from "../http-errors";
+import { verifySession } from "../server";
 
 type ActionProps<T> = {
   params: T;
@@ -30,11 +28,11 @@ const action = async <T>({
     return new Error("Schema validation failed");
   }
 
-  const session = await auth();
+  const session = await verifySession();
 
   if (authorise && !session?.user) {
     return new UnauthorizedError(
-      "Your are not authorized to perform this operation"
+      "Your are not authorized to perform this operation",
     );
   }
 

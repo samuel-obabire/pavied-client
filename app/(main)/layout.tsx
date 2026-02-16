@@ -8,7 +8,8 @@ import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 
 const MainLayout = async ({ children }: { children: ReactNode }) => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   if (!user) redirect(ROUTES.SIGN_IN);
 

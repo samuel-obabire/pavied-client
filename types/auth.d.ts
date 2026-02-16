@@ -1,10 +1,3 @@
-import type { DefaultSession } from "next-auth";
+// Type definitions are handled by better-auth's createAuthClient
+// No module augmentation needed
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id?: string;
-      onboardingStep?: User["onboardingStep"];
-    } & DefaultSession["user"];
-  }
-}

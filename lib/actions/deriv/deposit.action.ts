@@ -2,12 +2,12 @@
 
 import "server-only";
 import { v4 as uuidv4 } from "uuid";
-import { db } from "@/lib/firebase/firebase.config";
-import { firestoreAdapter } from "../../firebase/firestore.adapter";
+import type { DerivAccount } from "@/prisma/lib/generated/prisma/client";
 import action from "../../handlers/action";
 import handleError from "../../handlers/error";
 import { UnauthorizedError } from "../../http-errors";
 import logger from "../../logger";
+import { prismaAdapter } from "../../prisma-adapters/prisma.adapter";
 import { divideNumbers, scheduleOrderCancellation } from "../../utils";
 import { DerivDepositSchema } from "../../validation";
 import { fetchCachedRate } from "../rate.action";
@@ -65,9 +65,9 @@ export const createDerivDepositTransaction = async (
       getUserDerivAccounts(userId, {
         onlyActive: true,
       }),
-      firestoreAdapter.siteConfig.getSiteConfig(),
-      firestoreAdapter.adminBank.getAdminActiveBankAccounts(),
-      firestoreAdapter.stats.getUserStats(userId),
+      prismaAdapter.siteConfig.getSiteConfig(),
+      prismaAdapter.adminBank.getAdminActiveBankAccounts(),
+      prismaAdapter.stats.getUserStats(userId),
     ]);
 
     if (!rateRes.data)
@@ -123,75 +123,23 @@ export const createDerivDepositTransaction = async (
       );
     }
 
-    const transactionRef = db
-      .collection("transactions")
-      .where("status", "in", ["pending", "processing"])
-      .where("type", "==", "deriv_deposit");
-
-    const userPendingTransactionRef = transactionRef.where(
-      "userId",
-      "==",
-      userId,
-    );
-
-    // Check to prevent users with similar name to have deposit transactions at the same time
-    const duplicateUserPendingTransactionRef = transactionRef.where(
-      "extra.paidFromAccountName",
-      "==",
-      paidFromAccountName,
-    );
-
-    const transactionId = await db.runTransaction(async (t) => {
-      const pendingUserOrder = await t.get(userPendingTransactionRef.limit(1));
-      const similarOrder = await t.get(
-        duplicateUserPendingTransactionRef.limit(1),
-      );
-
-      if (!pendingUserOrder.empty) {
-        throw new Error(
-          "You have a pending order. Please create a new order when your pending order has expired or completed",
-        );
-      }
-      if (!similarOrder.empty) {
-        throw new Error(
-          "Unable to complete your request. Please try again in few minutes",
-        );
-      }
-
-      const txId = uuidv4();
-
-      const transactionsRef = db.collection("transactions").doc(txId);
-
-      t.set(transactionsRef, {
-        transactionId: txId,
+    const transactionId =
+      await prismaAdapter.derivFlow.createDerivDepositTransaction({
         userId,
+        transactionId: uuidv4(),
         amount,
-        status: "pending",
-        type: "deriv_deposit",
-        assignedBank: {
-          bankName: assignedAccount.bankName,
-          accountNumber: assignedAccount.accountNumber,
-          accountName: assignedAccount.accountName,
-          id: assignedAccount.id,
-        },
-        extra: {
-          amount: convertedAmount,
-          currency,
-          derivLoginId,
-          paidFromBankName,
-          paidFromBankCode,
-          paidFromAccountNumber,
-          paidFromAccountName,
-        },
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        fulfillment: {
-          fulfilled: false,
-        },
-      } satisfies DerivDeposit);
-
-      return txId;
-    });
+        convertedAmount,
+        currency,
+        derivLoginId,
+        paidFromBankName,
+        paidFromBankCode,
+        paidFromAccountNumber,
+        paidFromAccountName,
+        assignedBankId: assignedAccount.id,
+        assignedBankName: assignedAccount.bankName,
+        assignedBankAccountName: assignedAccount.accountName,
+        assignedBankAccountNumber: assignedAccount.accountNumber,
+      });
 
     // Automatically cancel order if not paid within 15 mins
     await scheduleOrderCancellation(transactionId, "Payment timeout");
@@ -211,12 +159,9 @@ async function getUserDerivAccounts(
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const derivAccounts = await firestoreAdapter.deriv.getDerivAccounts(
-      userId,
-      {
-        onlyActive,
-      },
-    );
+    const derivAccounts = await prismaAdapter.deriv.getDerivAccounts(userId, {
+      onlyActive,
+    });
 
     return { success: true, data: derivAccounts };
   } catch (error) {

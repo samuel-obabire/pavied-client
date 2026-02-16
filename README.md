@@ -1,6 +1,6 @@
 # Pavied Client
 
-A Next.js + TypeScript client for handling payments, onboarding, and Deriv integrations with Firebase-backed storage and a shared backend API.
+A Next.js + TypeScript client for handling payments, onboarding, and Deriv integrations with Prisma-backed data storage and a shared backend API.
 
 ---
 
@@ -30,7 +30,7 @@ The app talks to a shared backend API (via `SHARED_API_URL`) for Deriv-related w
 - Google OAuth sign-in and onboarding
 - Bank account registration and selection
 - Deposit and withdrawal flows with Deriv integration
-- Firebase (Firestore + Storage) for persistent data and uploads
+- Prisma (PostgreSQL) for persistent data and Firebase Storage for uploads
 - Admin/shared API calls secured with a Bearer token
 - Clean UI components and flows (Radix + Tailwind)
 

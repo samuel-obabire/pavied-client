@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { addDerivAccounts } from "@/lib/actions/deriv.action";
+import { useSession } from "@/lib/auth-client";
 import { ROUTES } from "@/lib/constants/routes";
 import { cn } from "@/lib/utils";
+import { OnboardingStep } from "@/prisma/lib/generated/prisma/enums";
 import ActionState, { type ActionStatusProps } from "./ActionState";
 import CustomButton from "./CustomButton";
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
@@ -31,7 +32,7 @@ const DerivAccountSelectionList = ({
   const [actionState, setActionState] =
     useState<ActionStatusProps["state"]>("idle");
 
-  const { data } = useSession();
+  const { data: session } = useSession();
 
   const router = useRouter();
 
@@ -80,15 +81,13 @@ const DerivAccountSelectionList = ({
                 You&apos;ll be able to start transacting as soon as the verification is complete.
               </p>
 
-              {data?.user.onboardingStep !== "complete" ? (
-                <>
-                  <SaveStepFooter
-                    label="Continue to Next Step"
-                    onboardingStep="bank"
-                    nextRoute="ONBOARD_BANK"
-                    buttonClass="btn-secondary"
-                  />
-                </>
+              {session?.user?.onboardingStep !== OnboardingStep.COMPLETE ? (
+                <SaveStepFooter
+                  label="Continue to Next Step"
+                  onboardingStep="BANK"
+                  nextRoute="ONBOARD_BANK"
+                  buttonClass="btn-secondary"
+                />
               ) : (
                 <Button
                   onClick={() => router.push(ROUTES.DASHBOARD)}

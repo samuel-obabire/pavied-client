@@ -1,4 +1,5 @@
 import { supportedDerivAccountsType } from "../constants/supportedDerivAccountsType";
+import type { BaseTransaction } from "../prisma-adapters/types";
 
 type DerivError = {
   code: string;
@@ -20,10 +21,10 @@ export const getDerivAccount = (currency: string) => {
   );
 };
 
-export const getDerivTransactionDetails = (transaction: Transaction) => {
+export const getDerivTransactionDetails = (transaction: BaseTransaction) => {
   return {
     label:
-      transaction.type === "deriv_deposit"
+      transaction.type === "DERIV_DEPOSIT"
         ? "Deriv deposit"
         : "Deriv withdrawal",
     icon: "/assets/deriv.png",

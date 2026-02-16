@@ -4,17 +4,18 @@ import { useState } from "react";
 import Image from "next/image";
 import { removeUserBankAccount } from "@/lib/actions/bank.action";
 import { cn } from "@/lib/utils";
+import type { BankAccount } from "@/prisma/lib/generated/prisma/browser";
 import ActionState, { type ActionStateType } from "./ActionState";
 import BankIcon from "./BankIcon";
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 
@@ -62,10 +63,9 @@ const BankAccountCard = ({
           {
             "ring-2 ring-inset ring-secondary/30 border-secondary/50 bg-secondary/[0.02] shadow-md":
               selected,
-          }
+          },
         )}
       >
-
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50/50 dark:bg-white/5 border border-gray-100/50 dark:border-gray-800/50 shadow-sm group-hover:scale-105 transition-transform duration-500">

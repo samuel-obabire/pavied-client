@@ -1,5 +1,4 @@
-import { ReactNode } from "react";
-
+import type { ReactNode } from "react";
 import BrandName from "@/components/BrandName";
 
 export default function OnboardingLayout({

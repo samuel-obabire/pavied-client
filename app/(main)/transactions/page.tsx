@@ -35,7 +35,8 @@ type PageProps = {
 const TransactionPage = async ({ searchParams }: PageProps) => {
   const query = await loadSearchParams(searchParams);
 
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   if (!user?.id) redirect(ROUTES.SIGN_IN);
 

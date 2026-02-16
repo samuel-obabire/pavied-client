@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Federo, Lato } from "next/font/google";
 import "./globals.css";
 import type { ReactNode } from "react";
-import { SessionProvider } from "next-auth/react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
@@ -98,44 +97,42 @@ export default function RootLayout({
       <body
         className={`${LatoSans.className} ${FederoSans.variable} antialiased`}
       >
-        <SessionProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NuqsAdapter>{children}</NuqsAdapter>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NuqsAdapter>{children}</NuqsAdapter>
 
-            <script
-              type="application/ld+json"
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "Organization",
-                  name: "Pavied",
-                  url: process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com",
-                  logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com"}/favicon.ico`,
-                  sameAs: [
-                    "https://twitter.com/pavied",
-                    "https://facebook.com/pavied",
-                    "https://instagram.com/pavied",
-                  ],
-                  contactPoint: {
-                    "@type": "ContactPoint",
-                    telephone: "+1-234-567-8900",
-                    contactType: "customer service",
-                    areaServed: "Worldwide",
-                    availableLanguage: "English",
-                  },
-                }),
-              }}
-            />
-          </ThemeProvider>
-        </SessionProvider>
+          <script
+            type="application/ld+json"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: schema validation
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                name: "Pavied",
+                url: process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com",
+                logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://pavied.com"}/favicon.ico`,
+                sameAs: [
+                  "https://twitter.com/pavied",
+                  "https://facebook.com/pavied",
+                  "https://instagram.com/pavied",
+                ],
+                contactPoint: {
+                  "@type": "ContactPoint",
+                  telephone: "+1-234-567-8900",
+                  contactType: "customer service",
+                  areaServed: "Worldwide",
+                  availableLanguage: "English",
+                },
+              }),
+            }}
+          />
+        </ThemeProvider>
+
         <WhatsAppWidget />
-
         <Toaster />
       </body>
     </html>

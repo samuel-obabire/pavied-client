@@ -4,13 +4,14 @@ import ConnectDeriv from "@/components/ConnectDeriv";
 import DerivAccountSelectionList from "@/components/DerivAccountSelectionList";
 import SaveOnboardingStep from "@/components/SaveOnboardingStep";
 import { getUserDerivAccounts } from "@/lib/actions/deriv.action";
-import { OnboardingStep } from "@/lib/constants/onboarding";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 import { parseSelectedDerivAccounts } from "@/lib/utils/deriv";
+import { OnboardingStep } from "@/prisma/lib/generated/prisma/enums";
 
 const OnboardDerivPage = async () => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   if (!user?.id) redirect(ROUTES.HOME);
 
@@ -41,7 +42,7 @@ const OnboardDerivPage = async () => {
         <SaveOnboardingStep
           label={data.length ? "Continue" : "Skip, and do it later"}
           nextRoute="ONBOARD_BANK"
-          onboardingStep={OnboardingStep.SETUP_BANK}
+          onboardingStep={OnboardingStep.BANK}
         />
       </section>
     </main>
