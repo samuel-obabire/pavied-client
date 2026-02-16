@@ -1,6 +1,9 @@
+"use client";
+
 /* eslint-disable react/jsx-handler-names */
 
 /* eslint-disable no-unused-vars */
+import { Eye, EyeOff } from "lucide-react";
 import React, { ReactNode } from "react";
 import type { FieldValues, ControllerRenderProps } from "react-hook-form";
 
@@ -12,6 +15,7 @@ export enum FormFieldTypes {
   INPUT = "text",
   SELECT = "select",
   SKELETON = "skeleton",
+  PASSWORD = "password",
 }
 
 type CustomFormFieldProps = {
@@ -38,6 +42,8 @@ const RenderCustomField = ({
   field,
   children,
 }: CustomFormFieldProps) => {
+  const [showPassword, setShowPassword] = React.useState(false);
+
   switch (fieldType) {
     case FormFieldTypes.INPUT:
       return (
@@ -63,6 +69,29 @@ const RenderCustomField = ({
 
     case FormFieldTypes.SKELETON:
       return <>{children}</>;
+
+    case FormFieldTypes.PASSWORD:
+      return (
+        <div className="relative">
+          <Input
+            className="inputClass pr-10"
+            placeholder={placeholder}
+            type={showPassword ? "text" : "password"}
+            {...field}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground outline-none"
+          >
+            {showPassword ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+      );
 
     default: {
       const exhaustiveCheck: never = fieldType;

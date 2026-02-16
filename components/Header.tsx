@@ -56,7 +56,7 @@ const Header = () => {
         {/* Desktop Actions (Right) */}
         <div className="hidden items-center gap-4 md:flex">
           <Link
-            href={ROUTES.SIGN_IN}
+            href={ROUTES.SIGN_UP}
             className="text-16-bold text-black-1/80 transition-colors hover:text-black-1 dark:text-white/80 dark:hover:text-white w-20"
           >
             Sign up
@@ -107,7 +107,7 @@ const Header = () => {
                   variant="outline"
                   className="h-12 border-black-1/10 text-16-bold dark:border-white/10"
                 >
-                  <Link href={ROUTES.SIGN_IN} onClick={() => setIsOpen(false)}>
+                  <Link href={ROUTES.SIGN_UP} onClick={() => setIsOpen(false)}>
                     Sign up
                   </Link>
                 </Button>

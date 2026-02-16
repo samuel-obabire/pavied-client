@@ -45,7 +45,7 @@ const RatesSection = async () => {
               </ul>
 
               <Button asChild className="btn-secondary h-14 px-10 rounded-xl shadow-md group mb-6">
-                <Link href={ROUTES.SIGN_IN} className="flex items-center gap-2">
+                <Link href={ROUTES.SIGN_UP} className="flex items-center gap-2">
                   <span className="text-16-bold">Get started</span>
                   <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
                 </Link>
