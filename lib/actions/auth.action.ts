@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import "server-only";
 
 import { APIError, type User } from "better-auth";
-import { redirect } from "next/navigation";
 import type z from "zod";
 import {
   changePassword,
@@ -50,7 +49,13 @@ export const signInWithEmail = async (
   } catch (error) {
     if (error instanceof APIError) {
       if (error.message === "Email not verified") {
-        redirect(ROUTES.EMAIL_VERIFICATION);
+        return {
+          success: false,
+          error: {
+            message: "Email not verified",
+            code: "EMAIL_NOT_VERIFIED",
+          },
+        };
       }
     }
 

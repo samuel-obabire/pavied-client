@@ -21,7 +21,7 @@ export function VerificationSuccess() {
       return () => clearTimeout(timerId);
     }
 
-    router.push(ROUTES.ONBOARD_BIO);
+    router.push(ROUTES.DASHBOARD);
   }, [countdown, router]);
 
   return (
@@ -44,9 +44,9 @@ export function VerificationSuccess() {
         Redirecting in {countdown}s...
       </p>
 
-      <Link href={ROUTES.ONBOARD_BIO}>
+      <Link href={ROUTES.DASHBOARD}>
         <Button className="btn-primary w-full max-w-xs mx-auto">
-          Continue to Onboarding
+          Continue to Dashboard
         </Button>
       </Link>
     </div>
