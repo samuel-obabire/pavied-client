@@ -37,7 +37,7 @@ export async function proxy(request: NextRequest) {
 
   // Redirect to sign-in if no user and not on a public route
   if (!user?.id && !publicRoutes.includes(pathname)) {
-    const newUrl = new URL(ROUTES.HOME, request.url);
+    const newUrl = new URL(ROUTES.SIGN_IN, request.url);
     newUrl.searchParams.set("callback", pathname);
 
     return NextResponse.redirect(newUrl);
@@ -60,7 +60,9 @@ export async function proxy(request: NextRequest) {
       }
     } catch (err) {
       logger.error({ err, pathname }, "Onboarding middleware error");
-      const response = NextResponse.redirect(new URL(ROUTES.SIGN_IN, request.url));
+      const response = NextResponse.redirect(
+        new URL(ROUTES.SIGN_IN, request.url),
+      );
       // Clear session cookies to force logout if user data is invalid
       response.cookies.delete("authjs.session-token");
       response.cookies.delete("__Secure-authjs.session-token");

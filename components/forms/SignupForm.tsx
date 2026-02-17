@@ -1,18 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useForm } from "react-hook-form";
+import type * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
-    Form, FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import CustomFormField, { FormFieldTypes } from "../CustomFormField";
+import { signUpWithEmail } from "@/lib/actions/signup.action";
 import { SignupSchema } from "@/lib/validation";
+import CustomFormField, { FormFieldTypes } from "../CustomFormField";
 
 const SignupForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +22,7 @@ const SignupForm = () => {
   const form = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -30,8 +33,13 @@ const SignupForm = () => {
     setIsLoading(true);
     try {
       // TODO: Implement actual signup logic here
-      console.log("Signup values:", values);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Mock delay
+
+      const result = await signUpWithEmail(values);
+      if (result.success) {
+        alert(`Success. please verify your email ${result.data?.email}`);
+      } else {
+        alert(result.error?.message);
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -42,6 +50,21 @@ const SignupForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name</FormLabel>
+              <CustomFormField
+                fieldType={FormFieldTypes.INPUT}
+                placeholder="John Doe"
+                field={field as any}
+              />
+              <FormMessage className="form-error" />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -88,11 +111,11 @@ const SignupForm = () => {
           )}
         />
         <Button
-            className="btn-primary w-full"
-            type="submit"
-            disabled={isLoading}
+          className="btn-primary w-full"
+          type="submit"
+          disabled={isLoading}
         >
-            {isLoading ? "Creating Account..." : "Create Account"}
+          {isLoading ? "Creating Account..." : "Create Account"}
         </Button>
       </form>
     </Form>

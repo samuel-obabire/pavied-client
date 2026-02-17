@@ -4,6 +4,7 @@ import {
   PrismaClientRustPanicError,
   PrismaClientValidationError,
 } from "@prisma/client/runtime/client";
+import { APIError } from "better-auth";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { RequestError, ValidationError } from "../http-errors";
@@ -78,6 +79,26 @@ const handleError = (error: unknown, responseType: ResponseType = "server") => {
       error.message,
       error.errors,
     );
+  }
+
+  if (error instanceof APIError) {
+    const statusCode = error.statusCode;
+    const message = error.message;
+
+    logger.error(
+      {
+        err: error,
+        betterAuth: {
+          status: error.status,
+          statusCode,
+          code: error.body?.code,
+          body: error.body,
+        },
+      },
+      `Better Auth API Error (${statusCode})`,
+    );
+
+    return formatResponse(responseType, statusCode, message);
   }
 
   if (error instanceof ZodError) {

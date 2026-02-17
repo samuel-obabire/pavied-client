@@ -20,12 +20,28 @@ export const AccountRegistrationSchema = z.object({
     .or(z.literal("")),
 });
 
+export const StrongPasswordSchema = z
+  .string()
+  .min(8, { error: "Password must be at least 8 characters long" })
+  .regex(/[a-z]/, {
+    error: "Password must include at least one lowercase letter",
+  })
+  .regex(/[A-Z]/, {
+    error: "Password must include at least one uppercase letter",
+  })
+  .regex(/[0-9]/, {
+    error: "Password must include at least one number",
+  })
+  .regex(/^\S+$/, {
+    error: "Password must not contain spaces",
+  });
+
 export const SignupSchema = z
   .object({
-    email: z.string().email({ error: "Please enter a valid email address" }),
-    password: z
-      .string()
-      .min(8, { error: "Password must be at least 8 characters" }),
+    name: z.string().min(2, "Name must be at least 8 characters"),
+    email: z.email({ error: "Please enter a valid email address" }),
+    password: StrongPasswordSchema,
+
     confirmPassword: z
       .string()
       .min(8, { error: "Password must be at least 8 characters" }),
@@ -37,37 +53,39 @@ export const SignupSchema = z
 
 export const SigninSchema = z.object({
   email: z.string().email({ error: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(1, { error: "Password is required" }),
+  password: z.string().min(1, { error: "Password is required" }),
 });
 
 export const ForgotPasswordSchema = z.object({
-  email: z.string().email({ error: "Please enter a valid email address" }),
+  email: z.email({ error: "Please enter a valid email address" }),
+});
+
+export const SendEmailVerification = z.object({
+  email: z.email({ error: "Please enter a valid email address" }),
 });
 
 export const ResetPasswordSchema = z
   .object({
-    password: z
-      .string()
-      .min(8, { error: "Password must be at least 8 characters" }),
+    newPassword: StrongPasswordSchema,
     confirmPassword: z
       .string()
       .min(8, { error: "Password must be at least 8 characters" }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const ResetPasswordSchemaWithToken = ResetPasswordSchema.extend({
+  token: z.string().min(3, { error: "Please provide a valid token" }),
+});
 
 export const ChangePasswordSchema = z
   .object({
     currentPassword: z
       .string()
       .min(1, { error: "Current password is required" }),
-    newPassword: z
-      .string()
-      .min(8, { error: "Password must be at least 8 characters" }),
+    newPassword: StrongPasswordSchema,
     confirmPassword: z
       .string()
       .min(8, { error: "Password must be at least 8 characters" }),
