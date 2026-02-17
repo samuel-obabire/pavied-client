@@ -3,8 +3,8 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import prisma from "@/lib/prisma";
 import {
-  sendEmailVerification,
-  sendPasswordResetVerification,
+    sendEmailVerification,
+    sendPasswordResetVerification,
 } from "./lib/resend";
 import { OnboardingStep } from "./prisma/lib/generated/prisma/enums";
 
@@ -80,7 +80,8 @@ export const auth = betterAuth({
       sendEmailVerification(user.name, url, user.email);
     },
 
-    sendOnSignIn: false, // prevent sending email for each sign in attempt for non verified email
+    sendOnSignIn: false,
+    autoSignInAfterVerification: true,
     expiresIn: 15 * 60,
   },
   emailAndPassword: {

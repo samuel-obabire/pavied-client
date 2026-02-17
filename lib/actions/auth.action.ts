@@ -76,7 +76,7 @@ export const signUpWithEmail = async (
         name,
         password,
         rememberMe: true,
-        callbackURL: ROUTES.EMAIL_VERIFICATION, // route to navigate when user clicks on the verification link
+        callbackURL: ROUTES.EMAIL_VERIFICATION_RESULT,
       },
 
       headers: await headers(),
@@ -104,7 +104,7 @@ export const sendEmailVerification = async (
     await sendVerificationEmail({
       body: {
         email,
-        callbackURL: ROUTES.EMAIL_VERIFICATION, // route to navigate when user clicks on the verification link
+        callbackURL: ROUTES.EMAIL_VERIFICATION_RESULT,
       },
 
       headers: await headers(),

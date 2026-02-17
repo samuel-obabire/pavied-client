@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signInWithEmail } from "@/lib/actions/signin.action";
+import { signInWithEmail } from "@/lib/actions/auth.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { SigninSchema } from "@/lib/validation";
 import CustomFormField, { FormFieldTypes } from "../CustomFormField";
