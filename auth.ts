@@ -1,6 +1,11 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { nextCookies } from "better-auth/next-js";
 import prisma from "@/lib/prisma";
+import {
+  sendEmailVerification,
+  sendPasswordResetVerification,
+} from "./lib/resend";
 import { OnboardingStep } from "./prisma/lib/generated/prisma/enums";
 
 const NEXT_PUBLIC_URL =
@@ -70,6 +75,36 @@ export const auth = betterAuth({
       maxAge: 10 * 60, // Cache duration in seconds (10 minutes)
     },
   },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }, _request) => {
+      sendEmailVerification(user.name, url, user.email);
+    },
+
+    sendOnSignIn: false, // prevent sending email for each sign in attempt for non verified email
+    expiresIn: 15 * 60,
+  },
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true, // require email verification before signin
+
+    sendResetPassword: async ({ user, url }) => {
+      await sendPasswordResetVerification(user.name, url, user.email);
+    },
+
+    resetPasswordTokenExpiresIn: 15 * 60,
+    revokeSessionsOnPasswordReset: true,
+  },
+  plugins: [nextCookies()], // enables cookie setting in client. Make sure this is the last plugin in the array
 });
 
-export type User = typeof auth.$Infer.Session;
+export type User = typeof auth.$Infer.Session.user;
+
+export const {
+  signUpEmail,
+  signInEmail,
+  sendVerificationEmail,
+  changePassword,
+  requestPasswordReset,
+  resetPassword,
+  revokeSessions,
+} = auth.api;

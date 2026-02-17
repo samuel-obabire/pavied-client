@@ -1,23 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import type * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form, FormField,
+  Form,
+  FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
-import CustomFormField, { FormFieldTypes } from "../CustomFormField";
-import { SigninSchema } from "@/lib/validation";
+import { signInWithEmail } from "@/lib/actions/signin.action";
 import { ROUTES } from "@/lib/constants/routes";
+import { SigninSchema } from "@/lib/validation";
+import CustomFormField, { FormFieldTypes } from "../CustomFormField";
 
 const SigninForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof SigninSchema>>({
     resolver: zodResolver(SigninSchema),
@@ -30,9 +35,14 @@ const SigninForm = () => {
   async function onSubmit(values: z.infer<typeof SigninSchema>) {
     setIsLoading(true);
     try {
-      // TODO: Implement actual signin logic here
-      console.log("Signin values:", values);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Mock delay
+      const result = await signInWithEmail(values);
+
+      //Todo: handle error
+      if (result.success) {
+        router.push(ROUTES.DASHBOARD);
+      } else {
+        alert(result.error?.message);
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -73,22 +83,22 @@ const SigninForm = () => {
             </FormItem>
           )}
         />
-        
+
         <div className="flex justify-end">
-            <Link 
-                href={ROUTES.FORGOT_PASSWORD} 
-                className="text-14-regular text-secondary hover:underline"
-            >
-                Forgot Password?
-            </Link>
+          <Link
+            href={ROUTES.FORGOT_PASSWORD}
+            className="text-14-regular text-secondary hover:underline"
+          >
+            Forgot Password?
+          </Link>
         </div>
 
         <Button
-            className="btn-primary w-full"
-            type="submit"
-            disabled={isLoading}
+          className="btn-primary w-full"
+          type="submit"
+          disabled={isLoading}
         >
-            {isLoading ? "Signing In..." : "Sign In"}
+          {isLoading ? "Signing In..." : "Sign In"}
         </Button>
       </form>
     </Form>
