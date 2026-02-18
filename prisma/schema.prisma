@@ -33,6 +33,17 @@ model User {
   @@map("user")
 }
 
+model AdminUser {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  role      AdminRole @default(ADMIN)
+  lastLogin DateTime  @default(now())
+  isActive  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
 model Session {
   id        String   @id
   expiresAt DateTime
@@ -277,4 +288,11 @@ enum OnboardingStep {
   DERIV    @map("deriv")
   BANK     @map("bank")
   COMPLETE @map("complete")
+}
+
+enum AdminRole {
+  ADMIN         @map("admin")
+  PAYMENT_ADMIN @map("payment-admin")
+  ADMIN_MANAGER @map("admin-manager")
+  SUPER_ADMIN   @map("super-admin")
 }

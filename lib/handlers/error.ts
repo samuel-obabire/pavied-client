@@ -85,14 +85,6 @@ const handleError = (error: unknown, responseType: ResponseType = "server") => {
     const statusCode = error.statusCode;
     const message = error.message;
 
-    if (error.body?.code === "INVALID_PASSWORD" || message.toLowerCase().includes("invalid password")) {
-      return formatResponse(
-        responseType,
-        statusCode,
-        "The current password you entered is incorrect. Please check your password and try again."
-      );
-    }
-
     logger.error(
       {
         err: error,
