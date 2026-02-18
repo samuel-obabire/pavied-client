@@ -36,7 +36,8 @@ const SaveOnboardingStep = ({
       }).catch(console.log);
 
       if (onboardingRes?.success) {
-        await refetch();
+        // force fetch session from db
+        await refetch({ query: { disableCookieCache: true } });
 
         const route = ROUTES[nextRoute];
         if (typeof route === "string") {
