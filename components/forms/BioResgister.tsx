@@ -9,13 +9,13 @@ import countryList from "react-select-country-list";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import "react-phone-number-input/style.css";
 import { updateUser } from "@/lib/actions/user.action";
@@ -25,11 +25,11 @@ import ActionState, { type ActionStateType } from "../ActionState";
 import CustomFormField, { FormFieldTypes } from "../CustomFormField";
 import SaveOnboardingStep from "../SaveOnboardingStep";
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ defaultName }: { defaultName?: string }) => {
   const form = useForm<z.infer<typeof AccountRegistrationSchema>>({
     resolver: zodResolver(AccountRegistrationSchema),
     defaultValues: {
-      name: "",
+      name: defaultName || "",
       countryOfResidence: "",
       phone: "",
       whatsapp: "",

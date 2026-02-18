@@ -133,7 +133,7 @@ export default function RootLayout({
         </ThemeProvider>
 
         <WhatsAppWidget />
-        <Toaster />
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   );

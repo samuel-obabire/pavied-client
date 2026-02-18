@@ -1,23 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type * as z from "zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
-import { signUpWithEmail } from "@/lib/actions/signup.action";
+import { signUpWithEmail } from "@/lib/actions/auth.action";
+import { ROUTES } from "@/lib/constants/routes";
 import { SignupSchema } from "@/lib/validation";
 import CustomFormField, { FormFieldTypes } from "../CustomFormField";
 
 const SignupForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof SignupSchema>>({
     resolver: zodResolver(SignupSchema),
@@ -32,16 +36,19 @@ const SignupForm = () => {
   async function onSubmit(values: z.infer<typeof SignupSchema>) {
     setIsLoading(true);
     try {
-      // TODO: Implement actual signup logic here
-
       const result = await signUpWithEmail(values);
+
       if (result.success) {
-        alert(`Success. please verify your email ${result.data?.email}`);
+        toast.success("Account created! Please check your email to verify.");
+        router.push(
+          `${ROUTES.EMAIL_VERIFICATION}?email=${encodeURIComponent(values.email)}`,
+        );
       } else {
-        alert(result.error?.message);
+        toast.error(result.error?.message ?? "Something went wrong");
       }
     } catch (error) {
       console.error(error);
+      toast.error("An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
