@@ -89,7 +89,7 @@ const StepConfirm = ({
 
       {errorMessage && <div className="form-error">{errorMessage}</div>}
 
-      <div className="mt-4 grid grid-cols-2 gap-4">
+      <div className="mt-4 grid grid-cols-2 gap-4 items-center">
         <CustomButton
           type="button"
           disabled={isLoading}

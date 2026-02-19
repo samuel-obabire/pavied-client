@@ -1,3 +1,6 @@
+import { withdrawalErrorFaqs } from "@/lib/constants/faqs";
+import { DerivAccount, BankAccount } from "@/prisma/lib/generated/prisma/client";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@radix-ui/react-accordion";
 import BankAccountCard from "../BankAccountCard";
 import CustomButton from "../CustomButton";
 import DerivAccountCard from "../DerivAccountCard";
@@ -91,7 +94,7 @@ const StepConfirm = ({
 
       {errorMessage && <div className="form-error">{errorMessage}</div>}
 
-      <div className="mt-4 grid grid-cols-2 gap-4">
+      <div className="mt-4 grid grid-cols-2 gap-4 items-center">
         <CustomButton
           type="button"
           disabled={isLoading}
@@ -111,7 +114,34 @@ const StepConfirm = ({
         >
           Continue to payment
         </CustomButton>
+
+        
       </div>
+      {errorMessage && (
+          <div className="mt-6 w-full space-y-2">
+            <h3 className="text-black-1_dark-white px-1">
+              Frequently Asked Questions
+            </h3>
+            <div className="bg-white_dark-black-1 rounded-xl px-4">
+              <Accordion type="single" collapsible className="w-full">
+                {withdrawalErrorFaqs.map((faq, index) => (
+                  <AccordionItem
+                    key={index}
+                    value={`item-${index}`}
+                    className="card-border border-b border-0 last:border-0"
+                  >
+                    <AccordionTrigger className="text-black-1_dark-white hover:no-underline py-3">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-14-regular text-gray-500 dark:text-gray-400 pb-3">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
+        )}
     </div>
   );
 };

@@ -21,7 +21,7 @@ const StepSelectDerivAccount = ({
   return (
     <div className="mt-4 space-y-3">
       <p className="text-12-medium opacity-75">
-        Please select the deriv account you want to fund
+        Please select the deriv account you want to withdraw from
       </p>
 
       <DataRenderer
