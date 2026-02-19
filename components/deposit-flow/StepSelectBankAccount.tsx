@@ -1,5 +1,7 @@
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: ignore noStatic */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: ignore useKeyWithClickEvents */
+import Link from "next/link";
+import { ROUTES } from "@/lib/constants/routes";
 import BankAccountCard from "../BankAccountCard";
 import DataRenderer from "../DataRenderer";
 import { Button } from "../ui/button";
@@ -29,8 +31,13 @@ const StepSelectBankAccount = ({
         error={bankAccountsRes.error}
         empty={{
           title: "No active bank account!",
-          mesage:
+          message:
             "You can only send funds from a bank account we have verified.",
+          action: (
+            <Link href={ROUTES.SETUP_BANK}>
+              <Button>Add new account</Button>
+            </Link>
+          ),
         }}
         render={(bankAccounts) =>
           bankAccounts.map((account) => (

@@ -1,6 +1,8 @@
 /** biome-ignore-all lint/a11y/noStaticElementInteractions: ignore noStatic */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: ignore useKeyWithClickEvents */
 
+import Link from "next/link";
+import { ROUTES } from "@/lib/constants/routes";
 import DataRenderer from "../DataRenderer";
 import DerivAccountCard from "../DerivAccountCard";
 import { Button } from "../ui/button";
@@ -27,7 +29,12 @@ const StepSelectDerivAccount = ({
         success={derivAccountsRes.success}
         empty={{
           title: "No active accounts",
-          mesage: "You can only withdraw from an activated account",
+          message: "You can only withdraw from an activated account",
+          action: (
+            <Link href={ROUTES.SETUP_DERIV}>
+              <Button>Add new account</Button>
+            </Link>
+          ),
         }}
         error={derivAccountsRes.error}
         render={(derivAccounts) =>
