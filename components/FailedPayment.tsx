@@ -1,18 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { XCircle, RefreshCw } from "lucide-react";
 import { ROUTES } from "@/lib/constants/routes";
-import { formatNumber } from "@/lib/utils";
 import { WHATSAPP_SUPPORT_LINK } from "@/lib/constants/contacts";
-import Image from "next/image";
+import type { TransactionWithData } from "@/lib/prisma-adapters/types";
+import { formatNumber } from "@/lib/utils";
 
 type FailedPaymentProps = {
-  transaction: DerivDeposit;
+  transaction: TransactionWithData;
 };
 
 export default function FailedPayment({ transaction }: FailedPaymentProps) {
-  const declineReason = transaction.fulfillment?.note;
+  const declineReason = transaction.fulfillmentNote;
 
   return (
     <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">

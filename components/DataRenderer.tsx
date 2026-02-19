@@ -7,7 +7,8 @@ type Props<T> = {
   };
   empty?: {
     title: string;
-    mesage: string;
+    message: string;
+    action?: React.ReactNode;
   };
   render: (data: T[]) => void;
 };
@@ -31,7 +32,8 @@ const DataRenderer = <T,>({
     return (
       <div className="flex-center flex-col rounded-lg flex w-full 2xl:max-w-[404px] h-[203px] bg-white_dark-black-1">
         <p className="font-medium">{empty?.title || " No record yet!"}</p>
-        {empty?.mesage && <em className="text-12-medium">{empty.mesage}</em>}
+        {empty?.message && <em className="text-12-medium text-center">{empty.message}</em>}
+        {empty?.action && <div className="mt-4">{empty.action}</div>}
       </div>
     );
   }

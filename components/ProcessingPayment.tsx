@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Loader, ShieldCheck } from "lucide-react";
+import type { TransactionWithData } from "@/lib/prisma-adapters/types";
 
 type ProcessingPaymentProps = {
-  transaction: DerivDeposit;
+  transaction: TransactionWithData;
   uploadedAt?: Date;
 };
 

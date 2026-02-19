@@ -166,7 +166,7 @@ export const sendResetPasswordEmailVerification = async (
     await requestPasswordReset({
       body: {
         email,
-        redirectTo: ROUTES.FORGOT_PASSWORD,
+        redirectTo: ROUTES.RESET_PASSWORD,
       },
 
       headers: await headers(),

@@ -49,6 +49,18 @@ const DerivAccountSelectionList = ({
     }
   };
 
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedAccounts(parsedAccounts);
+    } else {
+      setSelectedAccounts([]);
+    }
+  };
+
+  const isAllSelected =
+    parsedAccounts.length > 0 &&
+    selectedAccounts.length === parsedAccounts.length;
+
   const handleSubmit = async () => {
     try {
       setActionState("pending");
@@ -99,6 +111,16 @@ const DerivAccountSelectionList = ({
             </>
           }
         />
+        <div className="bg-white_dark-black-1 flex items-center justify-between px-4 py-3 mb-4 rounded-lg">
+          <Label htmlFor="select-all" className="font-medium">
+            Select All Accounts
+          </Label>
+          <Checkbox
+            id="select-all"
+            checked={isAllSelected}
+            onCheckedChange={(checked) => handleSelectAll(Boolean(checked))}
+          />
+        </div>
         {parsedAccounts.map((account, index) => {
           const checkboxId = `account-${account.accountId}`;
 

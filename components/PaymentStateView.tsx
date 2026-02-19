@@ -2,26 +2,27 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getPaymentTransaction } from "@/lib/actions/payment.action";
+import type { TransactionWithData } from "@/lib/prisma-adapters/types";
 import FailedPayment from "./FailedPayment";
 import MakePayment from "./MakePayment";
 import PaymentSuccess from "./PaymentSuccess";
 import PendingPayment from "./PendingPayment";
 import ProcessingPayment from "./ProcessingPayment";
 
-type Props = { transaction: DerivDeposit };
+type Props = { transaction: TransactionWithData };
 
 function getPaymentStateView(
-  tx: DerivDeposit,
+  tx: TransactionWithData,
   uploadedAt?: Date,
 ): React.ReactNode {
   switch (tx.status) {
-    case "pending":
+    case "PENDING":
       return <PendingPayment transaction={tx} />;
-    case "processing":
+    case "PROCESSING":
       return <ProcessingPayment transaction={tx} uploadedAt={uploadedAt} />;
-    case "failed":
+    case "FAILED":
       return <FailedPayment transaction={tx} />;
-    case "success":
+    case "SUCCESS":
       return <PaymentSuccess transaction={tx} />;
     default: {
       const exhaustiveCheck: never = tx.status;
@@ -39,7 +40,7 @@ const PaymentStateView = ({ transaction }: Props) => {
 
   useEffect(() => {
     if (
-      ["success", "failed"].includes(transaction.status) ||
+      (["SUCCESS", "FAILED"] as string[]).includes(transaction.status) ||
       !recieptUploadSuccess
     )
       return;
@@ -55,14 +56,16 @@ const PaymentStateView = ({ transaction }: Props) => {
         const response = await getPaymentTransaction(transaction.transactionId);
 
         if (response.success && response.data) {
-          const newTx = response.data as DerivDeposit;
+          const newTx = response.data as TransactionWithData;
 
           setUpdatedTransaction((prevTx) => {
             if (prevTx.status === newTx.status) return prevTx;
             return newTx;
           });
 
-          if (["success", "failed"].includes(newTx.status)) {
+          if (
+            (["SUCCESS", "FAILED"] as string[]).includes(newTx.status)
+          ) {
             clearInterval(intervalRef.current!);
           }
         }
@@ -85,8 +88,7 @@ const PaymentStateView = ({ transaction }: Props) => {
   }, []);
 
   const isRecieptUploaded =
-    ("recieptPath" in updatedTransaction.extra &&
-      updatedTransaction.extra.recieptPath) ||
+    !!updatedTransaction.derivDepositExtra?.recieptPath ||
     recieptUploadSuccess;
 
   if (!isRecieptUploaded) {
@@ -98,12 +100,12 @@ const PaymentStateView = ({ transaction }: Props) => {
     );
   }
 
-  // After receipt upload, show ProcessingPayment immediately unless status is success/failed
-  if (["success", "failed"].includes(updatedTransaction.status)) {
+  if (
+    (["SUCCESS", "FAILED"] as string[]).includes(updatedTransaction.status)
+  ) {
     return getPaymentStateView(updatedTransaction, uploadedAt);
   }
 
-  // Receipt uploaded but not yet fully processed - show processing state
   return (
     <ProcessingPayment
       transaction={updatedTransaction}

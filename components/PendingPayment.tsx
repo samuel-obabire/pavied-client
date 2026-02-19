@@ -1,9 +1,10 @@
 "use client";
 
 import { Clock, Loader2 } from "lucide-react";
+import type { TransactionWithData } from "@/lib/prisma-adapters/types";
 
 type PendingPaymentProps = {
-  transaction: DerivDeposit;
+  transaction: TransactionWithData;
 };
 
 export default function PendingPayment({ transaction }: PendingPaymentProps) {

@@ -1,8 +1,6 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+
 import { FaPhoneAlt, FaEnvelope, FaRegClock, FaDiscord, FaInstagram, FaFacebook, FaTiktok } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { WHATSAPP_SUPPORT_NUMBER } from "@/lib/constants/contacts";
@@ -10,130 +8,102 @@ import { WHATSAPP_SUPPORT_NUMBER } from "@/lib/constants/contacts";
 
 const ContactSection = () => {
   return (
-    <section className="py-16 px-4 md:px-6">
-      <div className="text-center mb-12">
-        <h2 className="text-36-bold text-black-1 dark:text-white mb-4">Connect with Our Team</h2>
-        <p className="text-16-regular text-black-1/70 dark:text-white/70 max-w-xl mx-auto">
-          In rare cases of difficulties at any point of using Pavied you can contact us here
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-        {/* Contact Form Card */}
-        <div className="bg-[#F9FAFB] dark:bg-black-1/20 p-8 rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm">
-          <h3 className="text-20-medium text-black-1 dark:text-white mb-8">Get in Touch With Us</h3>
-          
-          <form className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-14-medium text-black-1 dark:text-white">First Name</label>
-                <Input 
-                  placeholder="John Doe" 
-                  className="bg-white dark:bg-black-2 h-12 border-gray-200 dark:border-white/10"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-14-medium text-black-1 dark:text-white">Last Name</label>
-                <Input 
-                  placeholder="John Doe" 
-                  className="bg-white dark:bg-black-2 h-12 border-gray-200 dark:border-white/10"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-14-medium text-black-1 dark:text-white">Email address</label>
-              <Input 
-                type="email"
-                placeholder="Johndoe@gmail.com" 
-                className="bg-white dark:bg-black-2 h-12 border-gray-200 dark:border-white/10"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Textarea 
-                placeholder="Input your statement here" 
-                className="bg-white dark:bg-black-2 min-h-[160px] border-gray-200 dark:border-white/10 resize-none p-4"
-              />
-            </div>
-
-            <Button className="btn-secondary w-full md:w-auto px-8 h-12 text-16-bold">
-              Send Message
-            </Button>
-          </form>
+    <section className="py-20 px-4 md:px-6">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="text-center mb-16 space-y-4">
+          <h2 className="text-36-bold text-black-1 dark:text-white">
+            Get in Touch
+          </h2>
+          <p className="text-16-regular text-black-1/70 dark:text-white/70 max-w-2xl mx-auto">
+            Have questions or need assistance? Our support team is here to help you around the clock. 
+            Reach out to us through any of the channels below.
+          </p>
         </div>
 
-        {/* Contact Info & Socials */}
-        <div className="space-y-12 lg:pl-8">
-          <div>
-            <h3 className="text-36-bold text-black-1 dark:text-white mb-2">Contact Details</h3>
-            <p className="text-16-regular text-black-1/70 dark:text-white/70 mb-8">
-              You can reach us via the following options
-            </p>
-
-            <div className="space-y-6">
-              {/* Mobile */}
-              <a 
-                href={`tel:+${WHATSAPP_SUPPORT_NUMBER}`}
-                className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black-2 shadow-sm transition-all hover:border-secondary/50 group"
-              >
-                <div className="size-12 rounded-lg bg-secondary flex items-center justify-center text-white shrink-0">
-                  <FaPhoneAlt className="size-5" />
-                </div>
-                <div>
-                  <h4 className="text-18-bold text-black-1 dark:text-white">Mobile</h4>
-                  <p className="text-14-regular text-black-1/70 dark:text-white/70">
-                    (+{WHATSAPP_SUPPORT_NUMBER.slice(0, 3)}) {WHATSAPP_SUPPORT_NUMBER.slice(3, 6)} {WHATSAPP_SUPPORT_NUMBER.slice(6, 10)} {WHATSAPP_SUPPORT_NUMBER.slice(10)}
-                  </p>
-                </div>
-              </a>
-
-              {/* Availability */}
-              <div className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black-2 shadow-sm">
-                <div className="size-12 rounded-lg bg-secondary flex items-center justify-center text-white shrink-0">
-                  <FaRegClock className="size-6" />
-                </div>
-                <div>
-                  <h4 className="text-18-bold text-black-1 dark:text-white">Availability</h4>
-                  <p className="text-14-regular text-black-1/70 dark:text-white/70">6am - 6pm Mon - Sat</p>
-                </div>
-              </div>
-
-              {/* Email */}
-              <a 
-                href={`mailto:support@pavied.com`}
-                className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-white/5 bg-white dark:bg-black-2 shadow-sm transition-all hover:border-secondary/50 group"
-              >
-                <div className="size-12 rounded-lg bg-secondary flex items-center justify-center text-white shrink-0">
-                  <FaEnvelope className="size-5" />
-                </div>
-                <div>
-                  <h4 className="text-18-bold text-black-1 dark:text-white">Email</h4>
-                  <p className="text-14-regular text-black-1/70 dark:text-white/70">support@pavied.com</p>
-                </div>
-              </a>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {/* Mobile Card */}
+          <a 
+            href={`tel:+${WHATSAPP_SUPPORT_NUMBER}`}
+            className="flex flex-col items-center p-8 rounded-3xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
+          >
+            <div className="size-16 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary mb-6 group-hover:bg-secondary group-hover:text-white transition-colors duration-300">
+              <FaPhoneAlt className="size-6" />
             </div>
+            <h3 className="text-20-bold text-black-1 dark:text-white mb-2">Call Us</h3>
+            <p className="text-16-regular text-black-1/60 dark:text-white/60 text-center mb-4">
+              Speak directly with our support team
+            </p>
+            <p className="text-18-medium text-black-1 dark:text-white">
+              (+{WHATSAPP_SUPPORT_NUMBER.slice(0, 3)}) {WHATSAPP_SUPPORT_NUMBER.slice(3, 6)} {WHATSAPP_SUPPORT_NUMBER.slice(6, 10)} {WHATSAPP_SUPPORT_NUMBER.slice(10)}
+            </p>
+          </a>
+
+          {/* Availability Card */}
+          <div className="flex flex-col items-center p-8 rounded-3xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 shadow-sm">
+            <div className="size-16 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary mb-6">
+              <FaRegClock className="size-7" />
+            </div>
+            <h3 className="text-20-bold text-black-1 dark:text-white mb-2">Availability</h3>
+            <p className="text-16-regular text-black-1/60 dark:text-white/60 text-center mb-4">
+              We are available to help you
+            </p>
+            <p className="text-18-medium text-black-1 dark:text-white">
+              24/7
+            </p>
           </div>
 
-          <div>
-            <h3 className="text-24-bold text-black-1 dark:text-white mb-6">Social Media</h3>
-            <div className="flex flex-wrap gap-6 items-center">
-              <a href="#" className="text-[#5865F2] transition-transform hover:scale-110">
-                <FaDiscord className="size-7" />
-              </a>
-              <a href="#" className="text-[#E4405F] transition-transform hover:scale-110">
-                <FaInstagram className="size-7" />
-              </a>
-              <a href="#" className="text-black dark:text-white transition-transform hover:scale-110">
-                <FaXTwitter className="size-7" />
-              </a>
-              <a href="#" className="text-[#1877F2] transition-transform hover:scale-110">
-                <FaFacebook className="size-7" />
-              </a>
-              <a href="#" className="text-black dark:text-white transition-transform hover:scale-110">
-                <FaTiktok className="size-7" />
-              </a>
+          {/* Email Card */}
+          <a 
+            href="mailto:support@pavied.com"
+            className="flex flex-col items-center p-8 rounded-3xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
+          >
+            <div className="size-16 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary mb-6 group-hover:bg-secondary group-hover:text-white transition-colors duration-300">
+              <FaEnvelope className="size-6" />
             </div>
+            <h3 className="text-20-bold text-black-1 dark:text-white mb-2">Email Us</h3>
+            <p className="text-16-regular text-black-1/60 dark:text-white/60 text-center mb-4">
+              Send us a detailed message
+            </p>
+            <p className="text-18-medium text-black-1 dark:text-white">
+              support@pavied.com
+            </p>
+          </a>
+        </div>
+
+        {/* Social Media Section */}
+        <div className="text-center bg-gray-50 dark:bg-white/5 rounded-3xl p-10">
+          <h3 className="text-24-bold text-black-1 dark:text-white mb-8">Connect on Social Media</h3>
+          <div className="flex flex-wrap justify-center gap-8">
+            <a href="#" className="group flex flex-col items-center gap-2 transition-transform hover:-translate-y-1">
+              <div className="size-12 rounded-full bg-white dark:bg-black-2 shadow-sm flex items-center justify-center text-[#5865F2] group-hover:bg-[#5865F2] group-hover:text-white transition-all">
+                <FaDiscord className="size-6" />
+              </div>
+              <span className="text-14-medium text-black-1/70 dark:text-white/70">Discord</span>
+            </a>
+            <a href="#" className="group flex flex-col items-center gap-2 transition-transform hover:-translate-y-1">
+              <div className="size-12 rounded-full bg-white dark:bg-black-2 shadow-sm flex items-center justify-center text-[#E4405F] group-hover:bg-[#E4405F] group-hover:text-white transition-all">
+                <FaInstagram className="size-6" />
+              </div>
+              <span className="text-14-medium text-black-1/70 dark:text-white/70">Instagram</span>
+            </a>
+            <a href="#" className="group flex flex-col items-center gap-2 transition-transform hover:-translate-y-1">
+              <div className="size-12 rounded-full bg-white dark:bg-black-2 shadow-sm flex items-center justify-center text-black dark:text-white group-hover:bg-black group-hover:dark:bg-white group-hover:text-white group-hover:dark:text-black transition-all">
+                <FaXTwitter className="size-6" />
+              </div>
+              <span className="text-14-medium text-black-1/70 dark:text-white/70">X (Twitter)</span>
+            </a>
+            <a href="#" className="group flex flex-col items-center gap-2 transition-transform hover:-translate-y-1">
+              <div className="size-12 rounded-full bg-white dark:bg-black-2 shadow-sm flex items-center justify-center text-[#1877F2] group-hover:bg-[#1877F2] group-hover:text-white transition-all">
+                <FaFacebook className="size-6" />
+              </div>
+              <span className="text-14-medium text-black-1/70 dark:text-white/70">Facebook</span>
+            </a>
+            <a href="#" className="group flex flex-col items-center gap-2 transition-transform hover:-translate-y-1">
+              <div className="size-12 rounded-full bg-white dark:bg-black-2 shadow-sm flex items-center justify-center text-black dark:text-white group-hover:bg-black group-hover:dark:bg-white group-hover:text-white group-hover:dark:text-black transition-all">
+                <FaTiktok className="size-6" />
+              </div>
+              <span className="text-14-medium text-black-1/70 dark:text-white/70">TikTok</span>
+            </a>
           </div>
         </div>
       </div>

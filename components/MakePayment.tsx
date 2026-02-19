@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react";
 import { AlertTriangle } from "lucide-react";
 import { uploadPaymentReciept } from "@/lib/actions/payment.action";
+import type { TransactionWithData } from "@/lib/prisma-adapters/types";
 import { cn } from "@/lib/utils";
 import CopyToClipboard from "./CopyToClipboard";
 import CustomButton from "./CustomButton";
@@ -11,7 +12,7 @@ import InfoCard from "./InfoCard";
 import PaymentCountdown from "./PaymentCountDown";
 
 type MakePaymentProps = {
-  transaction: Transaction;
+  transaction: TransactionWithData;
   handleRecieptUploadSuccess: (success: boolean) => void;
 };
 
@@ -49,7 +50,10 @@ const MakePayment = ({
     }
   };
 
-  return transaction.type === "deriv_deposit" ? (
+  const depositExtra = transaction.derivDepositExtra;
+  if (!depositExtra) return null;
+
+  return (
     <div className="w-full max-w-xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <header className="text-center space-y-1.5">
         <h1 className="text-24-bold text-gray-900 dark:text-white">
@@ -89,15 +93,12 @@ const MakePayment = ({
             {/* Bank Name */}
             <div className="group flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-black-2 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-colors">
               <div className="flex items-center gap-3">
-                {/* <div className="bg-white dark:bg-black-3 p-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800">
-                  <DerivCurrencyIcon currency="tUSDT" />
-                </div> */}
                 <div className="flex flex-col">
                   <span className="text-xs font-medium text-gray-500">
                     Bank Name
                   </span>
                   <span className="font-semibold text-gray-900 dark:text-white">
-                    {transaction.assignedBank.bankName}
+                    {depositExtra.assignedBankName}
                   </span>
                 </div>
               </div>
@@ -106,21 +107,18 @@ const MakePayment = ({
             {/* Account Number */}
             <div className="group flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-black-2 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-colors">
               <div className="flex items-center gap-3">
-                {/* <div className="bg-white dark:bg-black-3 p-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 text-blue-600">
-                  <Hash size={20} />
-                </div> */}
                 <div className="flex flex-col">
                   <span className="text-xs font-medium text-gray-500">
                     Account Number
                   </span>
                   <span className="font-mono font-semibold text-lg text-gray-900 dark:text-white tracking-wide">
-                    {transaction.assignedBank.accountNumber}
+                    {depositExtra.assignedBankAccountNumber}
                   </span>
                 </div>
               </div>
               <div className="bg-white dark:bg-black-3 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-blue-500 transition-colors">
                 <CopyToClipboard
-                  text={transaction.assignedBank.accountNumber}
+                  text={depositExtra.assignedBankAccountNumber}
                   className="w-5 h-5 text-gray-500 hover:text-blue-600 p-2 box-content"
                 />
               </div>
@@ -129,15 +127,12 @@ const MakePayment = ({
             {/* Account Name */}
             <div className="group flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-black-2 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-colors">
               <div className="flex items-center gap-3">
-                {/* <div className="bg-white dark:bg-black-3 p-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 text-blue-600">
-                  <User size={20} />
-                </div> */}
                 <div className="flex flex-col">
                   <span className="text-xs font-medium text-gray-500">
                     Account Name
                   </span>
                   <span className="font-medium text-gray-900 dark:text-white text-base">
-                    {transaction.assignedBank.accountName}
+                    {depositExtra.assignedBankAccountName}
                   </span>
                 </div>
               </div>
@@ -202,7 +197,7 @@ const MakePayment = ({
         </div>
       </section>
     </div>
-  ) : null;
+  );
 };
 
 export default MakePayment;

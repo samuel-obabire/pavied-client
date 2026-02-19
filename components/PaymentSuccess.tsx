@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { CheckCircle2, ExternalLink, LayoutDashboard } from "lucide-react";
 import { ROUTES } from "@/lib/constants/routes";
+import type { TransactionWithData } from "@/lib/prisma-adapters/types";
 import { formatNumber } from "@/lib/utils";
 
 type PaymentSuccessProps = {
-  transaction: DerivDeposit;
+  transaction: TransactionWithData;
 };
 
 export default function PaymentSuccess({ transaction }: PaymentSuccessProps) {
+  const depositExtra = transaction.derivDepositExtra;
+
   return (
     <div className="w-full max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-black-1 border border-gray-200 dark:border-gray-800 shadow-xl p-8">
@@ -40,21 +43,25 @@ export default function PaymentSuccess({ transaction }: PaymentSuccessProps) {
                 ₦{formatNumber(transaction.amount)}
               </span>
             </div>
-            <div className="h-px bg-gray-200 dark:bg-gray-700" />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Credited to</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">
-                {transaction.extra.derivLoginId} ({transaction.extra.currency})
-              </span>
-            </div>
-            <div className="h-px bg-gray-200 dark:bg-gray-700" />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500">Amount Received</span>
-              <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                {formatNumber(transaction.extra.amount)}{" "}
-                {transaction.extra.currency}
-              </span>
-            </div>
+            {depositExtra && (
+              <>
+                <div className="h-px bg-gray-200 dark:bg-gray-700" />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">Credited to</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    {depositExtra.derivLoginId} ({depositExtra.currency})
+                  </span>
+                </div>
+                <div className="h-px bg-gray-200 dark:bg-gray-700" />
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">Amount Received</span>
+                  <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                    {formatNumber(depositExtra.amount)}{" "}
+                    {depositExtra.currency}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="flex flex-col gap-3 w-full pt-2">
