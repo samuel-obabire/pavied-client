@@ -2,6 +2,7 @@ import { use } from "react";
 import { notFound } from "next/navigation";
 import CopyToClipboard from "@/components/CopyToClipboard";
 import StatusBadge from "@/components/StatusBadge";
+import UploadReceiptDialog from "@/components/UploadReceiptDialog";
 import { Separator } from "@/components/ui/separator";
 import type { TransactionWithData } from "@/lib/prisma-adapters/types";
 import {
@@ -143,44 +144,55 @@ const TransactionDetails = ({
     return null;
   };
 
+  const needsReceiptUpload =
+    status === "PENDING" &&
+    transactionIsDerivDeposit(transaction) &&
+    !transaction.derivDepositExtra?.recieptPath;
+
   return (
-    <div className="mx-auto flex w-full max-w-[550px] flex-col overflow-hidden rounded-3xl bg-white_dark-black-1 card-border p-6 sm:p-8">
-      <div className="mb-6 flex flex-col items-center gap-4">
-        <StatusBadge variant={status}>{status}</StatusBadge>
-        <div className="flex flex-col items-center">
-          <span className="text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
-            Amount
-          </span>
-          <div className="text-3xl font-bold tracking-tight sm:text-4xl">
-            <span className="mr-1">₦</span>
-            {formatNumber(amount)}
+    <div className="space-y-4">
+      <div className="mx-auto flex w-full max-w-[550px] flex-col overflow-hidden rounded-3xl bg-white_dark-black-1 card-border p-6 sm:p-8">
+        <div className="mb-6 flex flex-col items-center gap-4">
+          <StatusBadge variant={status}>{status}</StatusBadge>
+          <div className="flex flex-col items-center">
+            <span className="text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">
+              Amount
+            </span>
+            <div className="text-3xl font-bold tracking-tight sm:text-4xl">
+              <span className="mr-1">₦</span>
+              {formatNumber(amount)}
+            </div>
           </div>
+        </div>
+
+        <Separator className="mb-4" />
+
+        <div className="flex flex-col gap-1">
+          <DetailRow label="Transaction type">
+            {getTransactionDetailsByType(transaction).label}
+          </DetailRow>
+
+          {renderTypeDetails()}
+
+          <DetailRow label="Reference ID">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs">{transactionId}</span>
+              <CopyToClipboard
+                className="size-3.5 text-gray-500"
+                text={transactionId}
+              />
+            </div>
+          </DetailRow>
+
+          <DetailRow label="Date" className="pb-0">
+            {formatDateTime(createdAt)}
+          </DetailRow>
         </div>
       </div>
 
-      <Separator className="mb-4" />
-
-      <div className="flex flex-col gap-1">
-        <DetailRow label="Transaction type">
-          {getTransactionDetailsByType(transaction).label}
-        </DetailRow>
-
-        {renderTypeDetails()}
-
-        <DetailRow label="Reference ID">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs">{transactionId}</span>
-            <CopyToClipboard
-              className="size-3.5 text-gray-500"
-              text={transactionId}
-            />
-          </div>
-        </DetailRow>
-
-        <DetailRow label="Date" className="pb-0">
-          {formatDateTime(createdAt)}
-        </DetailRow>
-      </div>
+      {needsReceiptUpload && (
+        <UploadReceiptDialog transactionId={transactionId} />
+      )}
     </div>
   );
 };
