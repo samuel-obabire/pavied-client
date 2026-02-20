@@ -29,7 +29,7 @@ const DashboardStats = async ({ userId }: { userId: string }) => {
         prefix="$"
         decimals={2}
       />
-      <StatsCard
+      {/* <StatsCard
         title="Total Transactions"
         subText="Total transactions"
         description="Total transactions made so far. Both successful and failed transactions"
@@ -40,7 +40,7 @@ const DashboardStats = async ({ userId }: { userId: string }) => {
         subText="Total successful transactions"
         description="Total successful transactions made so far. Transactions that were success"
         count={totalSuccessfulTransactions}
-      />
+      /> */}
     </section>
   );
 };
