@@ -160,9 +160,11 @@ const BankAccountRegister = () => {
           />
 
           <InfoCard
-            message=" For your security, please ensure that the bank account you link is
-              registered in your own name. Transactions from third-party or
-              mismatched accounts will not be accepted"
+            message="For your security, please ensure that the bank account you link is registered in your own name. Transactions from third-party or mismatched accounts will not be accepted."
+          />
+
+          <InfoCard
+            message="You can link up to 3 bank accounts. Once your submission is reviewed and approved, you'll receive an email confirmation."
           />
 
           <Button className="btn-secondary w-full" type="submit">
