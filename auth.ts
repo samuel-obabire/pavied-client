@@ -1,12 +1,12 @@
-import { betterAuth } from "better-auth";
+import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import prisma from "@/lib/prisma";
 import {
-    sendEmailVerification,
-    sendPasswordResetVerification,
+  sendEmailVerification,
+  sendPasswordResetVerification,
 } from "./lib/resend";
-import { OnboardingStep } from "./prisma/lib/generated/prisma/enums";
+import { OnboardingStep, Role } from "./prisma/lib/generated/prisma/enums";
 
 const NEXT_PUBLIC_URL =
   process.env.NODE_ENV === "development"
@@ -27,6 +27,15 @@ export const auth = betterAuth({
         map: (value: string) => {
           // Ensure we return the actual Enum value Prisma expects
           return value.toUpperCase() as OnboardingStep;
+        },
+      },
+      role: {
+        type: "string",
+        defaultValue: Role.USER,
+        input: false,
+        map: (value: string) => {
+          // Ensure we return the actual Enum value Prisma expects
+          return value.toUpperCase() as Role;
         },
       },
       countryOfResidence: {
@@ -65,6 +74,22 @@ export const auth = betterAuth({
               },
             },
           });
+        },
+      },
+    },
+
+    session: {
+      create: {
+        before: async (session, ctx) => {
+          const user = (await ctx?.context?.internalAdapter?.findUserById(
+            session.userId,
+          )) as User;
+
+          if (!user || user.role !== ("USER" as Role)) {
+            throw new APIError("BAD_REQUEST", {
+              message: "Access denied",
+            });
+          }
         },
       },
     },

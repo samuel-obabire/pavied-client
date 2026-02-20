@@ -9,7 +9,7 @@ import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import WhySection from "@/components/WhySection";
 
-export default async function Home() {
+export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />

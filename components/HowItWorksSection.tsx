@@ -1,77 +1,86 @@
 import Image from "next/image";
 
-const depositSteps = [
+type ProcessStep = {
+  step: number;
+  title: string;
+  description: string;
+  image: string;
+};
+
+type StepCardProps = ProcessStep;
+
+// Settlement & payment infrastructure adaptation while preserving step card logic.
+const depositSteps: ProcessStep[] = [
   {
     step: 1,
-    title: "Quick Sign-up",
-    description: "Create your account in minutes. If you already have one, simply log in to continue.",
+    title: "Onboard & Verify",
+    description: "Create an account and complete secure onboarding.",
     image: "/assets/home/deposit-1.webp",
   },
   {
     step: 2,
-    title: "Link Account",
-    description: "Securely link your Deriv CR account ID with your Pavied profile.",
+    title: "Deposit or Request Payout",
+    description:
+      "Users initiate funding or withdrawal through structured settlement channels.",
     image: "/assets/home/deposit-3.webp",
   },
   {
     step: 3,
-    title: "Choose Amount",
-    description: "Fund your account with as little as $1 or any amount you need to start trading.",
+    title: "Automated Routing & Confirmation",
+    description:
+      "Transactions are processed through secure rails with real-time tracking.",
     image: "/assets/home/deposit-4.webp",
   },
   {
     step: 4,
-    title: "Instant Credit",
-    description: "Complete your payment, and your Deriv account will be credited immediately.",
+    title: "Settlement & Reconciliation",
+    description:
+      "Full ledger records and transaction logs are available instantly.",
     image: "/assets/home/deposit-5.webp",
   },
 ];
 
-const withdrawalSteps = [
+const withdrawalSteps: ProcessStep[] = [
   {
     step: 1,
-    title: "Quick Sign-up",
-    description: "Create your account in minutes. If you already have one, simply log in to continue.",
+    title: "Onboard & Verify",
+    description: "Create an account and complete secure onboarding.",
     image: "/assets/home/withdrawal-1.webp",
   },
   {
     step: 2,
-    title: "Link Account",
-    description: "After linking your Deriv account, navigate to the withdrawal section on our platform.",
+    title: "Submit Payout Instruction",
+    description:
+      "Initiate a payout request through the platform with structured controls.",
     image: "/assets/home/deposit-3.webp",
   },
   {
     step: 3,
-    title: "Enter Amount",
-    description: "Withdraw any amount from your gains, big or small, without fuss.",
+    title: "Automated Risk & Routing Checks",
+    description:
+      "Transactions are validated and routed with monitoring in real time.",
     image: "/assets/home/withdrawal-4.webp",
   },
   {
     step: 4,
-    title: "Automated Payout",
-    description: "Receive your funds instantly to your preferred local payment method.",
+    title: "Settlement Completion",
+    description:
+      "Payout confirmation and reconciliation records are completed instantly.",
     image: "/assets/home/deposit-5.webp",
   },
 ];
 
-const StepCard = ({ step, title, description, image }: { step: number; title: string; description: string; image: string }) => (
+const StepCard = ({ step, title, description, image }: StepCardProps) => (
   <div className="flex flex-col gap-4 rounded-2xl bg-[#F5F6F8] p-4 dark:bg-black-1/40">
     <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-white dark:bg-black-2/60">
-      <Image
-        src={image}
-        alt={title}
-        fill
-        className="object-contain p-4"
-      />
+      <Image src={image} alt={title} fill className="object-contain p-4" />
     </div>
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <div className="flex size-6 items-center justify-center rounded-sm bg-secondary text-white text-12-bold">
           {step}
         </div>
-        <h4 className="text-16-bold text-black-1 dark:text-white">
-          {title}
-        </h4>
+        <h4 className="text-16-bold text-black-1 dark:text-white">{title}</h4>
       </div>
       <p className="text-14-medium text-black-1/60 dark:text-white/60 leading-tight">
         {description}
@@ -85,9 +94,15 @@ const HowItWorksSection = () => {
     <section className="py-20">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-12">
-          <span className="text-secondary bg-secondary/10 px-3 py-1 rounded-full text-12-medium">How It Works</span>
-          <h2 className="mt-4 font-semibold text-2xl text-primary dark:text-white">Deposit Process</h2>
-          <p className="mt-2 text-16-medium text-black-1/60 dark:text-white/60">Follow this simple guide to fund your account instantly.</p>
+          <span className="text-secondary bg-secondary/10 px-3 py-1 rounded-full text-12-medium">
+            How It Works
+          </span>
+          <h2 className="mt-4 font-semibold text-2xl text-primary dark:text-white">
+            How Pavied Works
+          </h2>
+          <p className="mt-2 text-16-medium text-black-1/60 dark:text-white/60">
+            A neutral, secure flow for deposit and payout operations.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -97,8 +112,12 @@ const HowItWorksSection = () => {
         </div>
 
         <div className="mt-20 mb-12">
-          <h2 className="font-semibold text-2xl text-primary dark:text-white">Withdrawal Process</h2>
-          <p className="mt-2 text-16-medium text-black-1/60 dark:text-white/60">Here is how to withdraw your funds easily and securely.</p>
+          <h2 className="font-semibold text-2xl text-primary dark:text-white">
+            Payout Flow
+          </h2>
+          <p className="mt-2 text-16-medium text-black-1/60 dark:text-white/60">
+            Built for fast turnaround, visibility, and reconciliation at scale.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
