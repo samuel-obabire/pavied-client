@@ -2,14 +2,14 @@ import Image from "next/image";
 import InfoCard from "./InfoCard";
 import { Button } from "./ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "./ui/dialog";
 
 const ConnectDeriv = () => {
@@ -31,6 +31,9 @@ const ConnectDeriv = () => {
           <p className="text-14-regular text-gray-500 text-center md:text-left">
             Link your Deriv trading account to enable seamless deposits and withdrawals.
           </p>
+          <InfoCard
+            message="You can connect up to 10 Deriv accounts. Once your account is reviewed and approved, you'll receive an email confirmation."
+          />
         </div>
 
         <section className="space-y-6">
@@ -74,9 +77,10 @@ const ConnectDeriv = () => {
           </div>
 
           <InfoCard
-            message="Please note: Our platform currently only supports the following Deriv account
-           currencies: USD, tUSDT, USDC, and eUSDT."
+            message="Please note: Our platform currently only supports the following Deriv account currencies: USD, tUSDT, USDC, and eUSDT."
           />
+
+          
         </section>
       </div>
     </>
