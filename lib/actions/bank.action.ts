@@ -36,7 +36,10 @@ export const getUserBankAccounts = async (
 };
 
 export const addUserBankAccount = async (
-  bankAccount: BankAccount,
+  bankAccount: Pick<
+    BankAccount,
+    "accountName" | "accountNumber" | "bankCode" | "bankName"
+  >,
 ): Promise<ActionResponse> => {
   const result = await action({
     params: bankAccount,

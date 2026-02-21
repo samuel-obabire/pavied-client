@@ -1,6 +1,4 @@
 import Image from "next/image";
-import React from "react";
-
 import { nigeriaBanks } from "@/lib/constants/nigerianBanks";
 
 const BankIcon = ({ bankCode }: { bankCode: string }) => {
