@@ -81,11 +81,25 @@ export const auth = betterAuth({
     session: {
       create: {
         before: async (session, ctx) => {
-          const user = (await ctx?.context?.internalAdapter?.findUserById(
-            session.userId,
-          )) as User;
+          const internalAdapter = ctx?.context?.internalAdapter;
 
-          if (!user || user.role !== ("USER" as Role)) {
+          if (!internalAdapter) {
+            throw new APIError("BAD_REQUEST", {
+              message: "Access denied",
+            });
+          }
+
+          const user = await internalAdapter.findUserById(session.userId);
+
+          if (!user) {
+            throw new APIError("BAD_REQUEST", {
+              message: "Access denied",
+            });
+          }
+
+          const role = "role" in user ? user.role : undefined;
+
+          if (role !== Role.USER) {
             throw new APIError("BAD_REQUEST", {
               message: "Access denied",
             });

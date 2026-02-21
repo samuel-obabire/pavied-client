@@ -71,8 +71,8 @@ const withdrawalSteps: ProcessStep[] = [
 ];
 
 const StepCard = ({ step, title, description, image }: StepCardProps) => (
-  <div className="flex flex-col gap-4 rounded-2xl bg-[#F5F6F8] p-4 dark:bg-black-1/40">
-    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-white dark:bg-black-2/60">
+  <div className="flex flex-col gap-4 rounded-2xl border border-black-1/5 bg-[#F5F6F8] p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:border-white/5 dark:bg-black-1/40">
+    <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border border-black-1/5 bg-white dark:border-white/10 dark:bg-black-2/60">
       <Image src={image} alt={title} fill className="object-contain p-4" />
     </div>
     <div className="space-y-2">
@@ -91,7 +91,7 @@ const StepCard = ({ step, title, description, image }: StepCardProps) => (
 
 const HowItWorksSection = () => {
   return (
-    <section className="py-20">
+    <section className="py-20 md:py-28">
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-12">
           <span className="text-secondary bg-secondary/10 px-3 py-1 rounded-full text-12-medium">

@@ -62,12 +62,12 @@ const faqData: FaqItem[] = [
 
 const FaqSection = () => {
   return (
-    <section className="py-20 md:py-32">
+    <section className="py-16 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col gap-16 lg:flex-row lg:justify-between">
+        <div className="flex flex-col gap-12 lg:flex-row lg:justify-between lg:gap-16">
           {/* Left Content */}
           <div className="flex flex-col items-start lg:max-w-[400px]">
-            <div className="mb-6 inline-flex items-center rounded-full bg-secondary/10 px-4 py-1 text-secondary">
+            <div className="mb-5 inline-flex items-center rounded-full bg-secondary/10 px-4 py-1 text-secondary md:mb-6">
               <span className="text-12-medium md:text-14-medium">FAQs</span>
             </div>
 
@@ -75,7 +75,7 @@ const FaqSection = () => {
               Settlement Infrastructure FAQs
             </h2>
 
-            <p className="mt-6 text-16-medium text-black-1/60 dark:text-white/60 md:text-18-medium">
+            <p className="mt-5 text-16-medium text-black-1/60 dark:text-white/60 md:mt-6 md:text-18-medium">
               Can’t find the answer you’re looking for?
               <br />
               Reach out to our{" "}
@@ -93,17 +93,17 @@ const FaqSection = () => {
             <AccordionPrimitive.Root
               type="single"
               collapsible
-              className="w-full space-y-4"
+              className="w-full space-y-3 md:space-y-4"
             >
               {faqData.map((item) => (
                 <AccordionPrimitive.Item
                   key={item.question}
                   value={item.question}
-                  className="border-b border-black-1/5 dark:border-white/5 last:border-0"
+                  className="rounded-xl border border-black-1/5 bg-white/50 px-4 dark:border-white/5 dark:bg-black-1/20 md:px-6"
                 >
                   <AccordionPrimitive.Header className="flex">
-                    <AccordionPrimitive.Trigger className="group flex flex-1 items-center justify-between py-6 text-left outline-none">
-                      <span className="text-18-bold text-black-1 dark:text-white md:text-24-bold transition-colors group-hover:text-black-1/80 dark:group-hover:text-white/80">
+                    <AccordionPrimitive.Trigger className="group flex flex-1 items-center justify-between py-5 text-left outline-none md:py-6">
+                      <span className="text-16-bold text-black-1 transition-colors group-hover:text-black-1/80 dark:text-white dark:group-hover:text-white/80 md:text-24-bold">
                         {item.question}
                       </span>
                       <div className="flex size-6 shrink-0 items-center justify-center text-black-1 dark:text-white">
@@ -113,7 +113,7 @@ const FaqSection = () => {
                     </AccordionPrimitive.Trigger>
                   </AccordionPrimitive.Header>
                   <AccordionPrimitive.Content className="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-14-regular text-black-1/60 dark:text-white/60 md:text-16-regular">
-                    <div className="pb-8">{item.answer}</div>
+                    <div className="pb-6 md:pb-8">{item.answer}</div>
                   </AccordionPrimitive.Content>
                 </AccordionPrimitive.Item>
               ))}

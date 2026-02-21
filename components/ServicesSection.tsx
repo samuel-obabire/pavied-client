@@ -85,10 +85,10 @@ const ServicesSection = () => {
             {services.map((service) => (
               <div
                 key={service.id}
-                className="group relative rounded-2xl border border-black-1/5 bg-white p-8 transition-all duration-300 hover:border-secondary/50 hover:shadow-xl dark:border-white/5 dark:bg-black-1/20 ml-4"
+                className="group relative ml-4 rounded-2xl border border-black-1/5 bg-white/70 p-8 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-secondary/50 hover:shadow-xl dark:border-white/5 dark:bg-black-1/20"
               >
                 {/* Roman Numeral Badge */}
-                <div className="absolute -left-3 top-8 flex size-10 items-center justify-center rounded-lg bg-secondary text-white text-14-bold shadow-md md:-left-5 scale-90 group-hover:scale-100 transition-transform">
+                <div className="absolute -left-3 top-8 flex size-10 items-center justify-center rounded-lg bg-secondary text-14-bold text-white shadow-md transition-transform group-hover:scale-100 md:-left-5 scale-90">
                   {service.id}
                 </div>
 

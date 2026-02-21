@@ -19,57 +19,57 @@ type FloatingIcon = {
 // Settlement & payment infrastructure adaptation while preserving floating icon behavior and rates logic.
 const floatingIcons: FloatingIcon[] = [
   {
-    name: "USD",
-    src: "/assets/usd-currency.svg",
-    alt: "USD",
+    name: "Payment Routing",
+    src: "/assets/home/settlement-icons/payment-routing.svg",
+    alt: "Payment routing",
     wrapperClassName:
-      "size-12 md:size-16 rounded-full bg-white border border-black-1/10 p-2 shadow-lg animate-[spin_30s_linear_infinite_reverse]",
+      "size-12 md:size-16 rounded-full bg-white/95 dark:bg-black-1/80 border border-black-1/10 dark:border-white/10 p-2 shadow-lg backdrop-blur-sm animate-[spin_30s_linear_infinite_reverse] flex items-center justify-center",
     containerClassName: "absolute flex items-center justify-center",
     transform: "rotate(0deg) translateY(-160px) rotate(0deg)",
   },
   {
-    name: "Platform",
-    src: "/assets/home/deriv-icon.png",
-    alt: "Trading platform",
+    name: "Instant Settlement",
+    src: "/assets/home/settlement-icons/instant-settlement.svg",
+    alt: "Instant settlement",
     wrapperClassName:
-      "size-12 md:size-16 rounded-full bg-[#FF4449] p-2 shadow-lg animate-[spin_30s_linear_infinite_reverse] flex items-center justify-center",
+      "size-12 md:size-16 rounded-full bg-white/95 dark:bg-black-1/80 border border-black-1/10 dark:border-white/10 p-2 shadow-lg backdrop-blur-sm animate-[spin_30s_linear_infinite_reverse] flex items-center justify-center",
     containerClassName:
       "absolute flex items-center justify-center md:translate-x-0",
     transform: "rotate(60deg) translateY(-160px) rotate(-60deg)",
   },
   {
-    name: "Bitcoin",
-    src: "/assets/home/bitcoin-icon.png",
-    alt: "Bitcoin",
+    name: "Reconciliation",
+    src: "/assets/home/settlement-icons/reconciliation.svg",
+    alt: "Reconciliation",
     wrapperClassName:
-      "size-12 md:size-16 rounded-full bg-[#F7931A] p-2 shadow-lg animate-[spin_30s_linear_infinite_reverse]",
+      "size-12 md:size-16 rounded-full bg-white/95 dark:bg-black-1/80 border border-black-1/10 dark:border-white/10 p-2 shadow-lg backdrop-blur-sm animate-[spin_30s_linear_infinite_reverse] flex items-center justify-center",
     containerClassName: "absolute flex items-center justify-center",
     transform: "rotate(120deg) translateY(-160px) rotate(-120deg)",
   },
   {
-    name: "USDC",
-    src: "/assets/usdc-currency.svg",
-    alt: "USDC",
+    name: "Secure Payout",
+    src: "/assets/home/settlement-icons/secure-payout.svg",
+    alt: "Secure payout",
     wrapperClassName:
-      "size-12 md:size-16 rounded-full p-0 shadow-lg animate-[spin_30s_linear_infinite_reverse]",
+      "size-12 md:size-16 rounded-full bg-white/95 dark:bg-black-1/80 border border-black-1/10 dark:border-white/10 p-2 shadow-lg backdrop-blur-sm animate-[spin_30s_linear_infinite_reverse] flex items-center justify-center",
     containerClassName: "absolute flex items-center justify-center",
     transform: "rotate(180deg) translateY(-160px) rotate(-180deg)",
   },
   {
-    name: "USDT",
-    src: "/assets/usdt-currency.svg",
-    alt: "USDT",
+    name: "Liquidity Engine",
+    src: "/assets/home/settlement-icons/liquidity-engine.svg",
+    alt: "Liquidity engine",
     wrapperClassName:
-      "size-12 md:size-16 rounded-full bg-[#26A17B] p-2 shadow-lg animate-[spin_30s_linear_infinite_reverse]",
+      "size-12 md:size-16 rounded-full bg-white/95 dark:bg-black-1/80 border border-black-1/10 dark:border-white/10 p-2 shadow-lg backdrop-blur-sm animate-[spin_30s_linear_infinite_reverse] flex items-center justify-center",
     containerClassName: "absolute flex items-center justify-center",
     transform: "rotate(240deg) translateY(-160px) rotate(-240deg)",
   },
   {
-    name: "Solana",
-    src: "/assets/home/solana-icon.png",
-    alt: "Solana",
+    name: "Bank Connect",
+    src: "/assets/home/settlement-icons/bank-connect.svg",
+    alt: "Bank connectivity",
     wrapperClassName:
-      "size-12 md:size-16 rounded-full bg-black p-2 shadow-lg animate-[spin_30s_linear_infinite_reverse] flex items-center justify-center",
+      "size-12 md:size-16 rounded-full bg-white/95 dark:bg-black-1/80 border border-black-1/10 dark:border-white/10 p-2 shadow-lg backdrop-blur-sm animate-[spin_30s_linear_infinite_reverse] flex items-center justify-center",
     containerClassName: "absolute flex items-center justify-center",
     transform: "rotate(300deg) translateY(-160px) rotate(-300deg)",
   },
@@ -182,7 +182,10 @@ const RatesSection = async () => {
                 </div>
 
                 {/* Orbiting Icons Container */}
-                <div className="absolute inset-0 animate-[spin_30s_linear_infinite] pointer-events-none flex items-center justify-center">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 animate-[spin_30s_linear_infinite] pointer-events-none flex items-center justify-center"
+                >
                   {/* 
                   To space 6 items equally on a circle:
                   Each item is rotated by index * 60deg (360/6)
@@ -191,6 +194,8 @@ const RatesSection = async () => {
                  */}
                   {floatingIcons.map((icon) => (
                     <div
+                      aria-hidden="true"
+                      role="presentation"
                       key={icon.name}
                       className={icon.containerClassName}
                       style={{ transform: icon.transform }}
@@ -198,7 +203,7 @@ const RatesSection = async () => {
                       <div className={icon.wrapperClassName}>
                         <Image
                           src={icon.src}
-                          alt={icon.alt}
+                          alt=""
                           width={64}
                           height={64}
                           className="size-full object-contain"

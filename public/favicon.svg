@@ -1,0 +1,15 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="paviedBg" x1="10" y1="8" x2="54" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1C1655"/>
+      <stop offset="1" stop-color="#2B2379"/>
+    </linearGradient>
+    <linearGradient id="paviedAccent" x1="22" y1="20" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E2A704"/>
+      <stop offset="1" stop-color="#F4C843"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#paviedBg)"/>
+  <path d="M20 24C20 19.5817 23.5817 16 28 16H36C42.6274 16 48 21.3726 48 28C48 34.6274 42.6274 40 36 40H27V48H20V24Z" fill="white" fill-opacity="0.95"/>
+  <path d="M27 23H35.2C38.9555 23 42 26.0445 42 29.8C42 33.5555 38.9555 36.6 35.2 36.6H27V23Z" fill="url(#paviedAccent)"/>
+</svg>

@@ -68,11 +68,11 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section className="py-20 md:py-32 overflow-hidden">
+    <section className="overflow-hidden py-16 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
         {/* Header */}
-        <div className="mb-12 max-w-3xl">
-          <div className="mb-6 inline-flex items-center rounded-full bg-secondary/10 px-4 py-1 text-secondary">
+        <div className="mb-10 max-w-3xl md:mb-12">
+          <div className="mb-5 inline-flex items-center rounded-full bg-secondary/10 px-4 py-1 text-secondary md:mb-6">
             <span className="text-12-medium md:text-14-medium">
               Testimonials
             </span>
@@ -82,20 +82,20 @@ const TestimonialsSection = () => {
           </h2>
         </div>
 
-        <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-xl border border-black-1/5 bg-white/50 p-4 text-center dark:border-white/5 dark:bg-black-1/20">
+        <div className="mb-8 grid grid-cols-1 gap-3 md:mb-10 md:grid-cols-3 md:gap-4">
+          <div className="rounded-xl border border-black-1/5 bg-white/60 p-3.5 text-center shadow-sm dark:border-white/5 dark:bg-black-1/20 md:p-4">
             <p className="text-20-bold text-primary dark:text-white">10,000+</p>
             <p className="text-14-medium text-black-1/60 dark:text-white/60">
               Transactions Processed
             </p>
           </div>
-          <div className="rounded-xl border border-black-1/5 bg-white/50 p-4 text-center dark:border-white/5 dark:bg-black-1/20">
+          <div className="rounded-xl border border-black-1/5 bg-white/60 p-3.5 text-center shadow-sm dark:border-white/5 dark:bg-black-1/20 md:p-4">
             <p className="text-20-bold text-primary dark:text-white">99%+</p>
             <p className="text-14-medium text-black-1/60 dark:text-white/60">
               Successful Settlement Rate
             </p>
           </div>
-          <div className="rounded-xl border border-black-1/5 bg-white/50 p-4 text-center dark:border-white/5 dark:bg-black-1/20">
+          <div className="rounded-xl border border-black-1/5 bg-white/60 p-3.5 text-center shadow-sm dark:border-white/5 dark:bg-black-1/20 md:p-4">
             <p className="text-20-bold text-primary dark:text-white">24/7</p>
             <p className="text-14-medium text-black-1/60 dark:text-white/60">
               Real-Time Processing Infrastructure
@@ -106,7 +106,7 @@ const TestimonialsSection = () => {
         {/* Scrollable Container */}
         <div
           ref={scrollRef}
-          className={`no-scrollbar -mx-4 flex gap-6 overflow-x-auto px-4 pb-8 md:mx-0 md:px-0 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+          className={`no-scrollbar -mx-4 flex gap-4 overflow-x-auto px-4 pb-6 md:mx-0 md:gap-6 md:px-0 md:pb-8 ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
           onPointerDown={handlePointerDown}
           onPointerLeave={handlePointerLeave}
           onPointerUp={handlePointerUp}
@@ -115,7 +115,7 @@ const TestimonialsSection = () => {
           {testimonials.map((t) => (
             <div
               key={t.name + t.role}
-              className="flex min-w-[320px] flex-col gap-6 rounded-[24px] border border-black-1/5 bg-white p-6 shadow-sm dark:border-white/5 dark:bg-black-1/20 md:min-w-[550px] md:flex-row md:p-8 select-none"
+              className="flex min-w-[300px] select-none flex-col gap-5 rounded-[24px] border border-black-1/5 bg-white/85 p-5 shadow-sm transition-shadow duration-300 hover:shadow-md dark:border-white/5 dark:bg-black-1/20 md:min-w-[550px] md:flex-row md:gap-6 md:p-8"
             >
               {/* Profile Image with Info Overlay */}
               <div className="relative h-[250px] w-full shrink-0 overflow-hidden rounded-xl md:h-[280px] md:w-[220px]">

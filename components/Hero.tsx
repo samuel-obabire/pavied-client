@@ -14,28 +14,28 @@ const Hero = () => {
   ] as const;
 
   return (
-    <section className="relative overflow-hidden pt-10 pb-20 md:pt-20 md:pb-32">
+    <section className="relative overflow-hidden pt-10 pb-16 md:pt-24 md:pb-32">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-8 relative">
+        <div className="relative flex flex-col items-center gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
           {/* Background Glow */}
-          <div className="absolute -top-28 right-2 h-[45rem] w-[45rem] rounded-full bg-gradient-to-r from-secondary/10 to-transparent blur-md pointer-events-none" />
+          <div className="pointer-events-none absolute -top-28 right-2 h-[45rem] w-[45rem] rounded-full bg-gradient-to-r from-secondary/10 to-transparent blur-md" />
           {/* Left Content */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left w-full lg:max-w-[600px]">
             {/* Tagline */}
-            <div className="inline-flex items-center rounded-full bg-secondary/10 px-4 py-2 text-secondary mb-6 md:mb-10 animate-in fade-in slide-in-from-top-4 duration-700">
+            <div className="mb-5 inline-flex items-center rounded-full bg-secondary/10 px-4 py-2 text-secondary animate-in fade-in slide-in-from-top-4 duration-700 md:mb-10">
               <span className="text-xs">
                 Settlement & Payment Infrastructure Platform
               </span>
             </div>
 
             {/* Heading */}
-            <h1 className="text-[35px] leading-[48px] md:text-[54px] md:leading-[62px] font-bold text-primary dark:text-white mb-6 animate-in fade-in slide-in-from-left-4 duration-700 delay-100">
+            <h1 className="mb-5 text-[33px] leading-[44px] font-bold text-primary animate-in fade-in slide-in-from-left-4 duration-700 delay-100 dark:text-white md:mb-6 md:text-[54px] md:leading-[62px]">
               Secure Settlement Infrastructure for Online Financial Platforms &
               Traders
             </h1>
 
             {/* Description */}
-            <p className="text-16-medium md:text-20-medium text-black-1/60 dark:text-white/60 mb-8 md:mb-10 max-w-[500px] animate-in fade-in slide-in-from-left-4 duration-700 delay-200">
+            <p className="mb-7 max-w-[500px] text-16-medium text-black-1/60 animate-in fade-in slide-in-from-left-4 duration-700 delay-200 dark:text-white/60 md:mb-10 md:text-20-medium">
               Automated deposit and payout solutions that support brokerage
               funding, settlement reconciliation, and real-time tracking
               securely, instantly, and at competitive rates.
@@ -43,10 +43,10 @@ const Hero = () => {
 
             {/* Action Buttons Box */}
             <div className="w-full max-w-[400px] md:max-w-none animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-              <div className="rounded-2xl border border-black-1/5 bg-white/50 p-3 dark:border-white/5 dark:bg-black-1/20 backdrop-blur-sm lg:inline-flex lg:items-center lg:gap-4">
+              <div className="rounded-2xl border border-black-1/5 bg-white/60 p-2.5 shadow-sm backdrop-blur-sm dark:border-white/5 dark:bg-black-1/25 lg:inline-flex lg:items-center lg:gap-4 lg:p-3">
                 <Button
                   asChild
-                  className="btn-secondary w-full lg:w-64 h-14 px-8 rounded-xl shadow-md group"
+                  className="group btn-secondary h-12 w-full rounded-xl px-6 shadow-md lg:h-14 lg:w-64 lg:px-8"
                 >
                   <Link
                     href={ROUTES.SIGN_UP}
@@ -61,7 +61,7 @@ const Hero = () => {
                 <Button
                   asChild
                   variant="ghost"
-                  className="w-full lg:w-56 h-14 px-8 rounded-xl mt-3 lg:mt-0 text-16-bold bg-black-1/5 dark:bg-white/5 hover:bg-black-1/10 transition-colors"
+                  className="mt-2.5 h-12 w-full rounded-xl bg-black-1/5 px-6 text-16-bold transition-colors hover:bg-black-1/10 dark:bg-white/5 lg:mt-0 lg:h-14 lg:w-56 lg:px-8"
                 >
                   <Link
                     href={ROUTES.CONTACT}
@@ -72,7 +72,7 @@ const Hero = () => {
                 </Button>
               </div>
 
-              <p className="mt-4 text-14-regular text-black-1/40 dark:text-white/40 md:text-16-regular">
+              <p className="mt-3 text-14-regular text-black-1/40 dark:text-white/40 md:mt-4 md:text-16-regular">
                 Secure • Reliable
               </p>
             </div>
@@ -80,23 +80,33 @@ const Hero = () => {
 
           {/* Right Image/Mockup */}
           <div className="relative w-full max-w-[650px] lg:max-w-none lg:flex-1 animate-in fade-in slide-in-from-right-4 duration-1000 delay-200">
-            <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl shadow-md">
+            <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl border border-black-1/5 shadow-xl dark:border-white/10">
+              <div className="pointer-events-none absolute opacity-90 inset-0 z-10 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
               <Image
-                src="/assets/home/hero.png"
-                alt="Pavied Dashboard Preview"
+                src="/assets/home/hero.webp"
+                alt="Pavied dashboard preview"
                 fill
                 priority
-                className="object-cover object-left"
+                className="object-cover object-center scale-[1.07] md:scale-100"
               />
+              <div className="pointer-events-none absolute left-3 top-3 z-20 rounded-lg border border-white/40 bg-white/85 px-3 py-1.5 text-[11px] font-semibold text-primary shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-black-2/80 dark:text-white md:left-5 md:top-5 md:text-12-medium">
+                Settlement Queue
+              </div>
+              <div className="pointer-events-none absolute right-3 top-14 z-20 rounded-lg border border-white/40 bg-white/85 px-3 py-1.5 text-[11px] font-semibold text-primary shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-black-2/80 dark:text-white md:right-5 md:top-20 md:text-12-medium">
+                Reconciliation Log
+              </div>
+              <div className="pointer-events-none absolute bottom-4 left-4 z-20 rounded-lg border border-secondary/30 bg-secondary/95 px-3 py-1.5 text-[11px] font-semibold text-black shadow-sm md:bottom-6 md:left-6 md:text-12-medium">
+                Payout Confirmed
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-7 grid grid-cols-1 gap-2.5 md:mt-8 md:grid-cols-2 md:gap-3 lg:grid-cols-4">
           {trustItems.map((item) => (
             <div
               key={item}
-              className="rounded-xl border border-black-1/5 bg-white/50 px-4 py-3 text-center text-14-medium text-black-1/70 dark:border-white/5 dark:bg-black-1/20 dark:text-white/70"
+              className="rounded-xl border border-black-1/5 bg-white/60 px-3.5 py-2.5 text-center text-14-medium text-black-1/70 shadow-sm transition-colors dark:border-white/5 dark:bg-black-1/20 dark:text-white/70 md:px-4 md:py-3"
             >
               {item}
             </div>
