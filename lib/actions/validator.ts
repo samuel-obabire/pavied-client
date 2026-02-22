@@ -69,7 +69,7 @@ const assertDepositAmountWithinSiteLimits = (
   amount: number,
   siteConfig: SiteConfig,
 ) => {
-  if (siteConfig.derivDepositsMaxAmount.lessThan(amount)) {
+  if (siteConfig.derivDepositsMaxAmount < amount) {
     throw new Error("Transaction is greater than the max deposit amount");
   }
 };
@@ -90,7 +90,7 @@ const assertWithdrawalAmountWithinSiteLimits = (
   amount: number,
   siteConfig: SiteConfig,
 ) => {
-  if (siteConfig.derivWithdrawalsMaxAmount.lessThan(amount)) {
+  if (siteConfig.derivWithdrawalsMaxAmount < amount) {
     throw new Error("Transaction is greater than the max deposit amount");
   }
 };
