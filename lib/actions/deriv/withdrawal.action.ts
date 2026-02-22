@@ -207,9 +207,7 @@ export const processDerivWithdrawal = async (paymentData: {
         }
       });
 
-      await scheduleWithdrawalPayout(transactionId, 30 * 60).catch(
-        logger.error,
-      );
+      await scheduleWithdrawalPayout(transactionId, 40).catch(logger.error);
 
       return { success: true };
     }
