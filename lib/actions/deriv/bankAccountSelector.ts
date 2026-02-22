@@ -1,3 +1,4 @@
+import type { AdminBankAccount } from "@/prisma/lib/generated/prisma/client";
 import { BankAccountSelector, pickRandom } from "./utils";
 
 type AssignBankParams = {

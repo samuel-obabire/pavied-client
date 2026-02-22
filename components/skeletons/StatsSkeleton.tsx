@@ -21,8 +21,6 @@ const StatsSkeleton = () => {
     <div className="grid flex-none grid-cols-2 gap-2 sm:gap-4 xl:flex">
       <StatsCardSkeleton />
       <StatsCardSkeleton />
-      <StatsCardSkeleton />
-      <StatsCardSkeleton />
     </div>
   );
 };

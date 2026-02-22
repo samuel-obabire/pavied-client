@@ -17,6 +17,10 @@ const prisma =
 
     return new PrismaClient({
       adapter,
+      transactionOptions: {
+        maxWait: 5000,
+        timeout: 9000,
+      },
     });
   })();
 

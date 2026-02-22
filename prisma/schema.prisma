@@ -29,19 +29,10 @@ model User {
   derivAccounts      DerivAccount[]
   transactions       Transaction[]
 
+  role Role @default(USER)
+
   @@unique([email])
   @@map("user")
-}
-
-model AdminUser {
-  id        String    @id @default(cuid())
-  name      String
-  email     String    @unique
-  role      AdminRole @default(ADMIN)
-  lastLogin DateTime  @default(now())
-  isActive  Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
 }
 
 model Session {
@@ -115,7 +106,7 @@ model BankAccount {
   bankName      String
   bankCode      String
   active        Boolean @default(false)
-  user          User    @relation(fields: [userId], references: [id])
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
 
   createdAt DateTime @default(now())
@@ -132,7 +123,7 @@ model DerivAccount {
   active    Boolean @default(false)
   token     String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   createdAt DateTime @default(now())
@@ -255,18 +246,20 @@ model DerivWithdrawalExtra {
 }
 
 model SiteConfig {
-  id                        String   @id @default("default")
-  maintenanceMode           Boolean  @default(false)
-  paymentsPaused            Boolean  @default(false)
-  derivAutopaymentsEnabled  Boolean  @default(true)
-  derivDepositsEnabled      Boolean  @default(true)
-  derivDepositsMaxAmount    Decimal  @default(0)
-  derivWithdrawalsEnabled   Boolean  @default(true)
-  derivWithdrawalsMaxAmount Decimal  @default(0)
-  changeReason              String   @default("")
-  updatedBy                 String   @default("")
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
+  id                                 String   @id @default("default")
+  maintenanceMode                    Boolean  @default(false)
+  paymentsPaused                     Boolean  @default(false)
+  derivAutopaymentsEnabled           Boolean  @default(true)
+  derivDepositAutoPaymentsEnabled    Boolean  @default(true)
+  derivWithdrawalAutoPaymentsEnabled Boolean  @default(true)
+  derivDepositsEnabled               Boolean  @default(true)
+  derivDepositsMaxAmount             Int      @default(0)
+  derivWithdrawalsEnabled            Boolean  @default(true)
+  derivWithdrawalsMaxAmount          Int      @default(0)
+  changeReason                       String   @default("")
+  updatedBy                          String   @default("")
+  createdAt                          DateTime @default(now())
+  updatedAt                          DateTime @updatedAt
 
   @@map("site_config")
 }
@@ -290,7 +283,8 @@ enum OnboardingStep {
   COMPLETE @map("complete")
 }
 
-enum AdminRole {
+enum Role {
+  USER          @map("user")
   ADMIN         @map("admin")
   PAYMENT_ADMIN @map("payment-admin")
   ADMIN_MANAGER @map("admin-manager")
