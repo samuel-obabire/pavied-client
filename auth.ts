@@ -134,6 +134,7 @@ export const auth = betterAuth({
     resetPasswordTokenExpiresIn: 15 * 60,
     revokeSessionsOnPasswordReset: true,
   },
+  trustedOrigins: ["https://www.pavied.com", "https://pavied.com"],
   plugins: [nextCookies()], // enables cookie setting in client. Make sure this is the last plugin in the array
 });
 
