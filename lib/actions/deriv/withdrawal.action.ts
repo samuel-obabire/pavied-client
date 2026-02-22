@@ -3,6 +3,7 @@
 import "server-only";
 import { logger } from "@sentry/nextjs";
 import { v4 as uuidv4 } from "uuid";
+import { scheduleWithdrawalPayout } from "@/lib/utils/qstash";
 import action from "../../handlers/action";
 import {
   getDerivAccountToken,
@@ -205,6 +206,10 @@ export const processDerivWithdrawal = async (paymentData: {
           await tx.updateTransactionStatus(transactionId, "PROCESSING");
         }
       });
+
+      await scheduleWithdrawalPayout(transactionId, 30 * 60).catch(
+        logger.error,
+      );
 
       return { success: true };
     }

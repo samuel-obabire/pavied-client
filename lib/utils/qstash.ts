@@ -33,3 +33,16 @@ export const scheduleOrderCancellation = async (
     delay: delayInSeconds,
   });
 };
+
+export const scheduleWithdrawalPayout = async (
+  transactionId: string,
+  delayInSeconds: number = 15 * 60,
+) => {
+  if (process.env.NODE_ENV === "development") return;
+
+  return publishToQStash({
+    url: `${process.env.NEXT_PUBLIC_URL}/api/withdrawal-payout`,
+    body: { transactionId },
+    delay: delayInSeconds,
+  });
+};

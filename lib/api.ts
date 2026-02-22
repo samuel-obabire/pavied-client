@@ -43,20 +43,20 @@ export const api = {
       );
     },
 
-    // confirmClientWithdraw: async (transactionId: string) => {
-    //   return await fetchHandler<undefined>(
-    //     `${SHARED_API_URL}/confirm-deriv-withdraw`,
-    //     {
-    //       method: "POST",
-    //       body: JSON.stringify({
-    //         transactionId,
-    //       }),
-    //       headers: {
-    //         Authorization: `Bearer ${process.env.SHARED_API_TOKEN_CLIENT!}`,
-    //       },
-    //     },
-    //   );
-    // },
+    approveDerivWithdraw: async (transactionId: string) => {
+      return await fetchHandler<null>(
+        `${SHARED_API_URL}/deriv/deriv-withdrawal`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            transactionId,
+          }),
+          headers: {
+            Authorization: `Bearer ${process.env.SHARED_API_TOKEN_CLIENT as string}`,
+          },
+        },
+      );
+    },
 
     declineDerivDeposit: async (
       transactionId: string,
