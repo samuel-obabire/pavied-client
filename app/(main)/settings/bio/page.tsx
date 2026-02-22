@@ -5,7 +5,8 @@ import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 
 const SettingsBioPage = async () => {
-  const sessionUser = await verifySession();
+  const session = await verifySession();
+  const sessionUser = session?.user;
   if (!sessionUser || !sessionUser.id) redirect(ROUTES.SIGN_IN);
 
   const { data: user } = await getUserById(sessionUser.id);

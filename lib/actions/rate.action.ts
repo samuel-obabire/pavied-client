@@ -1,13 +1,18 @@
 import { unstable_cache as nextCache } from "next/cache";
-import { firestoreAdapter } from "../firebase/firestore.adapter";
+import type { CurrencyRate } from "@/prisma/lib/generated/prisma/client";
 import handleError from "../handlers/error";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
+import {
+  type DecimalToNumber,
+  transformDecimals,
+} from "../prisma-adapters/utils";
 
 export const fetchCachedRates = nextCache(
-  async (): Promise<ActionResponse<CurrencyConfig[]>> => {
+  async (): Promise<ActionResponse<DecimalToNumber<CurrencyRate[]>>> => {
     try {
-      const currencyConfigs = await firestoreAdapter.rates.getRates();
+      const currencyRates = await prismaAdapter.rates.getRates();
 
-      return { success: true, data: currencyConfigs };
+      return { success: true, data: transformDecimals(currencyRates) };
     } catch (error) {
       return handleError(error) as ErrorResponse;
     }
@@ -18,14 +23,14 @@ export const fetchCachedRates = nextCache(
 
 export const fetchCachedRate = (currency: string) =>
   nextCache(
-    async (): Promise<ActionResponse<CurrencyConfig>> => {
+    async (): Promise<ActionResponse<DecimalToNumber<CurrencyRate>>> => {
       try {
-        const currencyConfig =
-          await firestoreAdapter.rates.getRateByCurrency(currency);
+        const currencyRate =
+          await prismaAdapter.rates.getRateByCurrency(currency);
 
-        if (!currencyConfig) throw new Error("Currency config not found");
+        if (!currencyRate) throw new Error("Currency config not found");
 
-        return { success: true, data: currencyConfig };
+        return { success: true, data: transformDecimals(currencyRate) };
       } catch (error) {
         return handleError(error) as ErrorResponse;
       }

@@ -46,16 +46,3 @@ export type FundDerivSuccess = {
   agentAccount: string;
   currency: string;
 };
-
-export type TransactionFieldMap = {
-  status?: "pending" | "processing" | "success" | "failed";
-  "fulfillment.fulfilled"?: boolean;
-  "fulfillment.fulfilledAt"?: Date;
-  "fulfillment.actor"?: "client" | "admin" | "webhook";
-  "fulfillment.actorId"?: string;
-  "fulfillment.referenceId"?: string;
-  "extra.recieptPath"?: string;
-  "extra.fundingInProgress"?: boolean;
-  "extra.isPaymentConfirmed"?: boolean;
-  note?: string;
-};

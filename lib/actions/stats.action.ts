@@ -2,24 +2,27 @@
 
 import "server-only";
 
-import { firestoreAdapter } from "../firebase/firestore.adapter";
+import type { UserStats } from "@/prisma/lib/generated/prisma/client";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-errors";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
+import type { DecimalToNumber } from "../prisma-adapters/utils";
 import { verifySession } from "../server";
 
 export const getUserStats = async (
   userId: string,
-): Promise<ActionResponse<UserStats>> => {
-  const loggedInUser = await verifySession();
+): Promise<ActionResponse<DecimalToNumber<UserStats>>> => {
+  const session = await verifySession();
+  const loggedInUser = session?.user;
 
   try {
     if (!loggedInUser?.id || userId !== loggedInUser.id) {
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const stats = await firestoreAdapter.stats.getUserStats(userId);
+    const stats = await prismaAdapter.stats.getUserStats(userId);
 
-    if (!stats) throw new NotFoundError("User");
+    if (!stats) throw new NotFoundError("User stats");
 
     return { success: true, data: stats };
   } catch (error) {

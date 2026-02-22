@@ -11,7 +11,7 @@ const ConnectedPaymentState = async ({
 }) => {
   const { success, data } = await getPaymentTransaction(paymentId);
 
-  if (!success || data?.userId !== userId || data.type !== "deriv_deposit") {
+  if (!success || data?.userId !== userId || data.type !== "DERIV_DEPOSIT") {
     return <NotFoundPayment />;
   }
 

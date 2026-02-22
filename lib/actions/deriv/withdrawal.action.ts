@@ -3,8 +3,6 @@
 import "server-only";
 import { logger } from "@sentry/nextjs";
 import { v4 as uuidv4 } from "uuid";
-import { setById } from "../../firebase/firestore";
-import { firestoreAdapter } from "../../firebase/firestore.adapter";
 import action from "../../handlers/action";
 import {
   getDerivAccountToken,
@@ -13,7 +11,12 @@ import {
 } from "../../handlers/deriv";
 import handleError from "../../handlers/error";
 import { UnauthorizedError } from "../../http-errors";
-import { multiplyNumbers, scheduleOrderCancellation } from "../../utils";
+import { prismaAdapter } from "../../prisma-adapters/prisma.adapter";
+import {
+  multiplyNumbers,
+  scheduleOrderCancellation,
+  transactionIsDerivWithdrawal,
+} from "../../utils";
 import { decryptToken } from "../../utils/server/encryption";
 import {
   DerivWithdrawalOTPSchema,
@@ -71,7 +74,7 @@ export const createDerivWithdrawalTransaction = async (
       getUserDerivAccounts(userId, {
         onlyActive: true,
       }),
-      firestoreAdapter.siteConfig.getSiteConfig(),
+      prismaAdapter.siteConfig.getSiteConfig(),
     ]);
 
     if (!rateRes.data)
@@ -102,35 +105,28 @@ export const createDerivWithdrawalTransaction = async (
       amount,
     );
 
-    const transactionId = uuidv4();
-
-    await setById("transactions", transactionId, {
-      transactionId,
-      userId,
-      amount: multiplyNumbers(withdrawalRate, amount),
-      status: "pending",
-      type: "deriv_withdrawal",
-
-      extra: {
+    const convertedAmount = multiplyNumbers(withdrawalRate, amount);
+    const transactionId =
+      await prismaAdapter.derivFlow.createDerivWithdrawalTransaction({
+        userId,
+        transactionId: uuidv4(),
         amount,
+        convertedAmount,
         currency,
         derivLoginId,
         receivingBankAccountNumber,
         receivingBankCode,
         receivingBankName,
         recievingBankAccountName,
-      },
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      fulfillment: {
-        fulfilled: false,
-      },
-    } satisfies DerivWithdrawal);
+      });
 
     // Autocancel the order after 30 mins of non-payment
     await scheduleOrderCancellation(transactionId, "Payment timeout", 30 * 60);
 
-    return { success: true, data: { transactionId } };
+    return {
+      success: true,
+      data: { transactionId },
+    };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -157,25 +153,30 @@ export const processDerivWithdrawal = async (paymentData: {
 
   const userId = session?.user.id;
 
+  // revalidatePath("/deriv/withdrawal");
+
   try {
     if (!userId) {
       throw new UnauthorizedError("Not Authorized");
     }
 
     const transaction =
-      ((await firestoreAdapter.transactions.getTransactionById(
-        transactionId,
-      )) as DerivWithdrawal) || null;
+      await prismaAdapter.transactions.getTransactionById(transactionId);
 
     if (!transaction) throw new Error("Transaction not found");
 
-    const accountToken = await getDerivAccountToken(
-      userId,
-      transaction.extra.derivLoginId,
-    );
+    if (
+      !transaction.derivWithdrawalExtra ||
+      !transactionIsDerivWithdrawal(transaction)
+    )
+      throw new Error("Invalid Transaction");
+
+    const { amount, currency, derivLoginId } = transaction.derivWithdrawalExtra;
+
+    const accountToken = await getDerivAccountToken(userId, derivLoginId);
     if (!accountToken) throw new Error("Account not found");
 
-    const agentRes = await fetchAgentAccount(transaction.extra.currency);
+    const agentRes = await fetchAgentAccount(currency);
 
     if (!agentRes.success || !agentRes.data) {
       throw new Error(
@@ -184,8 +185,8 @@ export const processDerivWithdrawal = async (paymentData: {
     }
 
     const paymentAgentWithdrawResponse = await paymentAgentWithdraw({
-      amount: transaction.extra.amount,
-      currency: transaction.extra.currency,
+      amount: amount,
+      currency: currency,
       paymentagent_loginid: agentRes.data?.accountId as string,
       verification_code: pin,
       token: decryptToken(accountToken),
@@ -196,12 +197,12 @@ export const processDerivWithdrawal = async (paymentData: {
         `Deriv withdrawal tx: ${transactionId} successful with ref: ${paymentAgentWithdrawResponse.transaction_id}`,
       );
 
-      await firestoreAdapter.runTransaction(async (tx) => {
+      await prismaAdapter.runDbTransaction(async (tx) => {
         const transaction = await tx.getTransaction(transactionId);
         if (!transaction) throw new Error("Transaction not found");
 
-        if (transaction.status === "pending") {
-          await tx.updateTransaction(transactionId, { status: "processing" });
+        if (transaction.status === "PENDING") {
+          await tx.updateTransactionStatus(transactionId, "PROCESSING");
         }
       });
 

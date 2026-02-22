@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { useQueryState } from "nuqs";
 import { useOnInView } from "react-intersection-observer";
 import { getUserTransactions } from "@/lib/actions/payment.action";
+import { useSession } from "@/lib/auth-client";
 import { PER_PAGE } from "@/lib/constants";
+import type { BaseTransaction } from "@/lib/prisma-adapters/types";
 import Divider from "./Divider";
 import TransactionCard from "./TransactionCard";
 
@@ -18,16 +19,16 @@ const MobileTransactionList = ({
   transactions,
   infiniteScrollEnabled = true,
 }: {
-  transactions: Transaction[];
+  transactions: BaseTransaction[];
   infiniteScrollEnabled?: boolean;
 }) => {
   const [updatedTransactions, setUpdatedTransactions] =
-    useState<Transaction[]>(transactions);
+    useState<BaseTransaction[]>(transactions);
 
   const [type] = useQueryState("type");
   const [status] = useQueryState("status");
 
-  const session = useSession();
+  const { data: session } = useSession();
 
   const queryOptions = {
     type: type ?? undefined,
@@ -42,9 +43,9 @@ const MobileTransactionList = ({
     if (!inView) return;
 
     try {
-      if (updatedTransactions.length && session.status === "authenticated") {
+      if (updatedTransactions.length && session?.user?.id) {
         const { success, data } = await getUserTransactions(
-          session.data?.user.id as string,
+          session.user.id as string,
           {
             page: Math.ceil(updatedTransactions.length / PER_PAGE) + 1,
             perPage: PER_PAGE,

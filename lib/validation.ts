@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { OnboardingStep } from "./constants/onboarding";
+import { OnboardingStep } from "@/prisma/lib/generated/prisma/enums";
 import { supportedDerivAccountsType } from "./constants/supportedDerivAccountsType";
 
 export const AccountRegistrationSchema = z.object({
-  fullName: z
+  name: z
     .string()
     .min(5, {
       error: "Name is required and must have a minimum of 5 characters",
@@ -13,12 +13,87 @@ export const AccountRegistrationSchema = z.object({
     .string()
     .min(2, { error: "Please select your nationality" }),
   phone: z.string().min(6, { error: "Please enter your phone number" }),
-  whatsApp: z
+  whatsapp: z
     .string()
     .min(6, { error: "Please enter a valid  number" })
     .optional()
     .or(z.literal("")),
 });
+
+export const StrongPasswordSchema = z
+  .string()
+  .min(8, { error: "Password must be at least 8 characters long" })
+  .regex(/[a-z]/, {
+    error: "Password must include at least one lowercase letter",
+  })
+  .regex(/[A-Z]/, {
+    error: "Password must include at least one uppercase letter",
+  })
+  .regex(/[0-9]/, {
+    error: "Password must include at least one number",
+  })
+  .regex(/^\S+$/, {
+    error: "Password must not contain spaces",
+  });
+
+export const SignupSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 8 characters"),
+    email: z.email({ error: "Please enter a valid email address" }),
+    password: StrongPasswordSchema,
+
+    confirmPassword: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export const SigninSchema = z.object({
+  email: z.string().email({ error: "Please enter a valid email address" }),
+  password: z.string().min(1, { error: "Password is required" }),
+});
+
+export const ForgotPasswordSchema = z.object({
+  email: z.email({ error: "Please enter a valid email address" }),
+});
+
+export const SendEmailVerification = z.object({
+  email: z.email({ error: "Please enter a valid email address" }),
+});
+
+export const ResetPasswordSchema = z
+  .object({
+    newPassword: StrongPasswordSchema,
+    confirmPassword: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export const ResetPasswordSchemaWithToken = ResetPasswordSchema.extend({
+  token: z.string().min(3, { error: "Please provide a valid token" }),
+});
+
+export const ChangePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(1, { error: "Current password is required" }),
+    newPassword: StrongPasswordSchema,
+    confirmPassword: z
+      .string()
+      .min(8, { error: "Password must be at least 8 characters" }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export const DerivAccountSchema = {
   // client: z.object({
@@ -61,7 +136,7 @@ export const bankAccountSchema = {
       .trim(),
     accountNumber: z
       .string()
-      .min(10, { error: "Please provide a valid bank account number" })
+      .length(10, { error: "Please provide a valid bank account number" })
       .trim(),
   }),
 
@@ -72,7 +147,7 @@ export const bankAccountSchema = {
       .min(5, { error: "Please select your bank account name" }),
     accountNumber: z
       .string()
-      .min(10, { error: "Please provide a valid bank account number" }),
+      .length(10, { error: "Please provide a valid bank account number" }),
     bankCode: z
       .string()
       .min(3, { error: "Please provide bank code with min of 3 characters" }),

@@ -3,11 +3,12 @@
 import "server-only";
 
 import { revalidatePath } from "next/cache";
+import type { BankAccount } from "@/prisma/lib/generated/prisma/client";
 import { ROUTES } from "../constants/routes";
-import { firestoreAdapter } from "../firebase/firestore.adapter";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { UnauthorizedError } from "../http-errors";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
 import { verifySession } from "../server";
 import { bankAccountSchema } from "../validation";
 
@@ -15,14 +16,15 @@ export const getUserBankAccounts = async (
   userId: string,
   { onlyActive }: { onlyActive: boolean } = { onlyActive: false },
 ): Promise<ActionResponse<BankAccount[]>> => {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   try {
     if (!userId || !user?.id || userId !== user?.id) {
       throw new UnauthorizedError("Not Authorized");
     }
 
-    const bankAccounts = await firestoreAdapter.bank.getBankAccounts(
+    const bankAccounts = await prismaAdapter.bank.getBankAccounts(
       userId,
       onlyActive,
     );
@@ -34,7 +36,10 @@ export const getUserBankAccounts = async (
 };
 
 export const addUserBankAccount = async (
-  bankAccount: BankAccount,
+  bankAccount: Pick<
+    BankAccount,
+    "accountName" | "accountNumber" | "bankCode" | "bankName"
+  >,
 ): Promise<ActionResponse> => {
   const result = await action({
     params: bankAccount,
@@ -53,19 +58,7 @@ export const addUserBankAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    const { bankCode, accountNumber } = parsedBankAccount;
-
-    await firestoreAdapter.runTransaction(async (tx) => {
-      const existingBankAccount = await tx.getBankAccount(
-        bankCode,
-        accountNumber,
-      );
-
-      if (existingBankAccount)
-        throw new Error("Account already exist in the database");
-
-      tx.addBankAccount({ ...bankAccount, active: false }, userId);
-    });
+    await prismaAdapter.bank.addUserBankAccount(userId, parsedBankAccount);
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -95,7 +88,7 @@ export const removeUserBankAccount = async (
 
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
-    await firestoreAdapter.bank.removeBankAccount({
+    await prismaAdapter.bank.removeBankAccount({
       ...parsedBankAccount,
       userId,
     });

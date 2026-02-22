@@ -8,11 +8,17 @@ import {
 import { ROUTES } from "./lib/constants/routes";
 import logger from "./lib/logger";
 import { verifySession } from "./lib/server";
+import type { OnboardingStep } from "./prisma/lib/generated/prisma/enums";
 
 const publicRoutes = [
   ROUTES.HOME,
   ROUTES.HANDLE_DERIV,
   ROUTES.SIGN_IN,
+  ROUTES.SIGN_UP,
+  ROUTES.EMAIL_VERIFICATION_RESULT,
+  ROUTES.EMAIL_VERIFICATION,
+  ROUTES.FORGOT_PASSWORD,
+  ROUTES.RESET_PASSWORD,
   ROUTES.CONTACT,
   ROUTES.VERIFY_DERIV_DEPOSIT,
   ROUTES.CANCEL_ORDER,
@@ -22,7 +28,8 @@ const publicRoutes = [
 ];
 
 export async function proxy(request: NextRequest) {
-  const user = await verifySession();
+  const session = await verifySession();
+  const user = session?.user;
 
   const pathname = request.nextUrl.pathname;
 
@@ -31,16 +38,16 @@ export async function proxy(request: NextRequest) {
 
   // Redirect to sign-in if no user and not on a public route
   if (!user?.id && !publicRoutes.includes(pathname)) {
-    const newUrl = new URL(ROUTES.HOME, request.url);
+    const newUrl = new URL(ROUTES.SIGN_IN, request.url);
     newUrl.searchParams.set("callback", pathname);
 
     return NextResponse.redirect(newUrl);
   }
 
   // If user is on the onboarding route
-  if (onBoardingRoutes.includes(pathname)) {
+  if (user && onBoardingRoutes.includes(pathname)) {
     try {
-      const { success, data } = await api.users.getById(user!.id!);
+      const { success, data } = await api.users.getById(user.id);
 
       if (!success || !data) {
         throw new Error("User not found in middleware fetch");
@@ -54,7 +61,15 @@ export async function proxy(request: NextRequest) {
       }
     } catch (err) {
       logger.error({ err, pathname }, "Onboarding middleware error");
-      return redirect(ROUTES.HOME);
+      const response = NextResponse.redirect(
+        new URL(ROUTES.SIGN_IN, request.url),
+      );
+      // Clear session cookies to force logout if user data is invalid
+      response.cookies.delete("authjs.session-token");
+      response.cookies.delete("__Secure-authjs.session-token");
+      response.cookies.delete("next-auth.session-token");
+      response.cookies.delete("__Secure-next-auth.session-token");
+      return response;
     }
   }
 
@@ -65,10 +80,10 @@ export async function proxy(request: NextRequest) {
     !publicRoutes.includes(pathname)
   ) {
     if (
-      user?.onboardingStep !== "complete" &&
+      user?.onboardingStep !== ("COMPLETE" as OnboardingStep) &&
       pathname !== ROUTES.CONNECT_DERIV
     ) {
-      return redirect(stepToRoute[user?.onboardingStep ?? "bio"]);
+      return redirect(stepToRoute[user.onboardingStep as OnboardingStep]);
     }
   }
 

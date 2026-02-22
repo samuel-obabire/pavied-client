@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { addDerivAccounts } from "@/lib/actions/deriv.action";
+import { useSession } from "@/lib/auth-client";
 import { ROUTES } from "@/lib/constants/routes";
 import { cn } from "@/lib/utils";
+import { OnboardingStep } from "@/prisma/lib/generated/prisma/enums";
 import ActionState, { type ActionStatusProps } from "./ActionState";
 import CustomButton from "./CustomButton";
 import DerivCurrencyIcon from "./DerivCurrencyIcon";
@@ -31,7 +32,7 @@ const DerivAccountSelectionList = ({
   const [actionState, setActionState] =
     useState<ActionStatusProps["state"]>("idle");
 
-  const { data } = useSession();
+  const { data: session } = useSession();
 
   const router = useRouter();
 
@@ -47,6 +48,18 @@ const DerivAccountSelectionList = ({
       );
     }
   };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedAccounts(parsedAccounts);
+    } else {
+      setSelectedAccounts([]);
+    }
+  };
+
+  const isAllSelected =
+    parsedAccounts.length > 0 &&
+    selectedAccounts.length === parsedAccounts.length;
 
   const handleSubmit = async () => {
     try {
@@ -75,20 +88,18 @@ const DerivAccountSelectionList = ({
           successTitle="Account(s) Under Review"
           successMessage={
             <>
-              <p className="text-center">
-                Your account submitted deriv account is currently under review,
-                It will be ready for transaction once we have verified it
+              <p className="text-14-medium text-center text-gray-500">
+                Your Deriv account details have been submitted and are currently under review.
+                You&apos;ll be able to start transacting as soon as the verification is complete.
               </p>
 
-              {data?.user.onboardingStep !== "complete" ? (
-                <>
-                  <SaveStepFooter
-                    label="Continue to Next Step"
-                    onboardingStep="bank"
-                    nextRoute="ONBOARD_BANK"
-                    buttonClass="btn-secondary"
-                  />
-                </>
+              {session?.user?.onboardingStep !== OnboardingStep.COMPLETE ? (
+                <SaveStepFooter
+                  label="Continue to Next Step"
+                  onboardingStep="BANK"
+                  nextRoute="ONBOARD_BANK"
+                  buttonClass="btn-secondary"
+                />
               ) : (
                 <Button
                   onClick={() => router.push(ROUTES.DASHBOARD)}
@@ -100,6 +111,16 @@ const DerivAccountSelectionList = ({
             </>
           }
         />
+        <div className="bg-white_dark-black-1 flex items-center justify-between px-4 py-3 mb-4 rounded-lg">
+          <Label htmlFor="select-all" className="font-medium">
+            Select All Accounts
+          </Label>
+          <Checkbox
+            id="select-all"
+            checked={isAllSelected}
+            onCheckedChange={(checked) => handleSelectAll(Boolean(checked))}
+          />
+        </div>
         {parsedAccounts.map((account, index) => {
           const checkboxId = `account-${account.accountId}`;
 

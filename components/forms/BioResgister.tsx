@@ -9,30 +9,30 @@ import countryList from "react-select-country-list";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form";
 import "react-phone-number-input/style.css";
 import { updateUser } from "@/lib/actions/user.action";
-import { OnboardingStep } from "@/lib/constants/onboarding";
 import { AccountRegistrationSchema } from "@/lib/validation";
+import { OnboardingStep } from "@/prisma/lib/generated/prisma/browser";
 import ActionState, { type ActionStateType } from "../ActionState";
 import CustomFormField, { FormFieldTypes } from "../CustomFormField";
 import SaveOnboardingStep from "../SaveOnboardingStep";
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ defaultName }: { defaultName?: string }) => {
   const form = useForm<z.infer<typeof AccountRegistrationSchema>>({
     resolver: zodResolver(AccountRegistrationSchema),
     defaultValues: {
-      fullName: "",
+      name: defaultName || "",
       countryOfResidence: "",
       phone: "",
-      whatsApp: "",
+      whatsapp: "",
     },
   });
 
@@ -68,7 +68,7 @@ const RegistrationForm = () => {
       <ActionState
         state={actionState}
         pendingTitle="Registering Account"
-        successTitle="Account  successfully updated"
+        successTitle="Account successfully updated"
         errorMessage={errorMessage}
         retryAction={retrySubmit}
         successMessage={
@@ -76,7 +76,7 @@ const RegistrationForm = () => {
             <SaveOnboardingStep
               label="Continue to next step"
               nextRoute="ONBOARD_DERIV"
-              onboardingStep={OnboardingStep.SETUP_DERIV}
+              onboardingStep={OnboardingStep.DERIV}
             />
           )
         }
@@ -89,7 +89,7 @@ const RegistrationForm = () => {
         >
           <FormField
             control={form.control}
-            name="fullName"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Full name</FormLabel>
@@ -174,7 +174,7 @@ const RegistrationForm = () => {
 
           <FormField
             control={form.control}
-            name="whatsApp"
+            name="whatsapp"
             render={({ field }) => (
               <FormItem className="flex flex-col items-start">
                 <FormLabel>Whatsapp number (Optional)</FormLabel>

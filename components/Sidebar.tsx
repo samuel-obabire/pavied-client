@@ -1,9 +1,8 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
-
 import {
   Accordion,
   AccordionContent,
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/accordion";
 import { sideLinks } from "@/lib/constants/sideLinks";
 import { cn } from "@/lib/utils";
-
 import BrandName from "./BrandName";
 import ProfileLogout from "./ProfileLogout";
 
@@ -22,9 +20,7 @@ const Sidebar = () => {
   return (
     <aside className="bg-white_dark-black-1 sticky top-0 left-0 hidden h-screen w-full flex-col border-r border-gray-200 dark:border-gray-800 lg:flex lg:w-[260px]">
       <div className="p-6">
-        <Link href="/">
-          <BrandName />
-        </Link>
+        <BrandName />
       </div>
 
       <div className="flex flex-1 flex-col justify-between px-4 pb-6">
@@ -48,7 +44,7 @@ const Sidebar = () => {
                     >
                       <AccordionItem value="deriv-item" className="border-none">
                         <AccordionTrigger className="hover:bg-primary/5 text-14-medium rounded-lg px-3 py-2 text-gray-700 transition-colors hover:no-underline dark:text-gray-300">
-                          Deriv Transaction
+                          Merchant Settlement
                         </AccordionTrigger>
                         <AccordionContent className="pb-0 pl-4 pt-1">
                           <Link href={link.deposit.href}>
@@ -60,7 +56,7 @@ const Sidebar = () => {
                                     pathname === link.deposit.href,
                                   "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5":
                                     pathname !== link.deposit.href,
-                                }
+                                },
                               )}
                             >
                               <link.deposit.Icon size={18} />
@@ -68,7 +64,10 @@ const Sidebar = () => {
                             </li>
                           </Link>
 
-                          <Link href={link.withdrawal.href} className="mt-1 block">
+                          <Link
+                            href={link.withdrawal.href}
+                            className="mt-1 block"
+                          >
                             <li
                               className={cn(
                                 "flex h-10 w-full cursor-pointer items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
@@ -77,7 +76,7 @@ const Sidebar = () => {
                                     pathname === link.withdrawal.href,
                                   "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5":
                                     pathname !== link.withdrawal.href,
-                                }
+                                },
                               )}
                             >
                               <link.withdrawal.Icon size={18} />
@@ -98,7 +97,6 @@ const Sidebar = () => {
 
               return (
                 <React.Fragment key={href}>
-                  
                   {/* <Divider /> */}
 
                   <Link href={href}>
@@ -106,13 +104,20 @@ const Sidebar = () => {
                       className={cn(
                         "flex h-12 w-full cursor-pointer items-center gap-3 rounded-lg px-3 text-sm font-medium transition-all duration-200",
                         {
-                          "bg-primary text-white shadow-md shadow-primary/20": isActive,
+                          "bg-primary text-white shadow-md shadow-primary/20":
+                            isActive,
                           "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-100":
                             !isActive,
-                        }
+                        },
                       )}
                     >
-                      <Icon size={20} className={cn({ "text-white": isActive, "text-gray-500 dark:text-gray-400": !isActive })} /> 
+                      <Icon
+                        size={20}
+                        className={cn({
+                          "text-white": isActive,
+                          "text-gray-500 dark:text-gray-400": !isActive,
+                        })}
+                      />
                       {label}
                     </li>
                   </Link>

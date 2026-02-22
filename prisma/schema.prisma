@@ -1,0 +1,292 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                 String         @id
+  name               String
+  email              String
+  emailVerified      Boolean        @default(false)
+  image              String?
+  disabled           Boolean        @default(false)
+  phone              String?
+  countryOfResidence String?
+  whatsapp           String?
+  provider           String?
+  providerAccountId  String?
+  onboardingStep     OnboardingStep @default(BIO)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  sessions           Session[]
+  accounts           Account[]
+  userStats          UserStats?
+  bankAccounts       BankAccount[]
+  derivAccounts      DerivAccount[]
+  transactions       Transaction[]
+
+  role Role @default(USER)
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model UserStats {
+  id                          String  @id @default(cuid())
+  totalTransactions           Int     @default(0)
+  totalDeposits               Decimal @default(0) @db.Decimal(18, 2)
+  totalWithdrawals            Decimal @default(0) @db.Decimal(18, 2)
+  totalSuccessfulTransactions Int     @default(0)
+  totalFailedTransactions     Int     @default(0)
+  user                        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                      String  @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_stats")
+}
+
+model BankAccount {
+  id            String  @id @default(cuid())
+  accountNumber String
+  accountName   String
+  bankName      String
+  bankCode      String
+  active        Boolean @default(false)
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([bankCode, accountNumber])
+  @@map("bank_accounts")
+}
+
+model DerivAccount {
+  id        String  @id @default(cuid())
+  accountId String  @unique
+  currency  String
+  active    Boolean @default(false)
+  token     String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([currency, accountId])
+  @@map("deriv_accounts")
+}
+
+model AdminBankAccount {
+  id                        String   @id @default(cuid())
+  default                   Boolean  @default(false)
+  accountName               String
+  accountNumber             String
+  bankName                  String
+  bankCode                  String
+  syncedBanks               String[] @default([])
+  blackListedBanks          String[] @default([])
+  minAmountAllowed          Decimal  @default(0) @db.Decimal(18, 2)
+  maxAmountAllowed          Decimal  @default(0) @db.Decimal(18, 2)
+  requireManualConfirmation Boolean  @default(false)
+  dailyCap                  Decimal  @default(0) @db.Decimal(18, 2)
+  isActive                  Boolean  @default(false)
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  @@map("admin_bank_accounts")
+}
+
+model AgentDerivAccount {
+  id        String   @id
+  currency  String   @unique
+  accountId String   @unique
+  active    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("agent_deriv_accounts")
+}
+
+model CurrencyRate {
+  id                String   @id @default(cuid())
+  code              String   @unique
+  name              String
+  active            Boolean  @default(false)
+  depositMin        Decimal  @default(0) @db.Decimal(18, 2)
+  depositMax        Decimal  @default(0) @db.Decimal(18, 2)
+  depositRate       Decimal  @default(0) @db.Decimal(18, 2)
+  withdrawalMin     Decimal  @default(0) @db.Decimal(18, 2)
+  withdrawalMax     Decimal  @default(0) @db.Decimal(18, 2)
+  withdrawalRate    Decimal  @default(0) @db.Decimal(18, 2)
+  smallAmount       Decimal  @default(0) @db.Decimal(18, 2)
+  smallAmountCharge Decimal  @default(0) @db.Decimal(18, 2)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("rates")
+}
+
+model Transaction {
+  transactionId          String                @id
+  user                   User                  @relation(fields: [userId], references: [id])
+  userId                 String
+  amount                 Decimal               @db.Decimal(18, 2)
+  type                   TransactionType
+  status                 TransactionStatus     @default(PENDING)
+  fulfillmentFulfilled   Boolean               @default(false)
+  fulfillmentFulfilledAt DateTime?
+  fulfillmentActor       String?
+  fulfillmentActorId     String?
+  fulfillmentReferenceId String?
+  fulfillmentNote        String?
+  derivDepositExtra      DerivDepositExtra?
+  derivWithdrawalExtra   DerivWithdrawalExtra?
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+
+  @@index([userId])
+  @@map("transactions")
+}
+
+model DerivDepositExtra {
+  transactionId             String      @id
+  transaction               Transaction @relation(fields: [transactionId], references: [transactionId], onDelete: Cascade)
+  currency                  String
+  amount                    Decimal     @db.Decimal(18, 2)
+  derivLoginId              String
+  paidFromBankName          String
+  paidFromBankCode          String
+  paidFromAccountNumber     String
+  paidFromAccountName       String
+  assignedBankId            String
+  assignedBankName          String
+  assignedBankAccountName   String
+  assignedBankAccountNumber String
+  recieptPath               String?
+  isPaymentConfirmed        Boolean     @default(false)
+  fundingInProgress         Boolean     @default(false)
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @updatedAt
+
+  @@index([paidFromAccountName])
+  @@map("deriv_deposit_extras")
+}
+
+model DerivWithdrawalExtra {
+  transactionId              String      @id
+  transaction                Transaction @relation(fields: [transactionId], references: [transactionId], onDelete: Cascade)
+  currency                   String
+  amount                     Decimal     @db.Decimal(18, 2)
+  derivLoginId               String
+  receivingBankAccountNumber String
+  recievingBankAccountName   String
+  receivingBankCode          String
+  receivingBankName          String
+  createdAt                  DateTime    @default(now())
+  updatedAt                  DateTime    @updatedAt
+
+  @@map("deriv_withdrawal_extras")
+}
+
+model SiteConfig {
+  id                                 String   @id @default("default")
+  maintenanceMode                    Boolean  @default(false)
+  paymentsPaused                     Boolean  @default(false)
+  derivAutopaymentsEnabled           Boolean  @default(true)
+  derivDepositAutoPaymentsEnabled    Boolean  @default(true)
+  derivWithdrawalAutoPaymentsEnabled Boolean  @default(true)
+  derivDepositsEnabled               Boolean  @default(true)
+  derivDepositsMaxAmount             Int      @default(0)
+  derivWithdrawalsEnabled            Boolean  @default(true)
+  derivWithdrawalsMaxAmount          Int      @default(0)
+  changeReason                       String   @default("")
+  updatedBy                          String   @default("")
+  createdAt                          DateTime @default(now())
+  updatedAt                          DateTime @updatedAt
+
+  @@map("site_config")
+}
+
+enum TransactionStatus {
+  PENDING    @map("pending")
+  PROCESSING @map("processing")
+  SUCCESS    @map("success")
+  FAILED     @map("failed")
+}
+
+enum TransactionType {
+  DERIV_DEPOSIT    @map("deriv_deposit")
+  DERIV_WITHDRAWAL @map("deriv_withdrawal")
+}
+
+enum OnboardingStep {
+  BIO      @map("bio")
+  DERIV    @map("deriv")
+  BANK     @map("bank")
+  COMPLETE @map("complete")
+}
+
+enum Role {
+  USER          @map("user")
+  ADMIN         @map("admin")
+  PAYMENT_ADMIN @map("payment-admin")
+  ADMIN_MANAGER @map("admin-manager")
+  SUPER_ADMIN   @map("super-admin")
+}

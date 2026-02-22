@@ -1,9 +1,9 @@
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { NextResponse } from "next/server";
 import { api } from "@/lib/api";
-import { firestoreAdapter } from "@/lib/firebase/firestore.adapter";
 import { NotFoundError } from "@/lib/http-errors";
 import logger from "@/lib/logger";
+import { prismaAdapter } from "@/lib/prisma-adapters/prisma.adapter";
 
 //  Verify that this messages comes from QStash
 export const POST = verifySignatureAppRouter(async (req: Request) => {
@@ -16,11 +16,11 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
 
   try {
     const transaction =
-      await firestoreAdapter.transactions.getTransactionById(transactionId);
+      await prismaAdapter.transactions.getTransactionById(transactionId);
 
     if (!transaction) throw new NotFoundError(`Transaction ${transactionId}`);
 
-    if (transaction && transaction.status !== "pending")
+    if (transaction && transaction.status !== "PENDING")
       return NextResponse.json({ success: true }, { status: 201 });
 
     // proceed to cancel

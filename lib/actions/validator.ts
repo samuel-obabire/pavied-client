@@ -1,5 +1,11 @@
 import type { SupportedCurrencies } from "@deriv/api-types";
-import { firestoreAdapter } from "../firebase/firestore.adapter";
+import type {
+  CurrencyRate,
+  DerivAccount,
+  SiteConfig,
+} from "@/prisma/lib/generated/prisma/client";
+import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
+import type { DecimalToNumber } from "../prisma-adapters/utils";
 
 export const supportedCurrencies: SupportedCurrencies = [
   "USD",
@@ -21,13 +27,13 @@ const assertPaymentsNotPaused = (siteConfig: SiteConfig) => {
 };
 
 const assertDerivDepositEnabled = (siteConfig: SiteConfig) => {
-  if (!siteConfig.deriv.deposits.enabled) {
+  if (!siteConfig.derivDepositsEnabled) {
     throw new Error("Deriv deposits are currently disabled");
   }
 };
 
 const assertUserAccountIsActive = async (userId: string) => {
-  const user = await firestoreAdapter.user.getUserById(userId);
+  const user = await prismaAdapter.user.getUserById(userId);
 
   if (user?.disabled) {
     throw new Error("User account is disabled");
@@ -45,7 +51,7 @@ const assertUserCanFundTheAccount = (
 };
 
 const assertCurrencyisAvailable = (
-  currencyConfig: CurrencyConfig,
+  currencyConfig: DecimalToNumber<CurrencyRate>,
   currencytoFund: string,
 ) => {
   if (!currencyConfig || !currencyConfig.active)
@@ -63,7 +69,7 @@ const assertDepositAmountWithinSiteLimits = (
   amount: number,
   siteConfig: SiteConfig,
 ) => {
-  if (amount > siteConfig.deriv.deposits.maxAmount) {
+  if (siteConfig.derivDepositsMaxAmount.lessThan(amount)) {
     throw new Error("Transaction is greater than the max deposit amount");
   }
 };
@@ -84,7 +90,7 @@ const assertWithdrawalAmountWithinSiteLimits = (
   amount: number,
   siteConfig: SiteConfig,
 ) => {
-  if (amount > siteConfig.deriv.withdrawals.maxAmount) {
+  if (siteConfig.derivWithdrawalsMaxAmount.lessThan(amount)) {
     throw new Error("Transaction is greater than the max deposit amount");
   }
 };
@@ -105,7 +111,7 @@ const assertWithdrawAmountWithinCurrencyWithdrawLimits = (
 };
 
 const assertDerivWithdrawalEnabled = (siteConfig: SiteConfig) => {
-  if (!siteConfig.deriv.withdrawals.enabled) {
+  if (!siteConfig.derivWithdrawalsEnabled) {
     throw new Error("Deriv withdrawals are currently disabled");
   }
 };
@@ -128,8 +134,7 @@ const assertCurrencyWithdrawIsAvailable = async (
   currencyToWithdraw: string,
 ) => {
   const agentAccount =
-    await firestoreAdapter.deriv.getAgentAccount(currencyToWithdraw);
-  console.log(agentAccount);
+    await prismaAdapter.deriv.getAgentAccount(currencyToWithdraw);
 
   if (!agentAccount || !agentAccount.active)
     throw new Error(

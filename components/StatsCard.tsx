@@ -1,11 +1,10 @@
 "use client";
 import { Info } from "lucide-react";
 import CountUp from "react-countup";
-
 import {
     Tooltip,
-    TooltipTrigger,
     TooltipContent,
+    TooltipTrigger,
 } from "@/components/ui/tooltip";
 
 type StatsCardProps = {
@@ -13,9 +12,18 @@ type StatsCardProps = {
   subText: string;
   description?: string;
   count: number;
+  prefix?: string;
+  decimals?: number;
 };
 
-const StatsCard = ({ title, subText, count, description }: StatsCardProps) => {
+const StatsCard = ({
+  title,
+  subText,
+  count,
+  description,
+  prefix = "",
+  decimals = 0,
+}: StatsCardProps) => {
   return (
     <div className="bg-white dark:bg-black-2 flex flex-1 flex-col gap-3 rounded-xl border border-black-1/5 p-5 shadow-sm transition-all duration-300 hover:shadow-md dark:border-white/10 dark:shadow-white/10">
       <div className="flex items-center justify-between">
@@ -41,7 +49,12 @@ const StatsCard = ({ title, subText, count, description }: StatsCardProps) => {
 
       <div className="flex flex-col gap-1">
         <span className="text-28-bold text-black-1 dark:text-white">
-          <CountUp end={count} separator="," />
+          <CountUp
+            end={count}
+            separator=","
+            prefix={prefix}
+            decimals={decimals}
+          />
         </span>
         <span className="text-12-medium text-black-1/40 dark:text-white/40 truncate">
           {subText}
