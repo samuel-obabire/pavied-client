@@ -4,6 +4,7 @@ import AccountCardFallback from "@/components/AccountCardFallback";
 import BankAccountCard from "@/components/BankAccountCard";
 import DataRenderer from "@/components/DataRenderer";
 import BankAccountRegister from "@/components/forms/BankAccountRegister";
+import BankEmptyState from "@/components/ui/empties/bank-empty";
 import { getUserBankAccounts } from "@/lib/actions/bank.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
@@ -14,6 +15,7 @@ const AccountList = async ({ userId }: { userId: string }) => {
   return (
     <div className="flex flex-col gap-4 py-2">
       <DataRenderer
+        empty={{ component: <BankEmptyState /> }}
         data={bankAccountRes.data}
         success={bankAccountRes.success}
         render={(bankAccounts) => {
