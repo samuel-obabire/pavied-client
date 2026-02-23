@@ -1,19 +1,16 @@
 "use client";
 
+import { use } from "react";
 import {
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
-  type ColumnDef
 } from "@tanstack/react-table";
-import { useQueryStates } from "nuqs";
-import { use } from "react";
-
-
 import { useRouter } from "next/navigation";
+import { useQueryStates } from "nuqs";
 import { Button } from "@/components/ui/button";
-import { ROUTES } from "@/lib/constants/routes";
 import {
   Table,
   TableBody,
@@ -22,7 +19,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ROUTES } from "@/lib/constants/routes";
 import { paginationParsers } from "@/lib/utils/parsers";
+import type { Transaction } from "@/prisma/lib/generated/prisma/browser";
+import TransactionEmptyState from "../ui/empties/transaction-empty";
 
 interface TransactionTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -82,7 +82,7 @@ const TransactionTable = <TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -99,7 +99,7 @@ const TransactionTable = <TData, TValue>({
                   data-state={row.getIsSelected() ? "selected" : undefined}
                   onClick={() =>
                     router.push(
-                      `${ROUTES.TRANSACTIONS}/${(row.original as Transaction).transactionId}`
+                      `${ROUTES.TRANSACTIONS}/${(row.original as Transaction).transactionId}`,
                     )
                   }
                 >
@@ -107,7 +107,7 @@ const TransactionTable = <TData, TValue>({
                     <TableCell key={cell.id} className="">
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -119,7 +119,7 @@ const TransactionTable = <TData, TValue>({
                   colSpan={columns.length}
                   className="text-muted-foreground h-24 text-center"
                 >
-                  No results found.
+                  <TransactionEmptyState />
                 </TableCell>
               </TableRow>
             )}

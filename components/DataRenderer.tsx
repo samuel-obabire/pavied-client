@@ -6,11 +6,12 @@ type Props<T> = {
     message?: string;
   };
   empty?: {
-    title: string;
-    message: string;
+    title?: string;
+    message?: string;
     action?: React.ReactNode;
+    component?: React.ReactNode;
   };
-  render: (data: T[]) => void;
+  render: (data: T[]) => React.ReactNode;
 };
 
 const DataRenderer = <T,>({
@@ -31,8 +32,14 @@ const DataRenderer = <T,>({
   if (!data || !data.length) {
     return (
       <div className="flex-center flex-col rounded-lg flex w-full 2xl:max-w-[404px] h-[203px] bg-white_dark-black-1">
-        <p className="font-medium">{empty?.title || " No record yet!"}</p>
-        {empty?.message && <em className="text-12-medium text-center">{empty.message}</em>}
+        {empty?.component ? (
+          empty.component
+        ) : (
+          <p className="font-medium">{empty?.title || " No record yet!"}</p>
+        )}
+        {empty?.message && (
+          <em className="text-12-medium text-center">{empty.message}</em>
+        )}
         {empty?.action && <div className="mt-4">{empty.action}</div>}
       </div>
     );
