@@ -1,6 +1,7 @@
 import { APIError, betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
+import { after } from "next/server";
 import prisma from "@/lib/prisma";
 import {
   sendEmailVerification,
@@ -116,7 +117,9 @@ export const auth = betterAuth({
   },
   emailVerification: {
     sendVerificationEmail: async ({ user, url }, _request) => {
-      sendEmailVerification(user.name, url, user.email);
+      after(async () => {
+        await sendEmailVerification(user.name, url, user.email);
+      });
     },
 
     sendOnSignIn: false,
@@ -128,7 +131,9 @@ export const auth = betterAuth({
     requireEmailVerification: true, // require email verification before signin
 
     sendResetPassword: async ({ user, url }) => {
-      await sendPasswordResetVerification(user.name, url, user.email);
+      after(async () => {
+        await sendPasswordResetVerification(user.name, url, user.email);
+      });
     },
 
     resetPasswordTokenExpiresIn: 15 * 60,
