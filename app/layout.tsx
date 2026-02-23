@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
-import WhatsAppWidget from "@/components/WhatsAppWidget";
 
 const LatoSans = Lato({
   weight: ["400"],
@@ -135,7 +134,7 @@ export default function RootLayout({
           />
         </ThemeProvider>
 
-        <WhatsAppWidget />
+        {/* <WhatsAppWidget /> */}
         <Toaster richColors position="top-center" />
       </body>
     </html>

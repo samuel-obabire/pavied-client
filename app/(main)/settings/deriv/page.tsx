@@ -4,6 +4,7 @@ import AccountCardFallback from "@/components/AccountCardFallback";
 import ConnectDeriv from "@/components/ConnectDeriv";
 import DataRenderer from "@/components/DataRenderer";
 import DerivAccountCard from "@/components/DerivAccountCard";
+import DerivEmptyState from "@/components/ui/empties/deriv-empty";
 import { getUserDerivAccounts } from "@/lib/actions/deriv.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
@@ -14,6 +15,7 @@ const AccountList = async ({ userId }: { userId: string }) => {
   return (
     <div className="flex flex-col gap-4 py-2">
       <DataRenderer
+        empty={{ component: <DerivEmptyState /> }}
         data={derivAccountRes.data}
         success={derivAccountRes.success}
         render={(derivAccounts) => {
@@ -47,7 +49,7 @@ const DerivSettingsPage = async () => {
 
       <section className="bg-white_dark-black-1 rounded-2xl p-6 shadow-md dark:shadow-gray-200/15 border border-gray-200/30 space-y-6">
         <h2 className="text-20-medium text-black-1_dark-white">
-          Previously linked accounts
+          Connected Deriv accounts
         </h2>
 
         <Suspense fallback={<AccountCardFallback />}>
