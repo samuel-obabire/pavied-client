@@ -9,7 +9,7 @@ const DashboardStats = async ({ userId }: { userId: string }) => {
   return (
     <section className="grid flex-none grid-cols-2 gap-2 sm:gap-4 xl:flex">
       <StatsCard
-        title="Total Deposit"
+        title="Total Inflow"
         subText=""
         description="Total  deposits transactions made so far."
         count={totalDeposits}
@@ -17,7 +17,7 @@ const DashboardStats = async ({ userId }: { userId: string }) => {
         decimals={2}
       />
       <StatsCard
-        title="Total Withdrawals"
+        title="Total Outflow"
         subText=""
         description="Total  withdrawals transactions made so far."
         count={totalWithdrawals}
