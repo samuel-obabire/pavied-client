@@ -41,7 +41,13 @@ const DerivAccountSelectionList = ({
     checked: boolean,
   ) => {
     if (checked) {
-      setSelectedAccounts((prev) => [...prev, account]);
+      setSelectedAccounts((prev) => {
+        if (prev.some((a) => a.accountId === account.accountId)) {
+          return prev;
+        }
+
+        return [...prev, account];
+      });
     } else {
       setSelectedAccounts((prev) =>
         prev.filter((a) => a.accountId !== account.accountId),
@@ -51,7 +57,7 @@ const DerivAccountSelectionList = ({
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedAccounts(parsedAccounts);
+      setSelectedAccounts([...parsedAccounts]);
     } else {
       setSelectedAccounts([]);
     }
@@ -89,8 +95,9 @@ const DerivAccountSelectionList = ({
           successMessage={
             <>
               <p className="text-14-medium text-center text-gray-500">
-                Your Deriv account details have been submitted and are currently under review.
-                You&apos;ll be able to start transacting as soon as the verification is complete.
+                Your Deriv account details have been submitted and are currently
+                under review. You&apos;ll be able to start transacting as soon
+                as the verification is complete.
               </p>
 
               {session?.user?.onboardingStep !== OnboardingStep.COMPLETE ? (
@@ -123,6 +130,9 @@ const DerivAccountSelectionList = ({
         </div>
         {parsedAccounts.map((account, index) => {
           const checkboxId = `account-${account.accountId}`;
+          const isSelected = selectedAccounts.some(
+            (selected) => selected.accountId === account.accountId,
+          );
 
           return (
             <React.Fragment key={account.accountId}>
@@ -138,8 +148,9 @@ const DerivAccountSelectionList = ({
                   <Label htmlFor={checkboxId}>{account.accountId}</Label>
                   <Checkbox
                     id={checkboxId}
+                    checked={isSelected}
                     onCheckedChange={(checked) => {
-                      handleAccountSelection(account, Boolean(checked));
+                      handleAccountSelection(account, checked === true);
                     }}
                   />
                 </div>
