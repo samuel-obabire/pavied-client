@@ -8,6 +8,7 @@ import { getUserBankAccounts } from "@/lib/actions/bank.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 import { OnboardingStep } from "@/prisma/lib/generated/prisma/enums";
+import BankEmptyAction from "@/components/ui/empties/bank-empty";
 
 const BankAccountOnboardingPage = async () => {
   const session = await verifySession();
@@ -27,6 +28,7 @@ const BankAccountOnboardingPage = async () => {
             triggerLabel="My accounts"
             drawerContent={
               <DataRenderer
+                empty={{ component: <BankEmptyAction /> }}
                 data={bankAccountRes.data}
                 success={bankAccountRes.success}
                 render={(bankAccounts) => {

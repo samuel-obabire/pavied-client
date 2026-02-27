@@ -18,7 +18,7 @@ const ConnectDerivPage = async () => {
   const parsedAccounts = parseSelectedDerivAccounts(derivAccounts);
 
   return (
-    <main className="flex-center container max-w-lg flex-col  space-y-14">
+    <main className="flex-center container -mt-32 max-w-lg flex-col  space-y-14">
       {!parsedAccounts.length ? (
         <ConnectDeriv />
       ) : (
