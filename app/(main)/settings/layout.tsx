@@ -28,7 +28,7 @@ const SettingsLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
 
   return (
-    <div className="container py-8 max-w-6xl">
+    <div className="py-8">
       <div className="flex flex-col gap-10 lg:flex-row">
         {/* Settings Sidebar */}
         <aside className="w-full md:w-64 space-y-6">
