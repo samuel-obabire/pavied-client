@@ -50,7 +50,7 @@ const MainLayout = async ({ children }: { children: ReactNode }) => {
         </header>
 
         <main className="flex h-[calc(100dvh-40px)] flex-col space-y-4 px-4 pt-6 md:px-8 lg:h-[calc(100dvh-72px)]">
-          <div className="overflow-y-auto pb-8">{children}</div>
+          <div className="no-scrollbar overflow-y-auto pb-8">{children}</div>
         </main>
       </div>
     </div>
