@@ -9,6 +9,7 @@ import { getPaymentTransaction } from "@/lib/actions/payment.action";
 import { ROUTES } from "@/lib/constants/routes";
 import { verifySession } from "@/lib/server";
 import { transactionIsDerivWithdrawal } from "@/lib/utils";
+import { WithdrawalFaqs } from "@/components/deriv-withdrawal-flow/WithdrawalFaqs";
 
 const Verification = async ({
   ...props
@@ -61,19 +62,22 @@ const DerivWithdrawalVerificationPage = async ({
   }
 
   return (
-    <Suspense
-      fallback={
-        <div className="flex-center flex mt-6">
-          <Loader className="animate-spin" />
-        </div>
-      }
-    >
-      <Verification
-        accountId={transaction.derivWithdrawalExtra.derivLoginId}
-        transactionId={tx}
-        userId={user.id}
-      />
-    </Suspense>
+    <>
+      <Suspense
+        fallback={
+          <div className="flex-center flex mt-6">
+            <Loader className="animate-spin" />
+          </div>
+        }
+      >
+        <Verification
+          accountId={transaction.derivWithdrawalExtra.derivLoginId}
+          transactionId={tx}
+          userId={user.id}
+        />
+      </Suspense>
+      <WithdrawalFaqs />
+    </>
   );
 };
 
