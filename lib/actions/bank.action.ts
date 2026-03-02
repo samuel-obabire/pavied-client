@@ -2,7 +2,9 @@
 
 import "server-only";
 
+import { logger } from "better-auth";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import type { BankAccount } from "@/prisma/lib/generated/prisma/client";
 import { ROUTES } from "../constants/routes";
 import action from "../handlers/action";
@@ -11,6 +13,7 @@ import { UnauthorizedError } from "../http-errors";
 import { prismaAdapter } from "../prisma-adapters/prisma.adapter";
 import { verifySession } from "../server";
 import { bankAccountSchema } from "../validation";
+import { notifyAdmin } from "../telegram/notification";
 
 export const getUserBankAccounts = async (
   userId: string,
@@ -59,6 +62,12 @@ export const addUserBankAccount = async (
     if (!userId) throw new UnauthorizedError("Not Authorized");
 
     await prismaAdapter.bank.addUserBankAccount(userId, parsedBankAccount);
+
+    after(async () => {
+      await notifyAdmin(
+        `${userId} just added a bank account. Requires approval`,
+      ).catch(logger.error);
+    });
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

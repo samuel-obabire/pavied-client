@@ -1,14 +1,20 @@
 "use server";
 
 import "server-only";
+import { after } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import { notifyAdmin } from "@/lib/telegram/notification";
 import type { DerivAccount } from "@/prisma/lib/generated/prisma/client";
 import action from "../../handlers/action";
 import handleError from "../../handlers/error";
 import { UnauthorizedError } from "../../http-errors";
 import logger from "../../logger";
 import { prismaAdapter } from "../../prisma-adapters/prisma.adapter";
-import { divideNumbers, scheduleOrderCancellation } from "../../utils";
+import {
+  divideNumbers,
+  formatNairaAmount,
+  scheduleOrderCancellation,
+} from "../../utils";
 import { DerivDepositSchema } from "../../validation";
 import { fetchCachedRate } from "../rate.action";
 import type { DerivDepositParams } from "../types/action";
@@ -143,6 +149,12 @@ export const createDerivDepositTransaction = async (
 
     // Automatically cancel order if not paid within 15 mins
     await scheduleOrderCancellation(transactionId, "Payment timeout");
+
+    after(async () => {
+      await notifyAdmin(
+        `${userId} just created a deposit transaction of ${formatNairaAmount(amount)}.`,
+      ).catch(logger.error);
+    });
 
     return { success: true, data: { transactionId } };
   } catch (error) {

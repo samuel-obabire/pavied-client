@@ -2,7 +2,9 @@
 
 import "server-only";
 import { logger } from "@sentry/nextjs";
+import { after } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+import { nofifyAdmin } from "@/lib/telegram/notification";
 import { scheduleWithdrawalPayout } from "@/lib/utils/qstash";
 import action from "../../handlers/action";
 import {
@@ -14,6 +16,7 @@ import handleError from "../../handlers/error";
 import { UnauthorizedError } from "../../http-errors";
 import { prismaAdapter } from "../../prisma-adapters/prisma.adapter";
 import {
+  formatNairaAmount,
   multiplyNumbers,
   scheduleOrderCancellation,
   transactionIsDerivWithdrawal,
@@ -208,6 +211,12 @@ export const processDerivWithdrawal = async (paymentData: {
       });
 
       await scheduleWithdrawalPayout(transactionId, 40).catch(logger.error);
+
+      after(async () => {
+        await nofifyAdmin(
+          `${userId} just made a withdrawal transaction of ${formatNairaAmount(amount)} naira.`,
+        ).catch(logger.error);
+      });
 
       return { success: true };
     }
