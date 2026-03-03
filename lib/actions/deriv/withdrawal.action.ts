@@ -4,7 +4,7 @@ import "server-only";
 import { logger } from "@sentry/nextjs";
 import { after } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import { nofifyAdmin } from "@/lib/telegram/notification";
+import { notifyAdmin } from "@/lib/telegram/notification";
 import { scheduleWithdrawalPayout } from "@/lib/utils/qstash";
 import action from "../../handlers/action";
 import {
@@ -213,7 +213,7 @@ export const processDerivWithdrawal = async (paymentData: {
       await scheduleWithdrawalPayout(transactionId, 40).catch(logger.error);
 
       after(async () => {
-        await nofifyAdmin(
+        await notifyAdmin(
           `${userId} just made a withdrawal transaction of ${formatNairaAmount(amount)} naira.`,
         ).catch(logger.error);
       });
