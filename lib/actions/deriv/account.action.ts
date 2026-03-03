@@ -4,7 +4,10 @@ import "server-only";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import type { DerivAccountLink } from "@/components/DerivAccountSelectionList";
+import logger from "@/lib/logger";
+import { notifyAdmin } from "@/lib/telegram/notification";
 import type { DerivAccount } from "@/prisma/lib/generated/prisma/client";
 import { ROUTES } from "../../constants/routes";
 import action from "../../handlers/action";
@@ -66,6 +69,12 @@ export const addDerivAccounts = async (
       userId,
       encryptedAccounts,
     );
+
+    after(async () => {
+      await notifyAdmin(
+        `${userId} just added/updated deriv accounts. May need approval`,
+      ).catch(logger.error);
+    });
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

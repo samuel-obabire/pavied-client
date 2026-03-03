@@ -15,6 +15,7 @@ import type {
   TransactionWithData,
 } from "../prisma-adapters/types";
 import { verifySession } from "../server";
+import { notifyAdmin } from "../telegram/notification";
 import { publishToQStash } from "../utils/qstash";
 import { UploadPaymentRecieptSchema } from "../validation";
 import type { TransactionQueryParams } from "./types/action";
@@ -117,6 +118,12 @@ export const uploadPaymentReciept = async (
     });
 
     await updateDerivDepositTransactionRecieptPath(paymentId, fileName);
+
+    after(async () => {
+      await notifyAdmin(`${user.id} have marked an order as paid`).catch(
+        logger.error,
+      );
+    });
 
     after(async () => {
       logger.info(
