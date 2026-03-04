@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { removeUserBankAccount } from "@/lib/actions/bank.action";
-import { cn } from "@/lib/utils";
+import { cn, truncateString } from "@/lib/utils";
 import type { BankAccount } from "@/prisma/lib/generated/prisma/browser";
 import ActionState, { type ActionStateType } from "./ActionState";
 import BankIcon from "./BankIcon";
@@ -71,14 +71,14 @@ const BankAccountCard = ({
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50/50 dark:bg-white/5 border border-gray-100/50 dark:border-gray-800/50 shadow-sm group-hover:scale-105 transition-transform duration-500">
               <BankIcon bankCode={bankCode} />
             </div>
-            <span className="text-13-medium xl:max-w-[120px]  truncate text-gray-500 dark:text-gray-400 capitalize">
-              {bankName}
+            <span className="text-sm font-semibold xl:max-w-[120px]  truncate text-gray-500 dark:text-gray-400 capitalize">
+              {truncateString(bankName, 18)}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             {showActive && !bankAccount.active && (
-              <span className="px-1.5 py-0.5 rounded text-[9px] lg:text-[8px] font-semibold uppercase tracking-wider bg-amber-50 text-amber-600 border border-amber-100 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/50">
+              <span className="px-1.5 py-0.5 rounded text-[8px] font-semibold uppercase tracking-wider bg-amber-50 text-amber-600 border border-amber-100 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/50">
                 Under review
               </span>
             )}
@@ -113,7 +113,7 @@ const BankAccountCard = ({
             <span className="block text-[9px] font-medium uppercase tracking-[0.1em] text-gray-400 dark:text-gray-500">
               Account Holder
             </span>
-            <span className="text-16-bold text-black-1_dark-white tracking-tight leading-none">
+            <span className="text-sm font-semibold text-black-1_dark-white tracking-tight leading-none">
               {accountName}
             </span>
           </div>

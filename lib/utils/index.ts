@@ -2,8 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import Decimal from "decimal.js";
 import { twMerge } from "tailwind-merge";
 import type {
-  BaseTransaction,
-  TransactionWithData,
+    BaseTransaction,
+    TransactionWithData,
 } from "../prisma-adapters/types";
 import { getDerivTransactionDetails } from "./deriv";
 
@@ -169,4 +169,7 @@ export const transactionIsDerivWithdrawal = (
 ): tx is TransactionWithData &
   NonNullable<TransactionWithData["derivWithdrawalExtra"]> => {
   return tx.type === "DERIV_WITHDRAWAL" && tx.derivWithdrawalExtra !== null;
+};
+export const truncateString = (str: string, length: number) => {
+  return str.length > length ? `${str.substring(0, length)}...` : str;
 };

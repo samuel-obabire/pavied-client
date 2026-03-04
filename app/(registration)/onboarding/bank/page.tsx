@@ -32,15 +32,20 @@ const BankAccountOnboardingPage = async () => {
                 data={bankAccountRes.data}
                 success={bankAccountRes.success}
                 render={(bankAccounts) => {
-                  return bankAccounts.map((bankAcccount) => {
-                    return (
-                      <BankAccountCard
-                        key={bankAcccount.bankCode + bankAcccount.accountNumber}
-                        bankAccount={bankAcccount}
-                        removeable
-                      />
-                    );
-                  });
+                  return (
+                    <div className="flex flex-col gap-4 px-5 pb-10 pt-2 max-h-[70vh] overflow-y-auto">
+                      {bankAccounts.map((bankAcccount) => (
+                        <BankAccountCard
+                          key={
+                            bankAcccount.bankCode + bankAcccount.accountNumber
+                          }
+                          bankAccount={bankAcccount}
+                          showActive
+                          removeable
+                        />
+                      ))}
+                    </div>
+                  );
                 }}
               />
             }
